@@ -1,5 +1,10 @@
-// SnapKey v1.8.0 — keyboard group input handler, universal game autodetect, glitch-hardened
+// SnapKey v1.9.0 — keyboard group input handler, universal game autodetect, glitch-hardened
 // base: github.com/cafali/SnapKey (MIT, cafali + contributors)
+// v1.9.0 scope: universal mode. The group transform is a general keyboard
+//   utility — with universal=1 it runs in every window with no foreground
+//   classification, no per-title jitter/risk policy and no idle unhook.
+//   Detection mode (universal=0) is unchanged for existing configs.
+//   This is an input utility, not an anti-cheat bypass; no detection claim.
 // v1.8.0 scope: ROB RUN (Steam 4262460, EAC) classification, AC-launcher
 //   exclusions, snap-tap ban-risk model shown in tray/log/dialog, bounded
 //   per-snap drift on high-risk titles. No false "undetected" claim: kernel
@@ -137,6 +142,7 @@ static bool   trayActive   = false;
 static bool   isLocked     = false;
 
 // config v4
+static bool     cfgUniversal       = true;  // v1.9.0: run in every window, no title gating
 static bool     cfgAutoDetect      = true;
 static bool     cfgRequireFullscreen = true;
 static int      cfgCoverPct        = 95;   // unknown titles: monitor % area required
@@ -867,7 +873,7 @@ static void RebuildWatchedPids() {
 }
 
 static bool GateOpen() {
-    return g_gateOpen;
+    return cfgUniversal || g_gateOpen;
 }
 
 // whitelist mode (autoDetect=0): original v1.4.0 semantics — snapping only
@@ -926,7 +932,15 @@ static void PollTick() {
 
     bool sensed = false;
 
-    if (!cfgAutoDetect) {
+    if (cfgUniversal) {
+        // general keyboard utility: active in every window, no title
+        // classification, no per-title jitter/risk policy, no ban-risk log.
+        sensed = true;
+        g_jmin = cfgJitterMin;
+        g_jmax = cfgJitterMax;
+        g_settle = cfgSettleMs;
+        g_risk = RISK_LOW;
+    } else if (!cfgAutoDetect) {
         RebuildWatchedPids();
         sensed = WhitelistGate();
         if (sensed) {
@@ -1018,7 +1032,10 @@ static void PollTick() {
 static void WatchdogTick() {
     bool gameRunning = false;
 
-    if (!cfgAutoDetect) {
+    if (cfgUniversal) {
+        // hook stays resident in every window; refresh cadence still applies
+        gameRunning = true;
+    } else if (!cfgAutoDetect) {
         RebuildWatchedPids();
         gameRunning = !watchedNames.empty() && !watchedPids.empty();
     } else {
@@ -1108,6 +1125,7 @@ bool LoadConfig(const std::string& filename, bool firstLoad) {
     }
 
     // v4 defaults — a value only sticks if the file carries the line
+    bool     newUniversal  = true;   // v1.9.0: default on, set 0 for detection mode
     int      newJitterMin  = 8;
     int      newJitterMax  = 18;
     int      newSettleMs   = 0;
@@ -1198,6 +1216,7 @@ bool LoadConfig(const std::string& filename, bool firstLoad) {
         }
 
         // root
+        if (name == "universal")            { newUniversal = atoi(valueStr.c_str()) != 0; continue; }
         if (name == "autoDetect")           { newAutoDetect = atoi(valueStr.c_str()) != 0; continue; }
         if (name == "requireFullscreen")    { newRequireFs  = atoi(valueStr.c_str()) != 0; continue; }
         if (name == "coverPct")             { newCoverPct   = atoi(valueStr.c_str()); continue; }
@@ -1287,6 +1306,7 @@ bool LoadConfig(const std::string& filename, bool firstLoad) {
         groupMembers[p.first].push_back(p.second);
     }
 
+    cfgUniversal  = newUniversal;
     cfgJitterMin  = newJitterMin;
     cfgJitterMax  = newJitterMax;
     cfgSettleMs   = newSettleMs;
@@ -1696,9 +1716,9 @@ int main() {
     RebuildWatchedPids();
 
     // first classification before the first keypress can arrive
-    g_gateOpen = cfgAutoDetect ? false : WhitelistGate();
+    g_gateOpen = cfgUniversal ? true : (cfgAutoDetect ? false : WhitelistGate());
     g_gateWasOpen = g_gateOpen;
-    if (!cfgAutoDetect) {
+    if (cfgUniversal || !cfgAutoDetect) {
         g_jmin = cfgJitterMin;
         g_jmax = cfgJitterMax;
         g_settle = cfgSettleMs;
@@ -1708,7 +1728,7 @@ int main() {
     }
     PollTick();
 
-    if (!cfgAutoDetect && !hookInstalled) {
+    if ((cfgUniversal || !cfgAutoDetect) && !hookInstalled) {
         hHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, NULL, 0);
         hookInstalled = (hHook != NULL);
         lastRehookTick = GetTickCount64();
@@ -1718,8 +1738,9 @@ int main() {
     SetTimer(hwnd, TIMER_WATCHDOG, (UINT)RandRange(1600, 2400), NULL);
     SetTimer(hwnd, TIMER_POLL, (UINT)cfgPollMs, NULL);
 
-    LogEvent("started v1.8.0");
-    LogEvent(cfgAutoDetect ? "autodetect on" : "whitelist mode");
+    LogEvent("started v1.9.0");
+    LogEvent(cfgUniversal ? "universal mode (all windows)"
+                          : (cfgAutoDetect ? "autodetect on" : "whitelist mode"));
     LogEvent("gate " + (cfgAutoDetect ? string("autodetect")
                                       : (watchedNames.empty() ? string("always active")
                                                               : string("activeOn=" + to_string(watchedNames.size()) + " proc"))));
@@ -1905,6 +1926,7 @@ static void UpdateTrayTip() {
     if (!trayActive) return;
     char tip[128];
     if (isLocked) snprintf(tip, sizeof(tip), "SnapKey: OFF");
+    else if (cfgUniversal) snprintf(tip, sizeof(tip), "SnapKey: universal (all windows)");
     else if (fgCache.isGame && !fgCache.name.empty())
         snprintf(tip, sizeof(tip), "SnapKey: %s (t%d %s risk)",
                  Narrow(fgCache.name).c_str(), fgCache.tier,
@@ -1943,12 +1965,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hSubMenu, TEXT("Select Profile"));
 
             AppendMenu(hMenu, MF_STRING, ID_TRAY_AUTODETECT,
-                       cfgAutoDetect ? TEXT("Autodetect: ON (all games)") : TEXT("Autodetect: OFF (whitelist)"));
+                       cfgUniversal ? TEXT("Universal: ON (all windows)")
+                                    : (cfgAutoDetect ? TEXT("Autodetect: ON (all games)")
+                                                     : TEXT("Autodetect: OFF (whitelist)")));
             {
-                string det = fgCache.isGame && !fgCache.name.empty()
-                    ? string("Detected: ") + Narrow(fgCache.name) +
-                      string(" [") + RiskName(fgCache.risk) + " risk]"
-                    : string("Detected: none (hover tray tip)");
+                string det = cfgUniversal
+                    ? string("Mode: universal (every window)")
+                    : (fgCache.isGame && !fgCache.name.empty()
+                        ? string("Detected: ") + Narrow(fgCache.name) +
+                          string(" [") + RiskName(fgCache.risk) + " risk]"
+                        : string("Detected: none (hover tray tip)"));
                 AppendMenuA(hMenu, MF_STRING, ID_TRAY_DETECTED, det.c_str());
             }
             AppendMenu(hMenu, MF_STRING, ID_TRAY_LOCK_FUNCTION, isLocked ? TEXT("Disable SnapKey") : TEXT("Enable SnapKey"));
@@ -1956,7 +1982,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
             AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
             AppendMenu(hMenu, MF_STRING, ID_TRAY_HELP, TEXT("Get Help"));
             AppendMenu(hMenu, MF_STRING, ID_TRAY_CHECKUPDATE, TEXT("Check Updates"));
-            AppendMenu(hMenu, MF_STRING, ID_TRAY_VERSION_INFO, TEXT("Version Info (1.8.0)"));
+            AppendMenu(hMenu, MF_STRING, ID_TRAY_VERSION_INFO, TEXT("Version Info (1.9.0)"));
             AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
             AppendMenu(hMenu, MF_STRING, ID_TRAY_EXIT_CONTEXT_MENU_ITEM, TEXT("Exit SnapKey"));
 
@@ -1989,11 +2015,28 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                 ShellExecute(NULL, TEXT("open"), TEXT("https://github.com/cafali/SnapKey/releases"), NULL, NULL, SW_SHOWNORMAL);
             }
         } else if (LOWORD(wParam) == ID_TRAY_AUTODETECT) {
-            cfgAutoDetect = !cfgAutoDetect;
+            cfgUniversal = !cfgUniversal;
             fgCache = FgCache();
-            LogEvent(cfgAutoDetect ? "autodetect toggled on" : "autodetect toggled off");
+            g_pendingCloseSince = 0;
+            if (cfgUniversal) {
+                g_gateOpen = true;
+                g_jmin = cfgJitterMin;
+                g_jmax = cfgJitterMax;
+                g_settle = cfgSettleMs;
+                g_risk = RISK_LOW;
+                if (!hookInstalled) InstallHook();
+                LogEvent("universal toggled on (all windows)");
+            } else {
+                g_gateOpen = cfgAutoDetect ? false : WhitelistGate();
+                LogEvent("universal toggled off (detection mode)");
+            }
         } else if (LOWORD(wParam) == ID_TRAY_DETECTED) {
-            if (fgCache.isGame) {
+            if (cfgUniversal) {
+                MessageBox(hwnd,
+                           TEXT("Universal mode: the group transform is active in every window.\n")
+                           TEXT("No title classification or per-game policy is applied."),
+                           TEXT("SnapKey Universal"), MB_OK);
+            } else if (fgCache.isGame) {
                 string body = "Detected: " + Narrow(fgCache.name) +
                               "\nTier: " + to_string(fgCache.tier) +
                               "\nBan risk: " + RiskName(fgCache.risk) +
@@ -2033,18 +2076,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 // ------------------------------------------------------------- version
 
 std::string GetVersionInfo() {
-    return "SnapKey v1.8.0\n"
-           "Keyboard group input handler — universal game autodetect, glitch-hardened.\n"
+    return "SnapKey v1.9.0\n"
+           "Keyboard group input handler — universal mode, glitch-hardened.\n"
            "Base: github.com/cafali/SnapKey (MIT)\n"
-           "Startup: registry Run key, working dir anchored to exe dir.\n"
-           "Detect: ~150-title table + shipping suffix + score heuristic\n"
-           "        (GPU + coverage% + borderless + store path), close-debounce 400ms.\n"
-           "        ROB RUN (4262460) is TIER_HARD — EAC via start_protected_game.exe.\n"
-           "Risk:   low/medium/high/extreme shown in tray tip, Detected dialog,\n"
-           "        and log; high-risk titles add bounded jitter drift (+/-3ms).\n"
-           "Config: autoDetect / autoExclude / autoInclude / requireFullscreen /\n"
-           "        coverPct / closeDebounceMs / gfxRescanMs / minHoldMs /\n"
-           "        jitterMinMs / jitterMaxMs / tier*MinMs / tier*MaxMs /\n"
+           "Mode:   universal=1 (default): group transform active in every window,\n"
+           "        global jitter range, no title classification / risk policy.\n"
+           "        universal=0: legacy autodetect (~150-title table + suffix +\n"
+           "        GPU/coverage heuristic) or whitelist (activeOn) mode.\n"
+           "Startup: working dir anchored to exe dir.\n"
+           "Config: universal / autoDetect / autoExclude / autoInclude /\n"
+           "        requireFullscreen / coverPct / closeDebounceMs / gfxRescanMs /\n"
+           "        minHoldMs / jitterMinMs / jitterMaxMs / tier*MinMs / tier*MaxMs /\n"
            "        settleMs / idleUnhookMs / skipChancePct / banRiskLog / pollMs /\n"
            "        toggleKey / killKey / reloadKey / stealth / tray / logFile\n";
 }

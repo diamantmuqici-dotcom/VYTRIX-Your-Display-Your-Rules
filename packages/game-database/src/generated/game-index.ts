@@ -10658,7 +10658,7 @@ export const gameConfigurations: readonly GameConfiguration[] =
   {
     "id": "snaptap",
     "name": "SnapTap",
-    "detail": "Launch tools/snaptap/bin/SnapKey_v1.7.0.exe, pick a profile in the tray, then hold opposing movement keys. VYTRIX only detects the process.",
+    "detail": "Launch tools/snaptap/bin/SnapKey_v1.7.0.exe, pick a profile in the tray, then hold opposing movement keys. Universal mode runs in every window.",
     "category": "misc",
     "launchers": [
       "manual"
@@ -10718,7 +10718,7 @@ export const gameConfigurations: readonly GameConfiguration[] =
       "Detection matches the documented SnapKey executable name only; no process memory is read and no code is injected.",
       "VYTRIX applies no display, color, crosshair, overlay, or monitoring profile to this tool.",
       "The low-level keyboard hook belongs to SnapTap and is installed only while that process runs.",
-      "Anti-cheat tiers and ban-risk readouts in the tool are informational; they are not an undetected claim."
+      "Universal mode (default) runs the group transform in every window with no title gating; set universal=0 for legacy detection mode."
     ],
     "supportedFeatures": [
       "detection"
@@ -10738,7 +10738,7 @@ export const gameConfigurations: readonly GameConfiguration[] =
     "releaseStatus": "released",
     "verification": {
       "status": "community",
-      "source": "Vendored SnapKey v1.8.0 source and documented binary name; upstream base cafali/SnapKey (MIT)",
+      "source": "Vendored SnapKey v1.9.0 source and documented binary name; upstream base cafali/SnapKey (MIT)",
       "lastVerifiedAt": "2026-11-21"
     },
     "schemaVersion": 1,

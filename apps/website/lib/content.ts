@@ -123,14 +123,14 @@ export const features: Feature[] = [
     icon: Keyboard,
     title: "SnapTap",
     summary:
-      "A bundled keyboard snap-tap utility in the misc category. Source, prebuilt binary, config and profiles ship with VYTRIX.",
+      "A bundled keyboard snap-tap utility in the misc category. Universal mode runs in every window. Source, prebuilt binary, config and profiles ship with VYTRIX.",
     details: [
       "Launch the included binary and pick a profile from the tray, then hold opposing movement keys.",
+      "Universal mode is on by default: the transform is active in every window with one global jitter range and no title gating.",
       "The full source, config keys, five profiles and MIT license are included for inspection and rebuild.",
-      "Catalogued for detection only, with a dedicated page listing every bundled file and build command.",
     ],
     limit:
-      "VYTRIX only detects the process. It does not read keyboard input, inject code, read game memory or modify game files.",
+      "VYTRIX does not read keyboard input, inject code, read game memory or modify game files. Set universal=0 for the legacy detection mode.",
   },
 ];
 

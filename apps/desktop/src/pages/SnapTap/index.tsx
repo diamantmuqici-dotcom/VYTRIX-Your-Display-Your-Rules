@@ -14,6 +14,8 @@ const BUNDLED_FILES = [
 ];
 
 const CONFIG_KEYS = [
+  ["universal", "Default 1: transform active in every window, global jitter, no title gating."],
+  ["jitterMinMs / jitterMaxMs", "Global snap delay range used in universal mode."],
   ["Primary", "Primary movement key."],
   ["Secondary", "Opposing movement key released when Primary is pressed."],
   ["Toggle", "Enables or disables the snap behavior from the tray."],
@@ -37,7 +39,7 @@ export default function SnapTap() {
             ))}
           </div>
           <div className="tiny" style={{ marginTop: 12, lineHeight: 1.6 }}>
-            VYTRIX catalogs SnapTap under Game Profiles → misc. The executable is vendored as a standalone tool; it is not merged into the VYTRIX runtime.
+            VYTRIX catalogs SnapTap under Game Profiles → misc. The executable is vendored as a standalone tool; it is not merged into the VYTRIX runtime. Universal mode is on by default and runs the transform in every window; set universal=0 for the legacy detection mode.
           </div>
         </Panel>
         <Panel title="Run and build" icon={Terminal}>

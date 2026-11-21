@@ -42,7 +42,7 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | Verified game hints | Working | 29 verified, 67 partial, 66 manual; 141 native executable hints |
 | 162 individual configurations | Working | 162 schema-valid records across 9 categories in `packages/game-database/data`; validation reports no duplicates |
 | Misc category and short details | Working | `misc` holds SnapTap and Zoom; each record carries a bounded one-line how-to rendered in the library and detail pane |
-| SnapTap tool | Working | vendored source, config, five profiles, icons, MIT license, upstream README and prebuilt binary under `tools/snaptap`; detection-only catalog entry and dedicated sidebar page |
+| SnapTap tool | Working | vendored v1.9.0 source, config, five profiles, icons, MIT license, upstream README and prebuilt binary under `tools/snaptap`; universal mode on by default, dedicated sidebar page |
 | Utility zoom | Working | `zoom_status`, `zoom_configure`, `zoom_toggle`, `zoom_release`; documented Magnification API, 1.0-8.0 bound, toggle and native hold polling, overlay status sync |
 | Game search/filter | Working | query plus category, launcher, and detection filters in `GameProfiles` |
 | Custom games | Working | add-game flow with launcher and executable hint |

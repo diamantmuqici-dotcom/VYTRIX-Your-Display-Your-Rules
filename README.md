@@ -57,7 +57,7 @@ for the selected monitor. No value in the color studio is cosmetic.
 
 ### Utility tools in misc
 
-- **SnapTap** — full vendored SnapKey v1.8.0 source, `config.cfg`, five profiles, tray icons, MIT license, upstream README, and the prebuilt `SnapKey_v1.7.0.exe`. It is catalogued for detection only; VYTRIX does not read its keyboard input, inject code, read game memory, or modify game files. A dedicated SnapTap sidebar page lists the bundled files, build commands, config keys, and boundary.
+- **SnapTap** — full vendored SnapKey v1.9.0 source, `config.cfg`, five profiles, tray icons, MIT license, upstream README, and the prebuilt `SnapKey_v1.7.0.exe`. Universal mode is on by default: the group transform runs in every window with no title gating, using one global jitter range. `universal=0` restores the legacy autodetect/whitelist behavior. VYTRIX does not read its keyboard input, inject code, read game memory, or modify game files. A dedicated SnapTap sidebar page lists the bundled files, build commands, config keys, and boundary.
 - **Zoom** — real full-screen magnification through the documented Windows `MagInitialize` / `MagSetFullscreenTransform` / `MagUninitialize` API, bounded to 1.0–8.0. Toggle mode flips on a bind press. Hold mode polls the bound keys with `GetAsyncKeyState` and restores the display on release. Default bind: `Alt + Z`; mode, level, status, and manual controls live in Display Effects.
 
 ### Crosshair Studio

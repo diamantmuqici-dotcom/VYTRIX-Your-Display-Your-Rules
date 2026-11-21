@@ -9,7 +9,7 @@ Profiles library as `SnapTap` so it appears beside the game configurations.
 
 | Path | Purpose |
 | --- | --- |
-| `SnapKey-ud-v1.7.0.cpp` | Full v1.8.0 source, MIT, upstream `cafali/SnapKey` base |
+| `SnapKey-ud-v1.7.0.cpp` | Full v1.9.0 source, MIT, upstream `cafali/SnapKey` base |
 | `config.cfg` | Group bindings and the complete v1.8.0 settings block |
 | `profiles/*.cfg` | WASD, ESDF, ARROW, AZERTY and CUSTOM profiles |
 | `bin/SnapKey_v1.7.0.exe` | Prebuilt binary; the filename is fixed by the upstream autostart Run key |
@@ -44,8 +44,12 @@ right-click menu selects profiles and shows detection state. Groups are
 last-input-wins: hold A, press D, and A releases after the configured delay.
 
 `config.cfg` and `profiles/` are read next to the executable. `reloadKey`
-re-reads the file without a restart. Every setting, including `autoDetect`,
-`coverPct`, `idleUnhookMs`, `skipChancePct` and the per-tier jitter ranges, is
+re-reads the file without a restart. Universal mode is on by default
+(`universal=1`): the group transform runs in every window with no foreground
+classification, no per-title risk policy and no idle unhook. It uses the global
+`jitterMinMs`/`jitterMaxMs` range. Set `universal=0` for the legacy autodetect
+or whitelist mode, which keeps the title table, per-tier jitter ranges,
+`coverPct`, `idleUnhookMs`, `skipChancePct` and `banRiskLog`. All settings are
 documented in `config.cfg` and `README.upstream.md`.
 
 ## Boundary
@@ -53,9 +57,10 @@ documented in `config.cfg` and `README.upstream.md`.
 - VYTRIX reads no keyboard input for this tool and does not drive it.
 - The tool uses `WH_KEYBOARD_LL` and `SendInput`; it does not inject code into
   games, read game memory, or modify game files.
-- Anti-cheat tiers and ban-risk readouts are informational. They are not an
-  undetected claim; kernel anti-cheat and server-side input analysis are
-  outside a low-level hook tool.
+- Universal mode is a general keyboard utility, not a detection-evasion
+  feature. No anti-cheat bypass or undetected result is claimed.
+- Anti-cheat tiers and ban-risk readouts apply only in `universal=0` detection
+  mode and are informational.
 - The `misc` catalog entry declares only `detection` as a supported feature.
   No display, color, overlay, crosshair, monitoring or restoration profile is
   applied to it.

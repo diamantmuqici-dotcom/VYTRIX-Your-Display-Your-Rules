@@ -34,7 +34,7 @@ Categories: `shooters`, `survival`, `sandbox`, `racing`, `rpg`, `strategy`, `hor
 
 Launchers: `steam`, `epic`, `riot`, `xbox`, `microsoft-store`, `battle-net`, `ubisoft-connect`, `ea-app`, `manual`.
 
-`misc` contains `snaptap` and `zoom`. Both carry a short `detail` string that the desktop library renders under the entry name and in the detail pane. SnapTap declares only `detection`; Zoom is built into VYTRIX and declares no external detection or game-modification features. The Zoom record points at `vytrix-native-magnification-v1`; the SnapTap record points at `vytrix-vendored-snaptap-v1`.
+`misc` contains `snaptap` and `zoom`. Both carry a short `detail` string that the desktop library renders under the entry name and in the detail pane. SnapTap declares only `detection` (VYTRIX detects the vendored process); the tool itself runs a universal keyboard group transform in every window by default. Zoom is built into VYTRIX and declares no external detection or game-modification features. The Zoom record points at `vytrix-native-magnification-v1`; the SnapTap record points at `vytrix-vendored-snaptap-v1`.
 
 Hard unsupported feature tokens on every record: `game-file-modification`, `anti-cheat-bypass`, `guaranteed-fps-gain`. Crosshair and overlay stay off by default unless a title is explicitly marked supported; the current database marks neither as universally supported.
 

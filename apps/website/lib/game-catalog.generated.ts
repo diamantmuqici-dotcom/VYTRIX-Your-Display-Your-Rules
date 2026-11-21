@@ -5496,7 +5496,7 @@ export const gameCatalog: GameCatalogEntry[] = [
       "manual-path"
     ],
     "verificationStatus": "community",
-    "verificationSource": "Vendored SnapKey v1.8.0 source and documented binary name; upstream base cafali/SnapKey (MIT)",
+    "verificationSource": "Vendored SnapKey v1.9.0 source and documented binary name; upstream base cafali/SnapKey (MIT)",
     "releaseStatus": "released",
     "capabilities": {
       "colorProfiles": false,
