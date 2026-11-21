@@ -1,5 +1,5 @@
 import type { ColorPreset, ColorSettings } from "@vytrix/shared-types";
-import { DEFAULT_COLOR_SETTINGS } from "@vytrix/validation";
+import { clamp, DEFAULT_COLOR_SETTINGS } from "@vytrix/validation";
 
 type PresetSeed = [string, string, string, Partial<ColorSettings>];
 
@@ -20,6 +20,7 @@ const SEEDS: PresetSeed[] = [
   ["Warm Film", "Cinematic", "Orange push with gentle highlight rolloff.", { temperatureK: 4900, saturation: 116, gamma: 104 }],
   ["Cold Film", "Cinematic", "Blue push with muted reds.", { temperatureK: 9000, saturation: 104, red: 88 }],
   ["Competitive", "Competitive", "Flat, readable, no color distraction.", { saturation: 118, vibrance: 130, gamma: 94, brightness: 104 }],
+  ["Vivid 300", "Competitive", "Maximum documented ramp chroma: saturation, vibrance and gamut all pushed to their strong, bounded ceiling.", { saturation: 300, vibrance: 300, gamut: 250, contrast: 108 }],
   ["Balanced", "Balanced", "Default reference profile.", {}],
 ];
 
@@ -39,10 +40,17 @@ export const BUILTIN_PRESETS: ColorPreset[] = SEEDS.map(([name, category, descri
   builtIn: true,
 }));
 
+/** Preview mirrors the native ramp direction without pretending to be a color-managed transform. */
 export function presetCss(preset: ColorPreset): import("react").CSSProperties {
   const s = preset.settings;
+  const chroma = clamp(
+    1 + (s.saturation - 100) / 200 + (s.vibrance - 100) / 300 + (s.gamut - 100) / 200,
+    0,
+    4,
+  );
+  const hueDegrees = s.hue * (s.hueStrength / 100);
   return {
-    filter: `saturate(${s.saturation}%) brightness(${s.brightness}%) contrast(${s.contrast}%) hue-rotate(${s.hue}deg)`,
+    filter: `saturate(${Math.round(chroma * 100)}%) brightness(${s.brightness}%) contrast(${s.contrast}%) hue-rotate(${hueDegrees}deg)`,
   };
 }
 

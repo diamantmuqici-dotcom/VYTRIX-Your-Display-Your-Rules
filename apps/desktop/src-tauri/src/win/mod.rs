@@ -269,11 +269,15 @@ extern "system" {
     pub fn ReleaseDC(hwnd: *mut c_void, dc: *mut c_void) -> i32;
 }
 
-// Gamma ramps live in gdi32, not user32; linking them in the user32 block breaks cargo test.
+// Gamma ramps and display DCs live in gdi32, not user32; a separate link block
+// keeps the native test build working on non-Windows hosts.
 #[link(name = "gdi32")]
 extern "system" {
     pub fn GetDeviceGammaRamp(dc: *mut c_void, ramp: *mut c_void) -> i32;
     pub fn SetDeviceGammaRamp(dc: *mut c_void, ramp: *const c_void) -> i32;
+    pub fn CreateDCW(driver: *const u16, device: *const u16, output: *const u16,
+        init_data: *const c_void) -> *mut c_void;
+    pub fn DeleteDC(dc: *mut c_void) -> i32;
 }
 
 #[link(name = "kernel32")]

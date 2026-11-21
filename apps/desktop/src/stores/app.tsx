@@ -225,8 +225,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setState((s) => ({ ...s, colorApplyStatus: status }));
   }, []);
 
-  const pushColor = useCallback((color: ColorSettings) => {
-    applyColor(color, reportColor);
+  const pushColor = useCallback((color: ColorSettings, monitorId: string | null = null) => {
+    applyColor(color, reportColor, monitorId);
   }, [reportColor]);
 
   const api = useMemo<AppApi>(() => ({
@@ -234,19 +234,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSection: (section) => setState((s) => ({ ...s, section })),
     setColorField: (field, value) => setState((s) => {
       const color = clampColorSettings({ ...s.color, [field]: value });
-      pushColor(color);
+      pushColor(color, s.settings.monitorId);
       return { ...s, color };
     }),
     setColor: (color) => setState((s) => {
       const next = clampColorSettings(color);
-      pushColor(next);
+      pushColor(next, s.settings.monitorId);
       return { ...s, color: next };
     }),
     setBaseline: (baseline) => setState((s) => ({ ...s, baseline: clampColorSettings(baseline) })),
     setSetting: (key, value) => setState((s) => ({ ...s, settings: { ...s.settings, [key]: value } })),
     applyPreset: (preset) => setState((s) => {
       const color = clampColorSettings(preset.settings);
-      pushColor(color);
+      pushColor(color, s.settings.monitorId);
       return { ...s, color };
     }),
     upsertPreset: (preset) => setState((s) => ({
@@ -352,7 +352,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     log,
     reset: () => {
       setState(defaultState());
-      void resetColor(reportColor);
+      void resetColor(null, reportColor);
     },
   }), [state, log, pushColor, reportColor]);
 

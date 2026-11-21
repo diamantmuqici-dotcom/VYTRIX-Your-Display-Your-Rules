@@ -9,17 +9,35 @@ export function finite(value: unknown, fallback: number): number {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
-const COLOR_RANGES: Record<keyof ColorSettings, readonly [number, number, number]> = {
+/**
+ * Bounds are shared by the desktop store, preset importer and phone bridge.
+ * Keeping them in one table stops a slider from ever writing an out-of-range
+ * value into the native ramp builder.
+ */
+export const COLOR_RANGES: Record<keyof ColorSettings, readonly [number, number, number]> = {
   saturation: [0, 300, 100],
   vibrance: [0, 300, 100],
   gamma: [50, 250, 100],
   brightness: [0, 200, 100],
   contrast: [0, 200, 100],
   hue: [0, 360, 0],
+  hueStrength: [0, 100, 0],
   red: [0, 200, 100],
   green: [0, 200, 100],
   blue: [0, 200, 100],
   temperatureK: [1000, 12000, 6500],
+  redLift: [-50, 50, 0],
+  greenLift: [-50, 50, 0],
+  blueLift: [-50, 50, 0],
+  redGamma: [50, 250, 100],
+  greenGamma: [50, 250, 100],
+  blueGamma: [50, 250, 100],
+  shadow: [-50, 50, 0],
+  midtone: [-50, 50, 0],
+  highlight: [-50, 50, 0],
+  blackPoint: [0, 100, 0],
+  whitePoint: [100, 200, 100],
+  gamut: [0, 300, 100],
 };
 
 export const DEFAULT_COLOR_SETTINGS: ColorSettings = {
@@ -29,10 +47,23 @@ export const DEFAULT_COLOR_SETTINGS: ColorSettings = {
   brightness: 100,
   contrast: 100,
   hue: 0,
+  hueStrength: 0,
   red: 100,
   green: 100,
   blue: 100,
   temperatureK: 6500,
+  redLift: 0,
+  greenLift: 0,
+  blueLift: 0,
+  redGamma: 100,
+  greenGamma: 100,
+  blueGamma: 100,
+  shadow: 0,
+  midtone: 0,
+  highlight: 0,
+  blackPoint: 0,
+  whitePoint: 100,
+  gamut: 100,
 };
 
 export function clampColorSettings(input: Partial<ColorSettings>): ColorSettings {

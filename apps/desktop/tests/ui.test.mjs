@@ -98,13 +98,19 @@ test("color changes reach the native gamma-ramp backend", () => {
   const service = readFileSync(new URL("services/color.ts", root), "utf8");
   const native = readFileSync(new URL("../src-tauri/src/color.rs", root), "utf8");
   const lib = readFileSync(new URL("../src-tauri/src/lib.rs", root), "utf8");
-  assert.match(store, /pushColor\(color\)/);
+  assert.match(store, /pushColor\(color,/);
   assert.match(service, /"color_apply"/);
   assert.match(service, /"color_reset"/);
+  assert.match(service, /"color_reset_linear"/);
   assert.match(native, /SetDeviceGammaRamp/);
   assert.match(native, /GetDeviceGammaRamp/);
+  assert.match(native, /fn build_ramp_from/);
+  assert.match(native, /pub fn restore_all/);
+  assert.match(native, /pub fn reset_linear/);
+  assert.match(lib, /tauri::RunEvent::Exit/);
   assert.match(lib, /commands::color_apply/);
   assert.match(lib, /commands::color_reset/);
+  assert.match(lib, /commands::color_reset_linear/);
 });
 
 test("color temperature is real: correct Kelvin direction and visible preview", () => {
@@ -116,8 +122,7 @@ test("color temperature is real: correct Kelvin direction and visible preview", 
   // Native ramp must derive red/blue from absolute Kelvin, not an inverted warmth term.
   assert.match(native, /fn temperature_gains\(kelvin: f64\)/);
   assert.match(native, /Lower Kelvin favors red \(warm\), higher Kelvin favors blue \(cool\)/);
-  assert.match(native, /gains\[0\] \*= temp_gains\[0\]/);
-  assert.match(native, /gains\[2\] \*= temp_gains\[2\]/);
+  assert.match(native, /gains\[channel\] = \(gains\[channel\] \* temp_gains\[channel\] \* phase\[channel\]\)/);
   assert.doesNotMatch(native, /0\.12 \* warmth/);
   assert.match(native, /temperature_warms_low_kelvin_and_cools_high_kelvin/);
 
@@ -131,7 +136,29 @@ test("color temperature is real: correct Kelvin direction and visible preview", 
   assert.match(studio, /style=\{currentTint\}/);
 
   // Temperature changes must still reach the native ramp on every slider move.
-  assert.match(store, /setColorField[\s\S]*pushColor\(color\)/);
+  assert.match(store, /setColorField[\s\S]*pushColor\(color,/);
+});
+
+test("color target display is persisted and re-applied", () => {
+  const studio = readFileSync(new URL("pages/ColorStudio/index.tsx", root), "utf8");
+  const native = readFileSync(new URL("../src-tauri/src/color.rs", root), "utf8");
+  const service = readFileSync(new URL("services/color.ts", root), "utf8");
+  assert.match(studio, /setSetting\("monitorId", nextId\)/);
+  assert.match(studio, /applyColorNow\(state\.color, undefined, nextId\)/);
+  assert.doesNotMatch(studio, /console\.log\(`Target display/);
+  assert.match(service, /"color_apply", \{ color, monitorId \}/);
+  assert.match(native, /CreateDCW\(display\.as_ptr\(\), name\.as_ptr\(\)/);
+  assert.match(native, /guard\.entry\(device\.clone\(\)\)\.or_insert\(current\)/);
+  // Neutral settings must reproduce the captured ramp, not a synthetic identity.
+  assert.match(native, /build_ramp_from\(&original, color\)/);
+  // Restore must keep the anchor so the next apply cannot capture a tinted ramp.
+  assert.doesNotMatch(native, /guard\.remove\(&device\)/);
+  assert.match(native, /blue_change_then_back_to_100_returns_to_saved_ramp/);
+});
+
+test("display page targets the selected monitor", () => {
+  const display = readFileSync(new URL("pages/Display/index.tsx", root), "utf8");
+  assert.match(display, /deviceId: state\.settings\.monitorId/);
 });
 
 test("Rob Run resolves through read-only Steam manifests", () => {

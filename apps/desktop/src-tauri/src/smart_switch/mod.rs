@@ -274,7 +274,7 @@ impl SmartSwitch {
         };
         let app_state = crate::APP_STATE.get().ok_or_else(|| "native state unavailable".to_owned())?;
         if let Some(color) = baseline {
-            let result = app_state.color.apply(&color)?;
+            let result = app_state.color.apply(&color, None)?;
             if !result.ok {
                 return Err(result.message);
             }
@@ -305,7 +305,7 @@ impl SmartSwitch {
             self.restore(&profile.game)?;
         }
         let app_state = crate::APP_STATE.get().ok_or_else(|| "native state unavailable".to_owned())?;
-        let color_result = app_state.color.apply(&profile.color)?;
+        let color_result = app_state.color.apply(&profile.color, None)?;
         if !color_result.ok {
             return Err(color_result.message);
         }

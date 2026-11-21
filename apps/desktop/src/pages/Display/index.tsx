@@ -15,7 +15,7 @@ const HEIGHT_BOUNDS = [360, 8640] as const;
 const HZ_BOUNDS = [24, 360] as const;
 
 export default function Display() {
-  const { log } = useApp();
+  const { state, log } = useApp();
   const { notify } = useToast();
   const t = useT();
   const [resolution, setResolution] = useState("1920x1080");
@@ -67,7 +67,7 @@ export default function Display() {
       notify(t("display.invalidCustom"), "error");
       return;
     }
-    const result = await invokeNative("display_apply", { width, height, refreshRate: hz, scaling, hdrEnabled: hdr });
+    const result = await invokeNative("display_apply", { width, height, refreshRate: hz, scaling, hdrEnabled: hdr, deviceId: state.settings.monitorId });
     if (!result.ok) {
       notify(result.error.message || t("display.needsNative"), "error");
       return;

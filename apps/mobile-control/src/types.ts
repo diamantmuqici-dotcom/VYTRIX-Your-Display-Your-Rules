@@ -8,10 +8,23 @@ export interface ColorSettings {
   brightness: number;
   contrast: number;
   hue: number;
+  hueStrength: number;
   red: number;
   green: number;
   blue: number;
   temperatureK: number | null;
+  redLift: number;
+  greenLift: number;
+  blueLift: number;
+  redGamma: number;
+  greenGamma: number;
+  blueGamma: number;
+  shadow: number;
+  midtone: number;
+  highlight: number;
+  blackPoint: number;
+  whitePoint: number;
+  gamut: number;
 }
 
 export interface PresetSummary {

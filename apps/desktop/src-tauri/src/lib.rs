@@ -36,7 +36,7 @@ pub static APP_STATE: OnceLock<AppState> = OnceLock::new();
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
         .setup(|app| {
             let handle = app.handle();
             let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;
@@ -68,6 +68,7 @@ pub fn run() {
             commands::display_rollback,
             commands::color_apply,
             commands::color_reset,
+            commands::color_reset_linear,
             commands::steam_installations,
             commands::sample_metrics,
             commands::register_hotkey,
@@ -93,6 +94,14 @@ pub fn run() {
             commands::smart_switch_set_enabled,
             commands::smart_switch_sync_profiles,
         ])
-        .run(tauri::generate_context!())
-        .expect("VYTRIX failed to start");
+        .build(tauri::generate_context!())
+        .expect("VYTRIX failed to build");
+
+    app.run(|_handle, event| {
+        if matches!(event, tauri::RunEvent::Exit) {
+            if let Some(state) = APP_STATE.get() {
+                state.color.restore_all();
+            }
+        }
+    });
 }

@@ -21,17 +21,45 @@ export interface MonitorInfo {
   backend: GpuBackend;
 }
 
+/**
+ * Color controls are per-channel transfer-function parameters applied through
+ * SetDeviceGammaRamp. A ramp cannot mix channels, so hue and saturation are
+ * implemented as channel-gain shaping, not per-pixel HSV rotation.
+ */
 export interface ColorSettings {
+  /** Chroma expansion around each channel's neutral pivot. 100 is neutral. */
   saturation: number;
+  /** Low-saturation protection weighted toward midtones. 100 is neutral. */
   vibrance: number;
+  /** Master transfer gamma. 100 is neutral. */
   gamma: number;
   brightness: number;
   contrast: number;
+  /** Channel-phase hue bias in degrees; requires hueStrength above zero. */
   hue: number;
+  /** Strength of the channel-phase hue bias. 0 disables it. */
+  hueStrength: number;
   red: number;
   green: number;
   blue: number;
   temperatureK: number | null;
+  /** Per-channel black-point lift. Negative values crush. */
+  redLift: number;
+  greenLift: number;
+  blueLift: number;
+  /** Per-channel transfer gamma. 100 is neutral. */
+  redGamma: number;
+  greenGamma: number;
+  blueGamma: number;
+  /** Shadow, midtone and highlight weighting in the transfer curve. */
+  shadow: number;
+  midtone: number;
+  highlight: number;
+  /** Global black and white points. */
+  blackPoint: number;
+  whitePoint: number;
+  /** Additional chroma ceiling independent of saturation. 100 is neutral. */
+  gamut: number;
 }
 
 export type ColorField = keyof ColorSettings;

@@ -5,18 +5,22 @@ export interface ColorApplyStatus {
   ok: boolean;
   message: string;
   backend: string;
+  device?: string;
 }
 
 type Listener = (status: ColorApplyStatus) => void;
 
 let timer: number | null = null;
-let queued: ColorSettings | null = null;
+let queued: { color: ColorSettings; monitorId: string | null } | null = null;
 let queuedListener: Listener | undefined;
 
-
 /** Queue a gamma-ramp write so slider drags do not flood the native runtime. */
-export function applyColor(color: ColorSettings, onResult?: Listener): void {
-  queued = { ...color };
+export function applyColor(
+  color: ColorSettings,
+  onResult?: Listener,
+  monitorId: string | null = null,
+): void {
+  queued = { color: { ...color }, monitorId };
   queuedListener = onResult;
   if (timer !== null) window.clearTimeout(timer);
   timer = window.setTimeout(() => {
@@ -25,20 +29,24 @@ export function applyColor(color: ColorSettings, onResult?: Listener): void {
     const listener = queuedListener;
     queued = null;
     queuedListener = undefined;
-    if (payload) void dispatch(payload, listener);
+    if (payload) void dispatch(payload.color, payload.monitorId, listener);
   }, 90);
 }
 
-export function applyColorNow(color: ColorSettings, onResult?: Listener): Promise<ColorApplyStatus | null> {
+export function applyColorNow(
+  color: ColorSettings,
+  onResult?: Listener,
+  monitorId: string | null = null,
+): Promise<ColorApplyStatus | null> {
   if (timer !== null) { window.clearTimeout(timer); timer = null; }
   queued = null;
   queuedListener = undefined;
-  return dispatch(color, onResult);
+  return dispatch(color, monitorId, onResult);
 }
 
-function dispatch(color: ColorSettings, onResult?: Listener): Promise<ColorApplyStatus | null> {
+function dispatch(color: ColorSettings, monitorId: string | null, onResult?: Listener): Promise<ColorApplyStatus | null> {
   if (!isTauriRuntime()) return Promise.resolve(null);
-  return invokeNative<ColorApplyStatus>("color_apply", { color }).then((result) => {
+  return invokeNative<ColorApplyStatus>("color_apply", { color, monitorId }).then((result) => {
     if (!result.ok) {
       const failure: ColorApplyStatus = {
         ok: false, message: result.error.message, backend: "unavailable",
@@ -51,9 +59,21 @@ function dispatch(color: ColorSettings, onResult?: Listener): Promise<ColorApply
   });
 }
 
-export function resetColor(onResult?: Listener): Promise<ColorApplyStatus | null> {
+export function resetColor(monitorId: string | null = null, onResult?: Listener): Promise<ColorApplyStatus | null> {
   if (!isTauriRuntime()) return Promise.resolve(null);
-  return invokeNative<ColorApplyStatus>("color_reset", {}).then((result) => {
+  return invokeNative<ColorApplyStatus>("color_reset", { monitorId }).then((result) => {
+    const status: ColorApplyStatus = result.ok
+      ? result.data
+      : { ok: false, message: result.error.message, backend: "unavailable" };
+    onResult?.(status);
+    return status;
+  });
+}
+
+/** Recovery for a display left tinted by a killed session with no saved ramp. */
+export function resetColorLinear(monitorId: string | null = null, onResult?: Listener): Promise<ColorApplyStatus | null> {
+  if (!isTauriRuntime()) return Promise.resolve(null);
+  return invokeNative<ColorApplyStatus>("color_reset_linear", { monitorId }).then((result) => {
     const status: ColorApplyStatus = result.ok
       ? result.data
       : { ok: false, message: result.error.message, backend: "unavailable" };

@@ -91,7 +91,7 @@ fn split_monitor_name(name: &str) -> (String, String) {
 
 #[tauri::command]
 pub fn display_apply(width: u32, height: u32, refresh_rate: u32, scaling: u32, hdr_enabled: bool,
-    state: State<'_, AppState>) -> Result<crate::display::ApplyResult, String> {
+    device_id: Option<String>, state: State<'_, AppState>) -> Result<crate::display::ApplyResult, String> {
     if !(50..=200).contains(&scaling) || scaling % 25 != 0 {
         return Err("scaling must be 50-200 in steps of 25".to_owned());
     }
@@ -99,11 +99,21 @@ pub fn display_apply(width: u32, height: u32, refresh_rate: u32, scaling: u32, h
         // HDR is not toggled here; only report that the request was understood.
         // Enabling HDR requires a documented HDR API path not linked in this build.
     }
-    let device_id = crate::display::enumerate().into_iter()
-        .find(|device| device.is_primary)
-        .or_else(|| crate::display::enumerate().into_iter().next())
-        .map(|device| device.id)
-        .ok_or_else(|| "no display available".to_owned())?;
+    let device_id = match device_id {
+        Some(requested) => {
+            let requested = crate::security::safe_id(&requested)
+                .ok_or_else(|| "invalid display identifier".to_owned())?;
+            if !crate::display::enumerate().iter().any(|device| device.id == requested) {
+                return Err("target display is not connected".to_owned());
+            }
+            requested
+        }
+        None => crate::display::enumerate().into_iter()
+            .find(|device| device.is_primary)
+            .or_else(|| crate::display::enumerate().into_iter().next())
+            .map(|device| device.id)
+            .ok_or_else(|| "no display available".to_owned())?,
+    };
     let _ = hdr_enabled;
     state.display.apply(crate::display::DisplayApplyRequest { device_id, width, height, refresh_rate })
 }
@@ -114,14 +124,21 @@ pub fn display_rollback(state: State<'_, AppState>) -> Result<crate::display::Ap
 }
 
 #[tauri::command]
-pub fn color_apply(color: crate::color::ColorPayload, state: State<'_, AppState>)
-    -> Result<crate::color::ColorApplyResult, String> {
-    state.color.apply(&color)
+pub fn color_apply(color: crate::color::ColorPayload, monitor_id: Option<String>,
+    state: State<'_, AppState>) -> Result<crate::color::ColorApplyResult, String> {
+    state.color.apply(&color, monitor_id.as_deref())
 }
 
 #[tauri::command]
-pub fn color_reset(state: State<'_, AppState>) -> Result<crate::color::ColorApplyResult, String> {
-    state.color.reset()
+pub fn color_reset(monitor_id: Option<String>, state: State<'_, AppState>)
+    -> Result<crate::color::ColorApplyResult, String> {
+    state.color.reset(monitor_id.as_deref())
+}
+
+#[tauri::command]
+pub fn color_reset_linear(monitor_id: Option<String>, state: State<'_, AppState>)
+    -> Result<crate::color::ColorApplyResult, String> {
+    state.color.reset_linear(monitor_id.as_deref())
 }
 
 #[tauri::command]
