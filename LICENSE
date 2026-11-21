@@ -1,0 +1,12 @@
+VYTRIX — Proprietary Commercial License
+Copyright (c) 2026 VYTRIX. All rights reserved.
+
+This source tree and the compiled application are proprietary software.
+No permission is granted to copy, modify, distribute, sublicense, or sell
+any part of it without a written license agreement from the copyright holder.
+
+The original VYTRIX brand assets in assets/branding are trademarked and may
+not be reused in derivative products.
+
+Third-party dependencies remain under their own licenses as recorded in the
+lockfile and their package manifests.

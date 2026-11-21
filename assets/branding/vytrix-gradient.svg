@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 512" role="img" aria-label="VYTRIX">
+  <defs>
+    <linearGradient id="vyGradient" x1="56" y1="96" x2="456" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00D9FF"/>
+      <stop offset="0.52" stop-color="#6557FF"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+    <linearGradient id="vyText" x1="560" y1="0" x2="1080" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F8FAFC"/>
+      <stop offset="1" stop-color="#A1AEC0"/>
+    </linearGradient>
+  </defs>
+  <path d="M56 96 H152 L256 366 L360 96 H456 L296 448 H216 Z" fill="url(#vyGradient)"/>
+  <path d="M170 96 H210 L256 232 L302 96 H342 L256 332 Z" fill="#080B12"/>
+  <path d="M238 380 H274 L256 420 Z" fill="#00D9FF"/>
+  <text x="556" y="338" font-family="Space Grotesk, Inter, sans-serif" font-size="176" font-weight="700" letter-spacing="10" fill="url(#vyText)">VYTRIX</text>
+</svg>

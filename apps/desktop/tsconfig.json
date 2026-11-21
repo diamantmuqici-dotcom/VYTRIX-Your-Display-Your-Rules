@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "noEmit": true,
+    "types": ["vite/client", "node"],
+    "paths": {
+      "@vytrix/design-system": ["../../packages/design-system/src/index.ts"],
+      "@vytrix/shared-types": ["../../packages/shared-types/src/index.ts"],
+      "@vytrix/validation": ["../../packages/validation/src/index.ts"],
+      "@vytrix/preset-format": ["../../packages/preset-format/src/index.ts"],
+      "@vytrix/config": ["../../packages/config/src/index.ts"],
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src", "vite.config.ts"]
+}

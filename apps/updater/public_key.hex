@@ -1,0 +1,11 @@
+# VYTRIX release signing public key (Ed25519, 32 raw bytes, lowercase hex).
+#
+# FILL: replace the placeholder hex on the last line with the REAL release
+# public key before shipping any build. The all-zero value below is a
+# placeholder, is not a valid signing key, and makes verification fail closed.
+#
+# Generate a keypair and print the raw public key (see apps/updater/README.md):
+#   openssl genpkey -algorithm ED25519 -out release-private-key.pem
+#   openssl pkey -in release-private-key.pem -pubout -outform DER | tail -c 32 | xxd -p -c 64
+#
+0000000000000000000000000000000000000000000000000000000000000000

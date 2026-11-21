@@ -1,0 +1,85 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build, stage, sign, publish
+    runs-on: windows-latest
+    env:
+      VYTRIX_RELEASE_PRIVATE_KEY: ${{ secrets.VYTRIX_RELEASE_PRIVATE_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            apps/desktop/src-tauri/target
+            apps/updater/target
+          key: ${{ runner.os }}-cargo-release-${{ hashFiles('apps/desktop/src-tauri/Cargo.lock', 'apps/updater/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-release-
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Verify workspace
+        run: |
+          npm run build
+          npm test
+          npm run typecheck
+
+      - name: Build Windows bundles (msi + nsis)
+        working-directory: apps/desktop/src-tauri
+        run: npx @tauri-apps/cli build
+
+      - name: Stage release manifest and checksums
+        run: node scripts/build-release.mjs --skip-build
+
+      - name: Sign release manifest
+        if: ${{ env.VYTRIX_RELEASE_PRIVATE_KEY != '' }}
+        run: node scripts/sign-manifest.mjs
+
+      - name: Publish unsigned manifest when signing secret is absent
+        if: ${{ env.VYTRIX_RELEASE_PRIVATE_KEY == '' }}
+        run: echo "VYTRIX_RELEASE_PRIVATE_KEY is not configured; manifest.signature is empty. See docs/RELEASING.md before uploading to the website."
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vytrix-${{ github.ref_name }}
+          path: |
+            dist-release/**
+            apps/desktop/src-tauri/target/release/bundle/**
+          if-no-files-found: error
+
+      - name: Attach files to GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            dist-release/**

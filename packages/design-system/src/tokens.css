@@ -1,0 +1,58 @@
+:root {
+  --vy-bg: #080B12;
+  --vy-bg-secondary: #0D1220;
+  --vy-sidebar: #0A0E18;
+  --vy-card: #111827;
+  --vy-card-elevated: #172033;
+  --vy-cyan: #00D9FF;
+  --vy-blue: #286BFF;
+  --vy-purple: #8B5CF6;
+  --vy-gradient: linear-gradient(135deg, #00D9FF 0%, #6557FF 52%, #A855F7 100%);
+  --vy-text: #F8FAFC;
+  --vy-text-secondary: #A1AEC0;
+  --vy-text-muted: #68758A;
+  --vy-success: #22C55E;
+  --vy-warning: #F59E0B;
+  --vy-error: #EF4444;
+  --vy-accent: var(--vy-cyan);
+  --vy-accent-secondary: var(--vy-purple);
+  --vy-radius-sm: 8px;
+  --vy-radius-md: 10px;
+  --vy-radius-lg: 12px;
+  --vy-radius-xl: 16px;
+  --vy-font-ui: 'Inter', system-ui, -apple-system, sans-serif;
+  --vy-font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --vy-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --vy-motion-fast: 120ms;
+  --vy-motion-base: 180ms;
+  --vy-motion-slow: 280ms;
+  --vy-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --vy-border: 1px solid rgba(161, 174, 192, 0.12);
+  --vy-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --vy-bg: #F4F7FB;
+  --vy-bg-secondary: #EAF0F7;
+  --vy-sidebar: #FFFFFF;
+  --vy-card: #FFFFFF;
+  --vy-card-elevated: #F1F5F9;
+  --vy-accent: #0891B2;
+  --vy-accent-secondary: #7C3AED;
+  --vy-text: #0F172A;
+  --vy-text-secondary: #475569;
+  --vy-text-muted: #94A3B8;
+  --vy-border: 1px solid rgba(15, 23, 42, 0.1);
+  --vy-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+  color-scheme: light;
+}
+
+[data-theme='midnight'] { --vy-bg: #05060C; --vy-bg-secondary: #090B14; --vy-accent: #38BDF8; --vy-accent-secondary: #6366F1; }
+[data-theme='cyan'] { --vy-bg: #061016; --vy-card: #0C1A24; --vy-accent: #00D9FF; --vy-accent-secondary: #22D3EE; }
+[data-theme='purple'] { --vy-bg: #0B0714; --vy-card: #160E28; --vy-accent: #A855F7; --vy-accent-secondary: #6366F1; }
+[data-theme='red'] { --vy-bg: #120608; --vy-card: #1E0D11; --vy-accent: #F43F5E; --vy-accent-secondary: #F97316; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 160" role="img" aria-label="VYTRIX">
+  <defs>
+    <linearGradient id="vyWordmark" x1="16" y1="20" x2="620" y2="148" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00D9FF"/>
+      <stop offset="0.52" stop-color="#6557FF"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+  <path d="M26 28 H74 L166 134 H118 Z" fill="url(#vyWordmark)"/>
+  <path d="M206 28 H158 L66 134 H114 Z" fill="url(#vyWordmark)"/>
+  <path d="M112 58 L160 64 L112 116 L64 64 Z" fill="#080B12"/>
+  <path d="M104 122 H120 L112 142 Z" fill="#00D9FF"/>
+  <text x="238" y="112" font-family="Space Grotesk, Inter, sans-serif" font-size="80" font-weight="700" letter-spacing="6" fill="url(#vyWordmark)">VYTRIX</text>
+</svg>

@@ -1,0 +1,76 @@
+:root {
+  color-scheme: dark;
+  --vy-cyan: #00d9ff;
+  --vy-purple: #8b5cf6;
+  --vy-ink: #05070c;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.overlay-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  background: transparent;
+}
+
+.crosshair {
+  position: absolute;
+  left: calc(50% + var(--crosshair-x, 0px));
+  top: calc(50% + var(--crosshair-y, 0px));
+  transform: translate(-50%, -50%);
+  overflow: visible;
+  filter: drop-shadow(0 0 2px rgb(0 0 0 / 0.85));
+}
+
+.zoom-chip,
+.hotkey-hint {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 1px solid rgb(0 217 255 / 0.28);
+  border-radius: 10px;
+  background: rgb(8 11 18 / 0.72);
+  color: #e8f7ff;
+  font: 600 12px/1.1 "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 18px rgb(0 0 0 / 0.35), inset 0 0 18px rgb(0 217 255 / 0.06);
+  backdrop-filter: blur(6px);
+}
+
+.zoom-chip {
+  right: 24px;
+  top: 24px;
+  color: var(--vy-cyan);
+}
+
+.hotkey-hint {
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zoom-chip,
+  .hotkey-hint {
+    backdrop-filter: none;
+  }
+}

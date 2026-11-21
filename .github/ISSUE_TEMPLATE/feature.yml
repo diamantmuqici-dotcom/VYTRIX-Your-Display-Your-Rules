@@ -1,0 +1,50 @@
+name: Feature request
+description: Propose a capability for VYTRIX.
+title: "feature: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        VYTRIX is local-first and has hard boundaries: no game memory access, no DLL injection,
+        no keylogging, no hidden drivers or services. Proposals within those boundaries are welcome.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Desktop app
+        - Overlay
+        - Website
+        - API
+        - Updater / installer
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem this solves
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: Works offline or degrades to an explicit unavailable state
+          required: true
+        - label: Requires no game memory access, injection, or hidden driver/service
+          required: true
+        - label: Any Windows setting change is reversible
+          required: false

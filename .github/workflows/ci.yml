@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  desktop:
+    name: Desktop + API + updater (Windows)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            apps/desktop/src-tauri/target
+            apps/updater/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('apps/desktop/src-tauri/Cargo.lock', 'apps/updater/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Build workspace
+        run: npm run build
+
+      - name: Test workspace
+        run: npm test
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Cargo check (desktop)
+        working-directory: apps/desktop/src-tauri
+        run: cargo check
+
+      - name: Cargo test (desktop)
+        working-directory: apps/desktop/src-tauri
+        run: cargo test
+
+      - name: Cargo check (updater)
+        working-directory: apps/updater
+        run: cargo check
+
+      - name: Cargo test (updater)
+        working-directory: apps/updater
+        run: cargo test
+
+  website:
+    name: Website build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Build website
+        run: npm run site:build

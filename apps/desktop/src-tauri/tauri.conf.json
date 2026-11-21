@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "VYTRIX",
+  "version": "0.1.0",
+  "identifier": "gg.vytrix.desktop",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "VYTRIX — YOUR DISPLAY. YOUR RULES.",
+        "width": 1280,
+        "height": 820,
+        "minWidth": 940,
+        "minHeight": 620,
+        "resizable": true,
+        "fullscreen": false,
+        "center": true,
+        "decorations": true,
+        "transparent": false
+      },
+      {
+        "label": "overlay",
+        "url": "/overlay.html",
+        "title": "VYTRIX Overlay",
+        "width": 1920,
+        "height": 1080,
+        "resizable": false,
+        "fullscreen": true,
+        "center": true,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' ipc: http://ipc.localhost; img-src 'self' asset: http://asset.localhost data: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' ipc: http://ipc.localhost"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "publisher": "VYTRIX",
+    "copyright": "Copyright © 2026 VYTRIX",
+    "category": "Utility",
+    "shortDescription": "Windows gaming display and performance suite",
+    "longDescription": "VYTRIX is a local-first Windows control center for display color, game profiles, crosshair overlays, reversible optimizations and system monitoring.",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.ico", "icons/icon.png"],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "",
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico",
+        "languages": ["English"]
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "@vytrix/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/server.js",
+  "description": "VYTRIX cloud backend — auth, licensing, billing, presets, releases and telemetry.",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "npm run db:generate && tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --import tsx --test tests/license.test.mjs tests/preset-validation.test.mjs",
+    "db:generate": "prisma generate --schema ../../database/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema ../../database/schema.prisma",
+    "db:push": "prisma db push --schema ../../database/schema.prisma"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.900.0",
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^11.1.0",
+    "@fastify/rate-limit": "^10.3.0",
+    "@prisma/client": "^6.16.2",
+    "argon2": "^0.44.0",
+    "dotenv": "^17.2.2",
+    "fastify": "^5.6.1",
+    "jsonwebtoken": "^9.0.2",
+    "stripe": "^18.5.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.5.2",
+    "prisma": "^6.16.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
