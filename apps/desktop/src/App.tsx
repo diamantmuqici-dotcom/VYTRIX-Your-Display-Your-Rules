@@ -22,6 +22,7 @@ import Settings from "@/pages/Settings";
 import { ToastProvider } from "@/hooks/useToast";
 import { PhoneBridge } from "@/hooks/usePhoneBridge";
 import { HotkeyBridge } from "@/hooks/useHotkeyBridge";
+import { SmartSwitchBridge } from "@/hooks/useSmartSwitchBridge";
 
 const PAGES: Record<string, () => React.JSX.Element> = {
   "overview": Overview,
@@ -123,6 +124,7 @@ export default function App() {
     <ToastProvider>
       <PhoneBridge />
       <HotkeyBridge />
+      <SmartSwitchBridge />
       <Shell />
     </ToastProvider>
   );

@@ -11,6 +11,7 @@ pub mod optimizer;
 pub mod overlay;
 pub mod phone;
 pub mod security;
+pub mod smart_switch;
 pub mod steam;
 pub mod storage;
 pub mod system;
@@ -28,6 +29,7 @@ pub struct AppState {
     pub hotkeys: Arc<hotkeys::HotkeyRegistry>,
     pub phone: Arc<phone::PhoneAgent>,
     pub overlay: Arc<overlay::OverlayState>,
+    pub smart_switch: Arc<smart_switch::SmartSwitch>,
 }
 
 pub static APP_STATE: OnceLock<AppState> = OnceLock::new();
@@ -49,12 +51,14 @@ pub fn run() {
                 hotkeys: Arc::new(hotkeys::HotkeyRegistry::default()),
                 phone: Arc::new(phone::PhoneAgent::new(handle.clone())),
                 overlay: Arc::new(overlay::OverlayState::new(handle.clone())),
+                smart_switch: Arc::new(smart_switch::SmartSwitch::new(handle.clone())),
             };
             let _ = APP_STATE.set(state.clone());
             state.overlay.sync();
-            app.manage(state);
+            app.manage(state.clone());
             #[cfg(windows)]
             hotkeys::attach_app(handle);
+            smart_switch::SmartSwitch::spawn_polling(state.smart_switch.clone());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -84,6 +88,10 @@ pub fn run() {
             commands::phone_unpair,
             commands::phone_permissions,
             commands::phone_presets,
+            commands::smart_switch_status,
+            commands::smart_switch_history,
+            commands::smart_switch_set_enabled,
+            commands::smart_switch_sync_profiles,
         ])
         .run(tauri::generate_context!())
         .expect("VYTRIX failed to start");

@@ -31,6 +31,7 @@ Paths are relative to `VYTRIX/`. Generated outputs and ignored dependencies are 
 | `apps/desktop/src/data/presets.ts` | Static desktop catalog or task data |
 | `apps/desktop/src/hooks/useHotkeyBridge.tsx` | React bridge hook for native events |
 | `apps/desktop/src/hooks/usePhoneBridge.tsx` | React bridge hook for native events |
+| `apps/desktop/src/hooks/useSmartSwitchBridge.tsx` | React bridge hook for SmartSwitch transitions |
 | `apps/desktop/src/hooks/useToast.tsx` | React bridge hook for native events |
 | `apps/desktop/src/main.tsx` | Desktop frontend foundation file |
 | `apps/desktop/src/pages/ColorStudio/index.tsx` | Desktop UI page |
@@ -49,6 +50,7 @@ Paths are relative to `VYTRIX/`. Generated outputs and ignored dependencies are 
 | `apps/desktop/src/i18n/index.ts` | EN/FR/DE/RU dictionaries and translation hooks |
 | `apps/desktop/src/services/color.ts` | Debounced native gamma-ramp apply/reset bridge |
 | `apps/desktop/src/services/overlay.ts` | Frontend service wrapper for native IPC |
+| `apps/desktop/src/services/smartSwitch.ts` | Fail-closed SmartSwitch IPC service |
 | `apps/desktop/src/services/tauri.ts` | Frontend service wrapper for native IPC |
 | `apps/desktop/src/stores/app.tsx` | Shared desktop application state |
 | `apps/desktop/src/styles/global.css` | Global styles and design tokens |
@@ -76,6 +78,7 @@ Paths are relative to `VYTRIX/`. Generated outputs and ignored dependencies are 
 | `apps/desktop/src-tauri/src/overlay/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/phone/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/security/mod.rs` | Native Windows engine module |
+| `apps/desktop/src-tauri/src/smart_switch/mod.rs` | Priority resolver, snapshot replay, and switch history |
 | `apps/desktop/src-tauri/src/storage/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/system/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/win/mod.rs` | Native Windows engine module |

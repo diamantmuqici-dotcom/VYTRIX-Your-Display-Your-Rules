@@ -166,6 +166,49 @@ export interface DiagnosticReport {
   samples: MetricSample[];
 }
 
+/** Matches the native display::DisplayMode serde shape used by SmartSwitch. */
+export interface SwitchDisplayMode {
+  width: number;
+  height: number;
+  refresh_rate: number;
+  bits_per_pixel: number;
+}
+
+export interface SwitchProfile {
+  id: string;
+  game: string;
+  priority: number;
+  enabled: boolean;
+  color: ColorSettings;
+  display: SwitchDisplayMode | null;
+}
+
+export interface SwitchRecord {
+  time: number;
+  game: string;
+  action: string;
+  detail: string;
+  priority: number;
+}
+
+export interface SwitchStatus {
+  enabled: boolean;
+  currentGame: string | null;
+  currentProfile: string | null;
+  profileCount: number;
+  historyCount: number;
+  pollIntervalMs: number;
+}
+
+export interface SwitchEvent {
+  kind: string;
+  game: string;
+  profileId: string | null;
+  priority: number;
+  restored: boolean;
+  detail?: string;
+}
+
 export interface SystemSummary {
   appVersion: string;
   windowsVersion: string;

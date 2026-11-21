@@ -11,7 +11,7 @@ import { LANGUAGE_OPTIONS, useT } from "@/i18n";
 const TABS = ["General", "Display", "Performance", "Privacy", "Account", "Advanced"] as const;
 
 export default function Settings() {
-  const { state, setSetting, reset, log } = useApp();
+  const { state, setSetting, reset, log, setSmartSwitchEnabled, loadSmartSwitchHistory } = useApp();
   const { notify } = useToast();
   const t = useT();
   const [tab, setTab] = useState<(typeof TABS)[number]>("General");
@@ -48,7 +48,13 @@ export default function Settings() {
       {tab === "Display" ? <Panel title={t("common.display")}>
         <div className="field"><label>{t("settings.defaultProfile")}</label><input type="text" value={state.profiles[0]?.name ?? "None"} readOnly /></div>
         <ToggleRow label={t("settings.autoRestoration")} checked detail={t("settings.autoRestorationDetail")} onChange={() => notify(t("settings.autoRestoration"))} />
-        <ToggleRow label={t("settings.autoGameSwitch")} checked={state.settings.autoGameSwitch} onChange={(v) => setSetting("autoGameSwitch", v)} />
+        <ToggleRow
+          label={t("settings.smartSwitch")}
+          detail={t("settings.smartSwitchDetail")}
+          checked={state.smartSwitchEnabled}
+          onChange={setSmartSwitchEnabled}
+          badge={state.smartSwitchStatus?.currentProfile ?? undefined}
+        />
       </Panel> : null}
 
       {tab === "Performance" ? <Panel title={t("common.performance")}>
@@ -73,6 +79,22 @@ export default function Settings() {
             <button className="btn" onClick={() => fileInput.current?.click()}><Upload size={14} /> {t("common.import")}</button>
             <input ref={fileInput} type="file" accept="application/json" hidden onChange={(e) => void importConfig(e.target.files?.[0])} />
             <button className="btn danger" onClick={() => { if (window.confirm(t("settings.resetConfirm"))) { reset(); notify(t("common.reset")); } }}><Trash2 size={14} /> {t("common.reset")}</button>
+          </div>
+        </Panel>
+        <Panel
+          title={t("settings.switchHistory")}
+          action={<button className="btn" onClick={() => loadSmartSwitchHistory(50)}>{t("settings.refreshHistory")}</button>}
+        >
+          <div style={{ maxHeight: 200, overflowY: "auto" }}>
+            {state.smartSwitchHistory.map((record, index) => (
+              <div className="row" key={`${record.time}-${index}`}>
+                <span className="tiny mono">{new Date(record.time).toLocaleTimeString()}</span>
+                <span className="tiny">{record.game}</span>
+                <span className="badge">{record.action}</span>
+                <span className="tiny">{record.detail}</span>
+              </div>
+            ))}
+            {state.smartSwitchHistory.length === 0 ? <div className="empty">{t("settings.switchHistoryEmpty")}</div> : null}
           </div>
         </Panel>
         <Panel title={t("settings.applicationLog")}>

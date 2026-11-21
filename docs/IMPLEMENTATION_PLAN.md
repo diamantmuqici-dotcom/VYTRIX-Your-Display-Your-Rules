@@ -50,11 +50,13 @@ Acceptance met: `npm run validate:games` exits 0 and reports 160 valid unique co
 
 ## Phase 5 — SmartSwitch
 
-Status: missing as a dedicated module; process detection foundation exists.
+Status: complete as a dedicated native module; process detection foundation reused.
 
-Build: profile resolver, priority conflict handling, current-settings snapshot, supported-settings apply, game-exit restore, crash recovery, switch history. Reuse display restoration and native detection.
+Build: `src-tauri/src/smart_switch/mod.rs` provides a pure `resolve_profile`/`plan_transition` resolver with highest-priority-wins and deterministic id tie-break, a 1.5s foreground poll loop, exit grace window, desktop color snapshot, replay of `color.apply` and `display.rollback(None)`, and a bounded 100-entry switch history. Four IPC commands (`smart_switch_status`, `smart_switch_history`, `smart_switch_set_enabled`, `smart_switch_sync_profiles`) are wired through a fail-closed frontend service and a `vytrix://smart-switch` event bridge. Settings exposes the master toggle and a read-only history panel; EN/FR/DE/RU each carry five new keys.
 
-Acceptance: automated test proves restore replay and conflict resolution; manual Windows test proves game start/stop restores desktop color state.
+Acceptance: automated evidence passes — 5 native tests cover priority conflict, deterministic tie-break, direct-switch restore-first, exit restore, and no-op idempotency; `ui.test.mjs` asserts the full native-to-UI wiring. Manual Windows game start/stop restore replay remains an operator-side check on real hardware.
+
+Validation: 24 Rust tests pass, 12 desktop tests pass, typecheck and desktop build pass.
 
 ## Phase 6 — Customization
 

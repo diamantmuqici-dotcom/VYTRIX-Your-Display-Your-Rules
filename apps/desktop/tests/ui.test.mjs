@@ -122,3 +122,36 @@ test("Rob Run resolves through read-only Steam manifests", () => {
   assert.ok(parsed.detection.methods.includes("launcher-library"));
   assert.equal(parsed.detection.requiresManualPath, false);
 });
+
+test("smart switch resolves conflicts and replays desktop restore", () => {
+  const mod = readFileSync(new URL("../src-tauri/src/smart_switch/mod.rs", root), "utf8");
+  const lib = readFileSync(new URL("../src-tauri/src/lib.rs", root), "utf8");
+  const commands = readFileSync(new URL("../src-tauri/src/commands/mod.rs", root), "utf8");
+  const service = readFileSync(new URL("services/smartSwitch.ts", root), "utf8");
+  const bridge = readFileSync(new URL("hooks/useSmartSwitchBridge.tsx", root), "utf8");
+  const settings = readFileSync(new URL("pages/Settings/index.tsx", root), "utf8");
+  const app = readFileSync(new URL("App.tsx", root), "utf8");
+
+  assert.match(mod, /pub fn resolve_profile/);
+  assert.match(mod, /pub fn plan_transition/);
+  assert.match(mod, /restore_first/);
+  assert.match(mod, /display\.rollback\(None\)/);
+  assert.match(mod, /vytrix:\/\/smart-switch/);
+  assert.match(mod, /highest_priority_wins/);
+  assert.match(mod, /equal_priority_resolves_deterministically_by_id/);
+  assert.match(mod, /conflicting_switch_restores_previous_profile_first/);
+
+  assert.match(lib, /pub mod smart_switch;/);
+  assert.match(lib, /commands::smart_switch_status/);
+  assert.match(lib, /commands::smart_switch_sync_profiles/);
+  assert.match(lib, /SmartSwitch::spawn_polling/);
+  assert.match(commands, /smart_switch_set_enabled/);
+  assert.match(commands, /smart_switch_history/);
+
+  assert.match(service, /"smart_switch_status"/);
+  assert.match(service, /"smart_switch_set_enabled"/);
+  assert.match(bridge, /vytrix:\/\/smart-switch/);
+  assert.match(settings, /setSmartSwitchEnabled/);
+  assert.match(settings, /smartSwitchHistory/);
+  assert.match(app, /SmartSwitchBridge/);
+});

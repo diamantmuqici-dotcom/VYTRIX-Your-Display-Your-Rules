@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type {
   AppSettings, ColorField, ColorPreset, ColorSettings, CrosshairConfig,
   GameEntry, GameProfile, HotkeyBinding, OptimizationTask, PhonePermissions,
+  SwitchProfile, SwitchRecord, SwitchStatus,
 } from "@vytrix/shared-types";
 import type { SectionId } from "@vytrix/config";
 import { DEFAULT_COLOR_SETTINGS, clampColorSettings } from "@vytrix/validation";
@@ -10,6 +11,11 @@ import { BUILTIN_PRESETS } from "@/data/presets";
 import { GAME_CATALOG } from "@/data/games";
 import { OPTIMIZER_TASKS } from "@/data/optimizer";
 import { applyColor, resetColor, type ColorApplyStatus } from "@/services/color";
+import {
+  setSmartSwitchEnabled,
+  smartSwitchHistory,
+  syncSmartSwitchProfiles,
+} from "@/services/smartSwitch";
 
 const STORAGE_KEY = "vytrix.state.v1";
 
@@ -29,6 +35,9 @@ interface AppState {
   favorites: string[];
   history: { time: number; text: string }[];
   colorApplyStatus: ColorApplyStatus | null;
+  smartSwitchEnabled: boolean;
+  smartSwitchStatus: SwitchStatus | null;
+  smartSwitchHistory: SwitchRecord[];
 }
 
 interface AppApi {
@@ -54,6 +63,10 @@ interface AppApi {
   setCrosshairEnabled: (enabled: boolean) => void;
   setPhonePermission: (key: keyof PhonePermissions, enabled: boolean) => void;
   log: (text: string) => void;
+  setSmartSwitchEnabled: (enabled: boolean) => void;
+  setSmartSwitchStatus: (status: SwitchStatus) => void;
+  loadSmartSwitchHistory: (limit?: number) => void;
+  syncSmartSwitchProfiles: (profiles: SwitchProfile[]) => void;
   reset: () => void;
 }
 
@@ -91,6 +104,9 @@ function defaultState(): AppState {
     favorites: [],
     history: [],
     colorApplyStatus: null,
+    smartSwitchEnabled: true,
+    smartSwitchStatus: null,
+    smartSwitchHistory: [],
   };
 }
 
@@ -199,6 +215,27 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setPhonePermission: (key, enabled) => setState((s) => ({
       ...s, phonePermissions: { ...s.phonePermissions, [key]: enabled },
     })),
+    setSmartSwitchEnabled: (enabled) => {
+      setState((s) => ({
+        ...s,
+        smartSwitchEnabled: enabled,
+        settings: { ...s.settings, autoGameSwitch: enabled },
+      }));
+      void setSmartSwitchEnabled(enabled, state.color).then((status) => {
+        if (status) setState((s) => ({ ...s, smartSwitchStatus: status }));
+      });
+    },
+    setSmartSwitchStatus: (status) => setState((s) => ({ ...s, smartSwitchStatus: status })),
+    loadSmartSwitchHistory: (limit) => {
+      void smartSwitchHistory(limit).then((records) => {
+        setState((s) => ({ ...s, smartSwitchHistory: records }));
+      });
+    },
+    syncSmartSwitchProfiles: (profiles) => {
+      void syncSmartSwitchProfiles(profiles).then((status) => {
+        if (status) setState((s) => ({ ...s, smartSwitchStatus: status }));
+      });
+    },
     log,
     reset: () => {
       setState(defaultState());

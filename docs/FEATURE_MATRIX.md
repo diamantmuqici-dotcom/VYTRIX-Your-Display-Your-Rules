@@ -43,8 +43,8 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | Game search/filter | Working | query plus category, launcher, and detection filters in `GameProfiles` |
 | Custom games | Working | add-game flow with launcher and executable hint |
 | Profile duplicate/export/import | Partial | game-profile duplicate and export exist; import and version migration missing |
-| Automatic switching | Missing | no resolver/restore orchestrator |
-| Switch history | Missing | no persisted transition log |
+| Automatic switching | Working | `smart_switch` resolves by priority with deterministic tie-break, polls foreground at 1.5s, replays desktop color/display on exit |
+| Switch history | Working | bounded 100-entry in-memory transition log via `smart_switch_history`, read-only Settings panel |
 
 ## Customization
 

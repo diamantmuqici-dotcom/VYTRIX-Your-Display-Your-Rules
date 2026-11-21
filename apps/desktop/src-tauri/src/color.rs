@@ -8,7 +8,7 @@ use std::sync::Mutex;
 pub const RAMP_SIZE: usize = 256;
 pub type Ramp = [[u16; RAMP_SIZE]; 3];
 
-#[derive(Debug, Clone, Copy, Deserialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(default)]
 pub struct ColorPayload {
     pub saturation: f64,

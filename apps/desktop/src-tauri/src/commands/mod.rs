@@ -222,3 +222,35 @@ pub fn phone_permissions(state: State<'_, AppState>, permissions: crate::phone::
 pub fn phone_presets(state: State<'_, AppState>, presets: Vec<crate::phone::PhonePreset>) {
     state.phone.set_presets(presets);
 }
+
+#[tauri::command]
+pub fn smart_switch_status(
+    state: State<'_, AppState>,
+) -> Result<crate::smart_switch::SwitchStatus, String> {
+    Ok(state.smart_switch.status())
+}
+
+#[tauri::command]
+pub fn smart_switch_history(
+    limit: Option<usize>,
+    state: State<'_, AppState>,
+) -> Result<Vec<crate::smart_switch::SwitchRecord>, String> {
+    Ok(state.smart_switch.history(limit.unwrap_or(50).min(100)))
+}
+
+#[tauri::command]
+pub fn smart_switch_set_enabled(
+    enabled: bool,
+    desktop_color: Option<crate::color::ColorPayload>,
+    state: State<'_, AppState>,
+) -> Result<crate::smart_switch::SwitchStatus, String> {
+    state.smart_switch.set_enabled(enabled, desktop_color)
+}
+
+#[tauri::command]
+pub fn smart_switch_sync_profiles(
+    profiles: Vec<crate::smart_switch::SwitchProfile>,
+    state: State<'_, AppState>,
+) -> Result<crate::smart_switch::SwitchStatus, String> {
+    state.smart_switch.sync_profiles(profiles)
+}
