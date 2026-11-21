@@ -166,7 +166,7 @@ export const accessFaqs: FaqItem[] = [
   {
     question: "Where do I download the app?",
     answer:
-      "The download page shows a signed build once a device has a signed-in session and an active license. This site does not expose a public installer link.",
+      "The portable Windows x64 executable is on the public GitHub releases page. VYTRIX is open source under MIT; no account, sign-in or license is needed to download it.",
   },
 ];
 

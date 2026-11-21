@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 
+// Required for Next static export (`output: export`).
+export const dynamic = "force-static";
+
 type Frequency = NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
 
 const routes: { path: string; changeFrequency: Frequency; priority: number }[] = [
