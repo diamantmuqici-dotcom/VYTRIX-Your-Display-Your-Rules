@@ -51,8 +51,8 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 
 | Feature | Status | Evidence / gap |
 | --- | --- | --- |
-| Crosshair editor | Working | editor, native overlay sync, and validated share-code export/import |
-| Crosshair shapes/animation/export | Partial | 4 shapes, rotation/scale/offset; no keyframed animation |
+| Crosshair editor | Working | eight-section studio; native overlay sync; versioned hash-verified design, collection, and game-profile IO |
+| Crosshair shapes/animation/export | Working | 14 bounded shapes, per-arm/dot/outline/ring controls, six CSS animation kinds, seeded randomizer, bounded native + overlay renderer |
 | Transparent overlay window | Working | second Vite entry + native window |
 | Overlay layouts/position | Working | 5 whitelisted anchors driven by CSS variables in the overlay webview |
 | Per-game overlay visibility | Working | `game_is_visible` hidden/allow rules evaluated on foreground poll |

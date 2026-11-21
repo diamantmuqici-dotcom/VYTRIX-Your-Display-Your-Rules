@@ -1,9 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type {
-  AppSettings, ColorField, ColorPreset, ColorSettings, CrosshairConfig,
-  GameEntry, GameProfile, HotkeyBinding, OptimizationTask, PhonePermissions,
-  SwitchProfile, SwitchRecord, SwitchStatus,
+  AppSettings, ColorField, ColorPreset, ColorSettings, CrosshairCollection,
+  CrosshairDesign, CrosshairGameProfile,
+  CrosshairStudioSettings, GameEntry, GameProfile, HotkeyBinding, OptimizationTask,
+  PhonePermissions, RecentCrosshair, SwitchProfile, SwitchRecord, SwitchStatus,
 } from "@vytrix/shared-types";
 import type { SectionId } from "@vytrix/config";
 import { DEFAULT_COLOR_SETTINGS, clampColorSettings } from "@vytrix/validation";
@@ -11,6 +12,8 @@ import { BUILTIN_PRESETS } from "@/data/presets";
 import { GAME_CATALOG } from "@/data/games";
 import { OPTIMIZER_TASKS } from "@/data/optimizer";
 import { applyColor, resetColor, type ColorApplyStatus } from "@/services/color";
+import { BUILTIN_CROSSHAIR_PRESETS, DEFAULT_DESIGN, DEFAULT_STUDIO_SETTINGS, PRESET_COLLECTIONS, type CrosshairPreset } from "@/crosshair/model";
+import { normalizeDesign } from "@/crosshair/validate";
 import {
   setSmartSwitchEnabled,
   smartSwitchHistory,
@@ -27,7 +30,14 @@ interface AppState {
   presets: ColorPreset[];
   games: GameEntry[];
   profiles: GameProfile[];
-  crosshairs: CrosshairConfig[];
+  crosshairs: CrosshairDesign[];
+  crosshairPresets: CrosshairPreset[];
+  crosshairCollections: CrosshairCollection[];
+  crosshairGameProfiles: CrosshairGameProfile[];
+  crosshairRecent: RecentCrosshair[];
+  customCrosshairColors: string[];
+  crosshairStudio: CrosshairStudioSettings;
+  crosshairTab: string;
   tasks: OptimizationTask[];
   hotkeys: HotkeyBinding[];
   crosshairEnabled: boolean;
@@ -55,8 +65,20 @@ interface AppApi {
   removeGame: (id: string) => void;
   upsertProfile: (profile: GameProfile) => void;
   removeProfile: (id: string) => void;
-  upsertCrosshair: (design: CrosshairConfig) => void;
+  upsertCrosshair: (design: CrosshairDesign) => void;
   removeCrosshair: (id: string) => void;
+  setCrosshairDesign: (design: CrosshairDesign) => void;
+  setCrosshairTab: (tab: string) => void;
+  upsertCrosshairPreset: (preset: CrosshairPreset) => void;
+  removeCrosshairPreset: (id: string) => void;
+  toggleCrosshairFavorite: (id: string) => void;
+  upsertCrosshairCollection: (collection: CrosshairCollection) => void;
+  removeCrosshairCollection: (id: string) => void;
+  upsertCrosshairGameProfile: (profile: CrosshairGameProfile) => void;
+  removeCrosshairGameProfile: (id: string) => void;
+  setCrosshairStudioSetting: <K extends keyof CrosshairStudioSettings>(key: K, value: CrosshairStudioSettings[K]) => void;
+  addCustomCrosshairColor: (color: string) => void;
+  markCrosshairUsed: (id: string) => void;
   applyTask: (id: string) => void;
   restoreTask: (id: string) => void;
   setHotkey: (action: HotkeyBinding["action"], keys: string[]) => void;
@@ -84,17 +106,25 @@ function defaultState(): AppState {
     presets: BUILTIN_PRESETS,
     games: GAME_CATALOG,
     profiles: [],
-    crosshairs: [{
-      id: "default-dot", name: "Precision Dot", style: "dot", color: "#00D9FF",
-      thickness: 2, gap: 0, length: 4, opacity: 0.9, outline: true, centerDot: true,
-      rotation: 0, scale: 1, monitorId: null, offsetX: 0, offsetY: 0,
-    }],
+    crosshairs: [DEFAULT_DESIGN],
+    crosshairPresets: BUILTIN_CROSSHAIR_PRESETS,
+    crosshairCollections: PRESET_COLLECTIONS.map((item) => ({ ...item, designIds: [...item.designIds] })),
+    crosshairGameProfiles: [],
+    crosshairRecent: [],
+    customCrosshairColors: [],
+    crosshairStudio: { ...DEFAULT_STUDIO_SETTINGS },
+    crosshairTab: "overview",
     tasks: OPTIMIZER_TASKS,
     hotkeys: [
       { action: "toggle-color", keys: ["Ctrl", "Shift", "C"], mouseButton: null, enabled: true },
       { action: "toggle-crosshair", keys: ["Ctrl", "Shift", "X"], mouseButton: null, enabled: true },
       { action: "open-color-studio", keys: ["Ctrl", "Shift", "V"], mouseButton: null, enabled: true },
       { action: "restore-defaults", keys: ["Ctrl", "Shift", "R"], mouseButton: null, enabled: true },
+      { action: "next-crosshair", keys: ["Ctrl", "Alt", "Right"], mouseButton: null, enabled: true },
+      { action: "previous-crosshair", keys: ["Ctrl", "Alt", "Left"], mouseButton: null, enabled: true },
+      { action: "toggle-overlay", keys: ["Ctrl", "Alt", "O"], mouseButton: null, enabled: true },
+      { action: "open-crosshair-studio", keys: ["Ctrl", "Alt", "X"], mouseButton: null, enabled: true },
+      { action: "save-crosshair", keys: ["Ctrl", "Alt", "S"], mouseButton: null, enabled: true },
     ],
     crosshairEnabled: false,
     phonePermissions: {
@@ -121,12 +151,50 @@ function load(): AppState {
     if (!raw) return defaultState();
     const parsed = JSON.parse(raw) as Partial<AppState>;
     const base = defaultState();
+    const savedCrosshairs = Array.isArray(parsed.crosshairs) ? parsed.crosshairs : base.crosshairs;
     return {
       ...base,
       ...parsed,
       color: clampColorSettings(parsed.color ?? base.color),
       baseline: clampColorSettings(parsed.baseline ?? base.baseline),
       settings: { ...base.settings, ...parsed.settings, language: validLanguage(parsed.settings?.language) },
+      crosshairs: savedCrosshairs.slice(0, 100).map((design) => normalizeDesign(design)),
+      crosshairPresets: Array.isArray(parsed.crosshairPresets)
+        ? parsed.crosshairPresets.slice(0, 200).map((preset) => {
+          const source = preset as CrosshairPreset;
+          return { ...source, ...normalizeDesign(source), builtIn: false };
+        })
+        : base.crosshairPresets,
+      crosshairCollections: Array.isArray(parsed.crosshairCollections)
+        ? parsed.crosshairCollections.slice(0, 100).map((collection) => ({
+          id: String(collection.id ?? "").replace(/[^\w-]/g, "").slice(0, 120),
+          name: String(collection.name ?? "Collection").slice(0, 80),
+          designIds: (Array.isArray(collection.designIds) ? collection.designIds : []).slice(0, 200).map(String),
+          createdAt: Number.isFinite(collection.createdAt) ? Number(collection.createdAt) : 0,
+        })).filter((collection) => collection.id)
+        : base.crosshairCollections,
+      crosshairGameProfiles: Array.isArray(parsed.crosshairGameProfiles)
+        ? parsed.crosshairGameProfiles.slice(0, 200).map((profile) => ({
+          id: String(profile.id ?? "").replace(/[^\w-]/g, "").slice(0, 120),
+          gameId: String(profile.gameId ?? "").replace(/[^\w-]/g, "").slice(0, 120),
+          gameName: String(profile.gameName ?? "").slice(0, 120),
+          designId: String(profile.designId ?? "").replace(/[^\w-]/g, "").slice(0, 120),
+          presetId: typeof profile.presetId === "string" ? profile.presetId.slice(0, 120) : null,
+          autoSwitch: profile.autoSwitch === true,
+          lastUsed: Number.isFinite(profile.lastUsed) ? Number(profile.lastUsed) : 0,
+        })).filter((profile) => profile.id && profile.gameId)
+        : base.crosshairGameProfiles,
+      crosshairRecent: Array.isArray(parsed.crosshairRecent)
+        ? parsed.crosshairRecent.slice(0, 12).map((item) => ({
+          id: String(item.id ?? "").slice(0, 120),
+          usedAt: Number.isFinite(item.usedAt) ? Number(item.usedAt) : 0,
+        }))
+        : base.crosshairRecent,
+      customCrosshairColors: Array.isArray(parsed.customCrosshairColors)
+        ? parsed.customCrosshairColors.filter((item) => typeof item === "string" && /^#[0-9A-F]{6}$/i.test(item)).slice(0, 32)
+        : base.customCrosshairColors,
+      crosshairStudio: { ...base.crosshairStudio, ...parsed.crosshairStudio },
+      crosshairTab: typeof parsed.crosshairTab === "string" ? parsed.crosshairTab.slice(0, 40) : base.crosshairTab,
     };
   } catch {
     return defaultState();
@@ -198,6 +266,51 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ...s, crosshairs: [...s.crosshairs.filter((c) => c.id !== design.id), design].slice(0, 100),
     })),
     removeCrosshair: (id) => setState((s) => ({ ...s, crosshairs: s.crosshairs.filter((c) => c.id !== id) })),
+    setCrosshairDesign: (design) => setState((s) => ({
+      ...s,
+      crosshairs: [...s.crosshairs.filter((item) => item.id !== design.id), design].slice(0, 100),
+    })),
+    setCrosshairTab: (crosshairTab) => setState((s) => ({ ...s, crosshairTab })),
+    upsertCrosshairPreset: (preset) => setState((s) => ({
+      ...s,
+      crosshairPresets: [...s.crosshairPresets.filter((item) => item.id !== preset.id || item.builtIn), preset].slice(0, 200),
+    })),
+    removeCrosshairPreset: (id) => setState((s) => ({
+      ...s,
+      crosshairPresets: s.crosshairPresets.filter((item) => item.id !== id || item.builtIn),
+    })),
+    toggleCrosshairFavorite: (id) => setState((s) => ({
+      ...s,
+      crosshairPresets: s.crosshairPresets.map((preset) =>
+        preset.id === id ? { ...preset, favorite: !preset.favorite } : preset),
+    })),
+    upsertCrosshairCollection: (collection) => setState((s) => ({
+      ...s,
+      crosshairCollections: [...s.crosshairCollections.filter((item) => item.id !== collection.id), collection].slice(0, 100),
+    })),
+    removeCrosshairCollection: (id) => setState((s) => ({
+      ...s, crosshairCollections: s.crosshairCollections.filter((item) => item.id !== id),
+    })),
+    upsertCrosshairGameProfile: (profile) => setState((s) => ({
+      ...s,
+      crosshairGameProfiles: [...s.crosshairGameProfiles.filter((item) => item.id !== profile.id), profile].slice(0, 200),
+    })),
+    removeCrosshairGameProfile: (id) => setState((s) => ({
+      ...s, crosshairGameProfiles: s.crosshairGameProfiles.filter((item) => item.id !== id),
+    })),
+    setCrosshairStudioSetting: (key, value) => setState((s) => ({
+      ...s, crosshairStudio: { ...s.crosshairStudio, [key]: value },
+    })),
+    addCustomCrosshairColor: (value) => setState((s) => ({
+      ...s,
+      customCrosshairColors: /^#[0-9A-F]{6}$/i.test(value)
+        ? [value.toUpperCase(), ...s.customCrosshairColors.filter((item) => item !== value.toUpperCase())].slice(0, 32)
+        : s.customCrosshairColors,
+    })),
+    markCrosshairUsed: (id) => setState((s) => ({
+      ...s,
+      crosshairRecent: [{ id, usedAt: Date.now() }, ...s.crosshairRecent.filter((item) => item.id !== id)].slice(0, 12),
+    })),
     applyTask: (id) => setState((s) => ({
       ...s,
       tasks: s.tasks.map((t) => t.id === id ? { ...t, applied: true, previousValue: t.previousValue ?? t.currentState, currentState: t.recommendedState } : t),

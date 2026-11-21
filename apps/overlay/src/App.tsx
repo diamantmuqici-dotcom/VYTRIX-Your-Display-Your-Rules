@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { Keyboard, ZoomIn } from "lucide-react";
 import { DEFAULT_OVERLAY_CONFIG, normalizeOverlayConfig } from "./config";
-import type { CrosshairConfig, OverlayConfig } from "./types";
+import type { CrosshairAdvancedView, CrosshairArmView, CrosshairConfig, OverlayConfig } from "./types";
 
 async function loadOverlayConfig(): Promise<OverlayConfig> {
   try {
@@ -25,19 +25,55 @@ async function subscribeConfig(onConfig: (config: OverlayConfig) => void): Promi
   }
 }
 
+function armGeometry(arm: CrosshairArmView, center: number, spacing: number, scale: number) {
+  const gap = (arm.innerGap + spacing) * scale;
+  const length = arm.length * scale;
+  const thickness = arm.thickness;
+  const shift = arm.offset * scale;
+  const horizontal = arm.id === "left" || arm.id === "right";
+  const sign = arm.id === "left" || arm.id === "top" ? -1 : 1;
+  const along = center + sign * (gap + length / 2) + shift;
+  if (horizontal) {
+    return { x1: along - length / 2, y1: center, x2: along + length / 2, y2: center, thickness };
+  }
+  return { x1: center, y1: along - length / 2, x2: center, y2: along + length / 2, thickness };
+}
+
 function CrosshairMark({ config }: { config: CrosshairConfig }) {
+  const advanced: CrosshairAdvancedView = config.advanced;
   const cx = 120;
   const cy = 120;
-  const arm = config.length * config.scale;
-  const gap = config.gap * config.scale;
-  const stroke = config.thickness;
-  const arms = [
-    { x1: cx - gap - arm, y1: cy, x2: cx - gap, y2: cy },
-    { x1: cx + gap, y1: cy, x2: cx + gap + arm, y2: cy },
-    { x1: cx, y1: cy - gap - arm, x2: cx, y2: cy - gap },
-    { x1: cx, y1: cy + gap, x2: cx, y2: cy + gap + arm },
-  ];
-  const showArms = config.style === "cross" || config.style === "dynamic-cross";
+  const scale = config.scale;
+  const visibleArms = advanced.arms.filter((arm) => arm.visible);
+  const ringRadius = visibleArms.length > 0
+    ? Math.max(...visibleArms.map((arm) => arm.length)) * scale
+    : 12 * scale;
+  const showRing = advanced.ring || advanced.shape === "circle" || advanced.shape === "circle-dot";
+  const showDot = advanced.dot.enabled || advanced.shape === "dot" || advanced.shape === "cross-dot";
+  const animation = advanced.animation;
+  const duration = Math.max(100, animation.durationMs / Math.max(0.1, animation.speed));
+  const animationStyle: CSSProperties | undefined = animation.enabled ? {
+    ["--vy-cross-duration" as string]: `${duration}ms`,
+    ["--vy-cross-intensity" as string]: String(animation.intensity / 100),
+    ["--vy-cross-color-to" as string]: animation.colorTo,
+    ["--vy-cross-dot-color" as string]: advanced.dot.color,
+    animationName: `vy-cross-${animation.kind}`,
+    animationDuration: `${duration}ms`,
+    animationIterationCount: "infinite",
+    animationTimingFunction: animation.easing,
+    transformOrigin: "120px 120px",
+  } : undefined;
+
+  const outline = advanced.outline.enabled
+    ? { stroke: advanced.outline.color, strokeOpacity: advanced.outline.opacity }
+    : null;
+  const glowStyle = advanced.glow
+    ? { filter: `drop-shadow(0 0 3px ${advanced.glowColor})` }
+    : undefined;
+  const overlayStyle = advanced.shadow
+    ? { filter: "drop-shadow(1px 2px 1px rgba(0,0,0,.8))" }
+    : undefined;
+
   return (
     <svg
       className="crosshair"
@@ -50,49 +86,97 @@ function CrosshairMark({ config }: { config: CrosshairConfig }) {
         {
           "--crosshair-x": `${config.offsetX}px`,
           "--crosshair-y": `${config.offsetY}px`,
+          ...overlayStyle,
         } as CSSProperties
       }
     >
-      <g transform={`rotate(${config.rotation} ${cx} ${cy})`} opacity={config.opacity}>
-        {showArms && config.outline
-          ? arms.map((line, index) => (
+      <g
+        transform={`rotate(${config.rotation} ${cx} ${cy})`}
+        opacity={config.opacity}
+        style={animationStyle}
+      >
+        <g style={glowStyle}>
+          {outline ? (
+            <g
+              opacity={advanced.outline.opacity}
+              style={advanced.outline.style === "dashed" ? { strokeDasharray: "3 2" } : undefined}
+            >
+              {visibleArms.map((arm) => {
+                const geo = armGeometry(arm, cx, advanced.lineSpacing, scale);
+                return (
+                  <line
+                    key={`outline-${arm.id}`}
+                    x1={geo.x1} y1={geo.y1} x2={geo.x2} y2={geo.y2}
+                    stroke={outline.stroke}
+                    strokeWidth={geo.thickness + advanced.outline.thickness * 2}
+                    strokeLinecap="butt"
+                    transform={arm.rotation ? `rotate(${arm.rotation} ${geo.x1} ${geo.y1})` : undefined}
+                  />
+                );
+              })}
+            </g>
+          ) : null}
+          {visibleArms.map((arm) => {
+            const geo = armGeometry(arm, cx, advanced.lineSpacing, scale);
+            return (
               <line
-                key={`outline-${index}`}
-                {...line}
-                stroke="#05070C"
-                strokeWidth={stroke + 2}
-                strokeLinecap="round"
+                key={arm.id}
+                x1={geo.x1} y1={geo.y1} x2={geo.x2} y2={geo.y2}
+                stroke={arm.color}
+                strokeWidth={geo.thickness}
+                strokeLinecap="butt"
+                transform={arm.rotation ? `rotate(${arm.rotation} ${geo.x1} ${geo.y1})` : undefined}
               />
-            ))
-          : null}
-        {showArms
-          ? arms.map((line, index) => (
-              <line
-                key={`arm-${index}`}
-                {...line}
-                stroke={config.color}
-                strokeWidth={stroke}
-                strokeLinecap="round"
+            );
+          })}
+          {showRing ? (
+            <g>
+              {outline ? (
+                <circle
+                  cx={cx} cy={cy} r={ringRadius} fill="none"
+                  stroke={outline.stroke}
+                  strokeOpacity={outline.strokeOpacity}
+                  strokeWidth={config.thickness + advanced.outline.thickness * 2}
+                />
+              ) : null}
+              <circle
+                cx={cx} cy={cy} r={ringRadius} fill="none"
+                stroke={visibleArms[0]?.color ?? config.color}
+                strokeWidth={config.thickness}
               />
-            ))
-          : null}
-        {config.style === "circle" ? (
-          <>
-            {config.outline ? (
-              <circle cx={cx} cy={cy} r={arm} fill="none" stroke="#05070C" strokeWidth={stroke + 2} />
-            ) : null}
-            <circle cx={cx} cy={cy} r={arm} fill="none" stroke={config.color} strokeWidth={stroke} />
-          </>
-        ) : null}
-        {config.style === "dot" ? (
-          <circle cx={cx} cy={cy} r={Math.max(1, arm / 2)} fill={config.color} />
-        ) : null}
-        {config.style === "dynamic-cross" ? (
-          <circle cx={cx} cy={cy} r={Math.max(2, arm * 0.35)} fill="none" stroke={config.color} strokeWidth={Math.max(1, stroke / 2)} />
-        ) : null}
-        {config.centerDot ? (
-          <circle cx={cx} cy={cy} r={Math.max(1, stroke)} fill={config.color} />
-        ) : null}
+            </g>
+          ) : null}
+          {showDot ? (
+            <g
+              opacity={advanced.dot.opacity}
+              style={advanced.dot.glow ? { filter: `drop-shadow(0 0 3px ${advanced.dot.color})` } : undefined}
+            >
+              {advanced.dot.shape === "square" ? (
+                <rect
+                  x={cx - advanced.dot.size / 2} y={cy - advanced.dot.size / 2}
+                  width={advanced.dot.size} height={advanced.dot.size}
+                  fill={advanced.dot.color}
+                  stroke={advanced.dot.outline ? advanced.outline.color : "none"}
+                  strokeWidth={advanced.dot.outlineThickness}
+                />
+              ) : advanced.dot.shape === "diamond" ? (
+                <polygon
+                  points={`${cx},${cy - advanced.dot.size / 2} ${cx + advanced.dot.size / 2},${cy} ${cx},${cy + advanced.dot.size / 2} ${cx - advanced.dot.size / 2},${cy}`}
+                  fill={advanced.dot.color}
+                  stroke={advanced.dot.outline ? advanced.outline.color : "none"}
+                  strokeWidth={advanced.dot.outlineThickness}
+                />
+              ) : (
+                <circle
+                  cx={cx} cy={cy} r={Math.max(1, advanced.dot.size / 2)}
+                  fill={advanced.dot.color}
+                  stroke={advanced.dot.outline ? advanced.outline.color : "none"}
+                  strokeWidth={advanced.dot.outlineThickness}
+                />
+              )}
+            </g>
+          ) : null}
+        </g>
       </g>
     </svg>
   );

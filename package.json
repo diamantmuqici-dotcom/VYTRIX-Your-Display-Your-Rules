@@ -6,8 +6,8 @@
   "workspaces": ["apps/*", "packages/*", "services/*"],
   "scripts": {
     "dev": "npm run dev -w @vytrix/desktop",
-    "build": "npm run build -w @vytrix/shared-types && npm run build -w @vytrix/design-system && npm run build -w @vytrix/validation && npm run build -w @vytrix/preset-format && npm run build -w @vytrix/config && npm run build -w @vytrix/game-database && npm run build -w @vytrix/desktop",
-    "typecheck": "npm run typecheck -w @vytrix/shared-types && npm run typecheck -w @vytrix/game-database && npm run typecheck -w @vytrix/desktop",
+    "build": "npm run build -w @vytrix/shared-types && npm run build -w @vytrix/design-system && npm run build -w @vytrix/validation && npm run build -w @vytrix/preset-format && npm run build -w @vytrix/config && npm run build -w @vytrix/game-database && npm run typecheck -w @vytrix/overlay && npm run build -w @vytrix/desktop",
+    "typecheck": "npm run typecheck -w @vytrix/shared-types && npm run typecheck -w @vytrix/game-database && npm run typecheck -w @vytrix/overlay && npm run typecheck -w @vytrix/desktop",
     "test": "npm run test -w @vytrix/preset-format && npm run test -w @vytrix/game-database && npm run test -w @vytrix/desktop",
     "validate:games": "npm run validate -w @vytrix/game-database",
     "check:games": "npm run check-duplicates -w @vytrix/game-database",

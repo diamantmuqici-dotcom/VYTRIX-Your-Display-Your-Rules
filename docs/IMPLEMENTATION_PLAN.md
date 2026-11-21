@@ -68,6 +68,10 @@ Shipped this phase: five anchor layouts (`center` + four corners) whitelisted in
 
 Acceptance: 3 new native tests (layout whitelist + bounded game lists, hidden-vs-allow precedence, allow-list gating) and a full UI wiring test pass. 27 Rust tests, 13 desktop tests, typecheck, and desktop build all green.
 
+Crosshair Studio addition: the existing Crosshair page was extended into eight sections — Overview, Crosshair Editor, Preset Library, Animated Crosshairs, Game Profiles, Crosshair Collections, Import & Export, and Settings. The studio keeps the original branding, navigation, settings, and game-profile fields; legacy `CrosshairConfig` remains the native contract with an optional bounded `advanced` model. Six helpers live under `apps/desktop/src/crosshair/`: model defaults, validation, color conversion, preset IO, seeded randomizer, and vector renderer. Storage persists designs, presets, collections, game profiles, recent use, studio settings, and active tab through the existing store. Import/export uses the versioned hash-verified `@vytrix/preset-format` container; executable-shaped fields are rejected at every depth. The native overlay sanitizer now emits bounded advanced view fields, and the standalone overlay webview mirrors those bounds and renders arms, dot, outline, ring, glow, shadow, and CSS animation with reduced-motion fallback. Five new hotkey actions — `next-crosshair`, `previous-crosshair`, `toggle-overlay`, `open-crosshair-studio`, `save-crosshair` — are wired through the frontend bridge and native registration list.
+
+Crosshair Studio validation: 29 Rust tests, 15 desktop tests, typecheck (including the overlay workspace), game validation, game duplicate check, and production build pass. Fullscreen/game compatibility is reported by the overlay window contract; no game memory is read and no anti-cheat bypass is claimed.
+
 ## Phase 7 — Diagnostics and system tools
 
 Status: partial.

@@ -37,6 +37,11 @@ export function setOverlayLayout(layout: OverlayLayout): Promise<CommandResult<O
   return update((view) => ({ ...view, layout: safe }));
 }
 
+export function setOverlayHotkeyHint(hint: string | null): Promise<CommandResult<OverlayView>> {
+  const clean = hint?.replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, 80) ?? "";
+  return update((view) => ({ ...view, hotkeyHint: clean || null }));
+}
+
 /** Both lists are bounded by the native sanitizer; cap here as well. */
 export function setOverlayGameRules(
   rules: OverlayGameVisibility,

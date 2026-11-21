@@ -35,7 +35,36 @@ body {
   top: calc(var(--anchor-y, 50%) + var(--crosshair-y, 0px));
   transform: translate(-50%, -50%);
   overflow: visible;
-  filter: drop-shadow(0 0 2px rgb(0 0 0 / 0.85));
+}
+
+@keyframes vy-cross-pulse {
+  0%, 100% { opacity: .55; scale: 1; }
+  50% { opacity: 1; scale: calc(1 + var(--vy-cross-intensity) * .18); }
+}
+
+@keyframes vy-cross-fade {
+  0%, 100% { opacity: .2; }
+  50% { opacity: 1; }
+}
+
+@keyframes vy-cross-color {
+  0%, 100% { filter: none; }
+  50% { filter: hue-rotate(120deg) brightness(1.35) drop-shadow(0 0 3px var(--vy-cross-color-to)); }
+}
+
+@keyframes vy-cross-scale {
+  0%, 100% { scale: 1; }
+  50% { scale: calc(1 + var(--vy-cross-intensity) * .3); }
+}
+
+@keyframes vy-cross-rotate {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+@keyframes vy-cross-appear {
+  0% { opacity: 0; scale: .6; }
+  30%, 100% { opacity: 1; scale: 1; }
 }
 
 .zoom-chip,
@@ -69,6 +98,10 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .crosshair g {
+    animation: none !important;
+  }
+
   .zoom-chip,
   .hotkey-hint {
     backdrop-filter: none;

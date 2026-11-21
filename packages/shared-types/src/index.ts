@@ -91,6 +91,72 @@ export interface GameProfile {
 
 export type CrosshairStyle = "dot" | "circle" | "cross" | "dynamic-cross";
 
+/** Advanced shape vocabulary. Legacy `style` is kept for native/overlay compat. */
+export type CrosshairShape =
+  | "classic" | "plus" | "small" | "large" | "dot" | "circle" | "circle-dot"
+  | "cross-dot" | "four-lines" | "static" | "minimal" | "precision"
+  | "geometric" | "custom";
+
+export type CrosshairArmId = "top" | "bottom" | "left" | "right";
+
+export interface CrosshairArm {
+  id: CrosshairArmId;
+  visible: boolean;
+  length: number;
+  thickness: number;
+  innerGap: number;
+  outerGap: number;
+  offset: number;
+  rotation: number;
+  color: string;
+}
+
+export interface CrosshairDotModel {
+  enabled: boolean;
+  size: number;
+  shape: "circle" | "square" | "diamond";
+  color: string;
+  opacity: number;
+  outline: boolean;
+  outlineThickness: number;
+  glow: boolean;
+}
+
+export interface CrosshairOutlineModel {
+  enabled: boolean;
+  thickness: number;
+  color: string;
+  opacity: number;
+  style: "solid" | "dashed";
+}
+
+export type CrosshairAnimationKind = "fade" | "pulse" | "color" | "scale" | "rotate" | "appear";
+
+export interface CrosshairAnimationModel {
+  enabled: boolean;
+  kind: CrosshairAnimationKind;
+  durationMs: number;
+  speed: number;
+  intensity: number;
+  easing: "linear" | "ease" | "ease-in-out";
+  colorTo: string;
+}
+
+export interface CrosshairAdvanced {
+  shape: CrosshairShape;
+  arms: CrosshairArm[];
+  dot: CrosshairDotModel;
+  outline: CrosshairOutlineModel;
+  animation: CrosshairAnimationModel;
+  lineSpacing: number;
+  centerGap: number;
+  ring: boolean;
+  shadow: boolean;
+  glow: boolean;
+  glowColor: string;
+  renderQuality: "crisp" | "balanced" | "smooth";
+}
+
 export interface CrosshairConfig {
   id: string;
   name: string;
@@ -107,6 +173,44 @@ export interface CrosshairConfig {
   monitorId: string | null;
   offsetX: number;
   offsetY: number;
+  advanced?: CrosshairAdvanced;
+}
+
+/** Fully normalized design used by the studio. `advanced` is always present. */
+export interface CrosshairDesign extends CrosshairConfig {
+  advanced: CrosshairAdvanced;
+}
+
+export interface CrosshairCollection {
+  id: string;
+  name: string;
+  designIds: string[];
+  createdAt: number;
+}
+
+export interface CrosshairGameProfile {
+  id: string;
+  gameId: string;
+  gameName: string;
+  designId: string;
+  presetId: string | null;
+  autoSwitch: boolean;
+  lastUsed: number;
+}
+
+export interface CrosshairStudioSettings {
+  defaultDesignId: string;
+  previewBackground: "dark" | "light" | "grid" | "target" | "transparent";
+  renderQuality: "crisp" | "balanced" | "smooth";
+  overlayStartEnabled: boolean;
+  animationEnabled: boolean;
+  autoGameSwitch: boolean;
+  showHotkeyHint: boolean;
+}
+
+export interface RecentCrosshair {
+  id: string;
+  usedAt: number;
 }
 
 export interface HotkeyBinding {
@@ -124,7 +228,12 @@ export type HotkeyAction =
   | "toggle-crosshair"
   | "toggle-zoom"
   | "switch-profile"
-  | "restore-defaults";
+  | "restore-defaults"
+  | "next-crosshair"
+  | "previous-crosshair"
+  | "toggle-overlay"
+  | "open-crosshair-studio"
+  | "save-crosshair";
 
 export type RiskLevel = "low" | "medium" | "high";
 

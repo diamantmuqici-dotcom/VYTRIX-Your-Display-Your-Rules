@@ -26,6 +26,12 @@ Paths are relative to `VYTRIX/`. Generated outputs and ignored dependencies are 
 | `apps/desktop/src/components/ui/Logo.tsx` | Reusable desktop UI component |
 | `apps/desktop/src/components/ui/Panel.tsx` | Reusable desktop UI component |
 | `apps/desktop/src/components/ui/ToggleRow.tsx` | Reusable desktop UI component |
+| `apps/desktop/src/crosshair/color.ts` | Crosshair Studio color conversion helpers |
+| `apps/desktop/src/crosshair/io.ts` | Versioned crosshair design/collection/profile import-export |
+| `apps/desktop/src/crosshair/model.ts` | Crosshair Studio defaults, shapes, palettes, and seed presets |
+| `apps/desktop/src/crosshair/random.ts` | Seeded deterministic crosshair randomizer |
+| `apps/desktop/src/crosshair/renderer.tsx` | Bounded vector crosshair preview renderer |
+| `apps/desktop/src/crosshair/validate.ts` | Behavior-free bounded crosshair normalization |
 | `apps/desktop/src/data/games.ts` | Static desktop catalog or task data |
 | `apps/desktop/src/data/optimizer.ts` | Static desktop catalog or task data |
 | `apps/desktop/src/data/presets.ts` | Static desktop catalog or task data |
@@ -35,7 +41,16 @@ Paths are relative to `VYTRIX/`. Generated outputs and ignored dependencies are 
 | `apps/desktop/src/hooks/useToast.tsx` | React bridge hook for native events |
 | `apps/desktop/src/main.tsx` | Desktop frontend foundation file |
 | `apps/desktop/src/pages/ColorStudio/index.tsx` | Desktop UI page |
-| `apps/desktop/src/pages/Crosshair/index.tsx` | Desktop UI page |
+| `apps/desktop/src/pages/Crosshair/index.tsx` | Crosshair Studio shell and eight-section router |
+| `apps/desktop/src/pages/Crosshair/Animated.tsx` | Crosshair Studio animation section |
+| `apps/desktop/src/pages/Crosshair/Collections.tsx` | Crosshair Studio collections section |
+| `apps/desktop/src/pages/Crosshair/Dashboard.tsx` | Crosshair Studio overview section |
+| `apps/desktop/src/pages/Crosshair/Editor.tsx` | Crosshair Studio editor section |
+| `apps/desktop/src/pages/Crosshair/ImportExport.tsx` | Crosshair Studio import/export section |
+| `apps/desktop/src/pages/Crosshair/Presets.tsx` | Crosshair Studio preset library section |
+| `apps/desktop/src/pages/Crosshair/Profiles.tsx` | Crosshair Studio game profiles section |
+| `apps/desktop/src/pages/Crosshair/Settings.tsx` | Crosshair Studio settings section |
+| `apps/desktop/src/pages/Crosshair/shared.ts` | Shared Crosshair Studio section props |
 | `apps/desktop/src/pages/Display/index.tsx` | Desktop UI page |
 | `apps/desktop/src/pages/Effects/index.tsx` | Desktop UI page |
 | `apps/desktop/src/pages/GameProfiles/index.tsx` | Desktop UI page |

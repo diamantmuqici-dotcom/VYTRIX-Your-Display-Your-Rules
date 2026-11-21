@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
 import type { HotkeyAction } from "@vytrix/shared-types";
 import { invokeNative, isTauriRuntime } from "@/services/tauri";
-import { setOverlayCrosshair, toggleOverlayZoom } from "@/services/overlay";
+import { setOverlayCrosshair, setOverlayEnabled, toggleOverlayZoom } from "@/services/overlay";
 import { useApp } from "@/stores/app";
 
 const ACTIONS: readonly HotkeyAction[] = [
   "toggle-color", "next-preset", "previous-preset", "open-color-studio",
   "toggle-crosshair", "toggle-zoom", "switch-profile", "restore-defaults",
+  "next-crosshair", "previous-crosshair", "toggle-overlay", "open-crosshair-studio", "save-crosshair",
 ];
 
 function isAction(value: string): value is HotkeyAction {
@@ -98,6 +99,39 @@ export function HotkeyBridge() {
         api.setColor({ ...state.baseline });
         api.log("Defaults restored by hotkey");
         break;
+      case "next-crosshair":
+      case "previous-crosshair": {
+        const designs = state.crosshairs;
+        if (designs.length === 0) break;
+        const current = designs.findIndex((item) => item.id === state.crosshairRecent[0]?.id);
+        const index = current < 0 ? 0 : (current + (action === "next-crosshair" ? 1 : -1) + designs.length) % designs.length;
+        const next = designs[index]!;
+        api.markCrosshairUsed(next.id);
+        void setOverlayCrosshair(next);
+        api.log(`Crosshair applied by hotkey: ${next.name}`);
+        break;
+      }
+      case "toggle-overlay": {
+        const next = !state.crosshairEnabled;
+        api.setCrosshairEnabled(next);
+        void setOverlayEnabled(next);
+        api.log(next ? "Overlay enabled by hotkey" : "Overlay disabled by hotkey");
+        break;
+      }
+      case "open-crosshair-studio":
+        api.setSection("crosshair");
+        break;
+      case "save-crosshair": {
+        const target = state.crosshairs.find((item) => item.id === state.crosshairRecent[0]?.id)
+          ?? state.crosshairs.find((item) => item.id === state.crosshairStudio.defaultDesignId)
+          ?? state.crosshairs[0];
+        if (!target) break;
+        api.setCrosshairDesign(target);
+        api.markCrosshairUsed(target.id);
+        void setOverlayCrosshair(target);
+        api.log(`Crosshair saved by hotkey: ${target.name}`);
+        break;
+      }
     }
   };
 

@@ -206,12 +206,12 @@ test("customization ships overlay layout, per-game rules, compare, and theme io"
   assert.match(shared, /export type OverlayLayout/);
   assert.match(shared, /export interface OverlayGameVisibility/);
 
-  // crosshair export/import round trip is wired to the validated preset format
-  assert.match(crosshair, /createPreset\(\{ kind: "crosshair"/);
-  assert.match(crosshair, /serializePreset\(file\)/);
-  assert.match(crosshair, /parseShareCode\(shareInput\.trim\(\)\)/);
-  assert.match(crosshair, /file\.kind !== "crosshair"/);
-  assert.match(crosshair, /setOverlayGameRules/);
+  // crosshair studio delegates transfer to the validated preset format
+  assert.match(crosshair, /TABS = \[/);
+  for (const tab of ["overview", "editor", "presets", "animated", "profiles", "collections", "import-export", "settings"]) {
+    assert.ok(crosshair.includes(`"${tab}"`), `missing crosshair studio section ${tab}`);
+  }
+  assert.match(crosshair, /import-export/);
 
   assert.match(presets, /COMPARE_FIELDS/);
   assert.match(presets, /Preset comparison/);
@@ -220,4 +220,66 @@ test("customization ships overlay layout, per-game rules, compare, and theme io"
   assert.match(themes, /parseThemeFile/);
   assert.match(themes, /\^#\[0-9a-fA-F\]\{6\}\$/);
   assert.match(themes, /vytrix-theme\.json/);
+});
+
+test("crosshair studio ships eight sections and a bounded advanced model", () => {
+  const shared = readFileSync(new URL("../../../packages/shared-types/src/index.ts", root), "utf8");
+  const model = readFileSync(new URL("crosshair/model.ts", root), "utf8");
+  const validate = readFileSync(new URL("crosshair/validate.ts", root), "utf8");
+  const io = readFileSync(new URL("crosshair/io.ts", root), "utf8");
+  const random = readFileSync(new URL("crosshair/random.ts", root), "utf8");
+  const renderer = readFileSync(new URL("crosshair/renderer.tsx", root), "utf8");
+  const editor = readFileSync(new URL("pages/Crosshair/Editor.tsx", root), "utf8");
+  const settings = readFileSync(new URL("pages/Crosshair/Settings.tsx", root), "utf8");
+  const bridge = readFileSync(new URL("hooks/useHotkeyBridge.tsx", root), "utf8");
+  const overlayApp = readFileSync(new URL("../../overlay/src/App.tsx", root), "utf8");
+  const overlayConfig = readFileSync(new URL("../../overlay/src/config.ts", root), "utf8");
+  const native = readFileSync(new URL("../src-tauri/src/overlay/mod.rs", root), "utf8");
+  const store = readFileSync(new URL("stores/app.tsx", root), "utf8");
+
+  for (const type of [
+    "CrosshairShape", "CrosshairArm", "CrosshairDotModel", "CrosshairOutlineModel",
+    "CrosshairAnimationModel", "CrosshairAdvanced", "CrosshairDesign", "CrosshairCollection",
+    "CrosshairGameProfile", "CrosshairStudioSettings",
+  ]) assert.ok(shared.includes(`export interface ${type}`) || shared.includes(`export type ${type}`), `missing shared type ${type}`);
+
+  for (const shape of ["classic", "plus", "dot", "circle", "cross-dot", "four-lines", "precision", "geometric", "custom"]) {
+    assert.ok(model.includes(`"${shape}"`), `missing shape ${shape}`);
+  }
+  assert.match(validate, /assertBehaviorFree/);
+  assert.match(validate, /normalizeAdvanced/);
+  assert.match(validate, /rejected field/);
+  assert.match(validate, /num\(source\.length, 0, 60/);
+  assert.match(validate, /num\(source\.thickness, 1, 12/);
+  assert.match(validate, /num\(source\.opacity, 0\.05, 1/);
+  assert.match(random, /makeRng\(seed\)/);
+  assert.match(io, /createPreset\(\{/);
+  assert.match(io, /parsePreset\(/);
+  assert.match(io, /shareCode\(preset\)/);
+  assert.match(io, /parseShareCode\(/);
+  assert.match(renderer, /advanced\.arms\.filter/);
+  assert.match(renderer, /advanced\.dot/);
+  assert.match(renderer, /advanced\.ring/);
+  assert.match(renderer, /vy-cross-/);
+  assert.match(overlayConfig, /function advancedFrom/);
+  assert.match(overlayConfig, /dotRaw\.outlineThickness/);
+  assert.match(overlayApp, /advanced\.arms\.filter/);
+  assert.match(overlayApp, /vy-cross-\$\{animation\.kind\}/);
+  assert.match(editor, /COLOR_PRESETS/);
+  assert.match(editor, /hexToHsv/);
+  assert.match(editor, /fullscreen/);
+  assert.match(settings, /setOverlayGameRules/);
+  assert.match(settings, /setOverlayLayout/);
+  for (const action of ["next-crosshair", "previous-crosshair", "toggle-overlay", "open-crosshair-studio", "save-crosshair"]) {
+    assert.ok(bridge.includes(`"${action}"`), `missing hotkey dispatch ${action}`);
+  }
+  assert.match(native, /struct CrosshairAdvancedView/);
+  assert.match(native, /fn sanitize_advanced/);
+  assert.match(store, /crosshairs: CrosshairDesign\[\]/);
+  assert.match(store, /crosshairPresets:/);
+  assert.match(store, /crosshairCollections:/);
+  assert.match(store, /crosshairGameProfiles:/);
+  assert.match(store, /crosshairRecent:/);
+  assert.match(store, /crosshairStudio:/);
+  assert.match(store, /crosshairTab:/);
 });
