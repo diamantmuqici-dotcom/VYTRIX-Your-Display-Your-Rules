@@ -148,12 +148,18 @@ test("color target display is persisted and re-applied", () => {
   assert.doesNotMatch(studio, /console\.log\(`Target display/);
   assert.match(service, /"color_apply", \{ color, monitorId \}/);
   assert.match(native, /CreateDCW\(display\.as_ptr\(\), name\.as_ptr\(\)/);
-  assert.match(native, /guard\.entry\(device\.clone\(\)\)\.or_insert\(current\)/);
-  // Neutral settings must reproduce the captured ramp, not a synthetic identity.
+  // The baseline must be a canonical linear ramp, never the (possibly tinted)
+  // ramp currently displayed — that was the root cause of "100 stays blue".
+  assert.match(native, /pub fn linear_ramp\(\)/);
+  assert.match(native, /or_insert_with\(linear_ramp\)/);
+  assert.doesNotMatch(native, /or_insert\(current\)/);
+  assert.match(native, /pub fn normalize_all/);
   assert.match(native, /build_ramp_from\(&original, color\)/);
-  // Restore must keep the anchor so the next apply cannot capture a tinted ramp.
   assert.doesNotMatch(native, /guard\.remove\(&device\)/);
   assert.match(native, /blue_change_then_back_to_100_returns_to_saved_ramp/);
+  assert.match(native, /neutral_apply_to_linear_baseline_writes_linear_not_a_tinted_ramp/);
+  const lib = readFileSync(new URL("../src-tauri/src/lib.rs", root), "utf8");
+  assert.match(lib, /state\.color\.normalize_all\(\)/);
 });
 
 test("display page targets the selected monitor", () => {

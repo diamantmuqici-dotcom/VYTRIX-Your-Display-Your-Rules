@@ -54,6 +54,8 @@ pub fn run() {
                 smart_switch: Arc::new(smart_switch::SmartSwitch::new(handle.clone())),
             };
             let _ = APP_STATE.set(state.clone());
+            // Clear any ramp a previous crashed session left on the displays.
+            state.color.normalize_all();
             state.overlay.sync();
             app.manage(state.clone());
             #[cfg(windows)]

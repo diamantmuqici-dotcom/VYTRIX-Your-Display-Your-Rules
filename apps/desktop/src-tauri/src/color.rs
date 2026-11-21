@@ -12,6 +12,17 @@ use std::sync::Mutex;
 pub const RAMP_SIZE: usize = 256;
 pub type Ramp = [[u16; RAMP_SIZE]; 3];
 
+/// Canonical neutral ramp. VYTRIX owns the whole transfer curve while it runs,
+/// so "100" always means this ramp — never a tint left by a crashed session.
+pub fn linear_ramp() -> Ramp {
+    let mut ramp = [[0u16; RAMP_SIZE]; 3];
+    for index in 0..RAMP_SIZE {
+        let value = (index as f64 / (RAMP_SIZE - 1) as f64 * u16::MAX as f64).round() as u16;
+        for channel in 0..3 { ramp[channel][index] = value; }
+    }
+    ramp
+}
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 #[serde(default, rename_all = "camelCase")]
 pub struct ColorPayload {
@@ -278,20 +289,24 @@ impl ColorState {
             // DEVMODE requests the DC for that specific physical display.
             let dc = unsafe { win::CreateDCW(display.as_ptr(), name.as_ptr(), std::ptr::null(), std::ptr::null()) };
             if dc.is_null() { return Err("display device context unavailable".to_owned()); }
-            let mut current = [[0u16; RAMP_SIZE]; 3];
+            let mut probe = [[0u16; RAMP_SIZE]; 3];
             // SAFETY: the ramp is a fixed 3x256 WORD buffer, the API contract.
+            // Capability probe only — never adopt this ramp as the baseline.
             let got = unsafe {
-                win::GetDeviceGammaRamp(dc, current.as_mut_ptr() as *mut std::ffi::c_void)
+                win::GetDeviceGammaRamp(dc, probe.as_mut_ptr() as *mut std::ffi::c_void)
             };
             if got == 0 {
                 unsafe { win::DeleteDC(dc) };
-                return Err("display does not expose a readable gamma ramp".to_owned());
+                return Err("display does not expose a writable gamma ramp".to_owned());
             }
+            let _ = probe;
 
             let original = {
                 let mut guard = self.saved.lock().map_err(|_| "color state lock poisoned".to_owned())?;
-                // First apply in a session: anchor to the display's real ramp, not identity.
-                *guard.entry(device.clone()).or_insert(current)
+                // A crashed session may have left a tint on the display. Adopting
+                // that ramp here is what made "back to 100" stay tinted. The
+                // baseline is always the canonical linear ramp instead.
+                *guard.entry(device.clone()).or_insert_with(linear_ramp)
             };
             let ramp = build_ramp_from(&original, color);
             // SAFETY: identical buffer shape, validated by the query above.
@@ -360,11 +375,7 @@ impl ColorState {
     /// crashed or force-killed session, where no original ramp was captured.
     pub fn reset_linear(&self, monitor_id: Option<&str>) -> Result<ColorApplyResult, String> {
         let device = self.resolve_device(monitor_id)?;
-        let mut linear = [[0u16; RAMP_SIZE]; 3];
-        for index in 0..RAMP_SIZE {
-            let value = (index as f64 / (RAMP_SIZE - 1) as f64 * u16::MAX as f64).round() as u16;
-            for channel in 0..3 { linear[channel][index] = value; }
-        }
+        let linear = linear_ramp();
         #[cfg(windows)]
         {
             Self::write_native(&device, &linear)?;
@@ -381,6 +392,25 @@ impl ColorState {
         {
             let _ = linear;
             Err("color control requires Windows".to_owned())
+        }
+    }
+
+    /// Clear ramps left behind by a previous session before the UI opens, and
+    /// seed every display's baseline so the very first apply already uses a
+    /// known neutral curve. This is what unsticks an already-tinted display.
+    pub fn normalize_all(&self) {
+        #[cfg(windows)]
+        {
+            let linear = linear_ramp();
+            let mut guard = match self.saved.lock() {
+                Ok(guard) => guard,
+                Err(_) => return,
+            };
+            for device in crate::display::enumerate() {
+                if Self::write_native(&device.id, &linear).is_ok() {
+                    guard.insert(device.id, linear);
+                }
+            }
         }
     }
 
@@ -403,7 +433,7 @@ impl ColorState {
 
 #[cfg(test)]
 mod tests {
-    use super::{build_ramp, build_ramp_from, channel_phase_gains, ColorPayload, RAMP_SIZE};
+    use super::{build_ramp, build_ramp_from, channel_phase_gains, linear_ramp, ColorPayload, RAMP_SIZE};
 
     fn deviation(ramp: &[[u16; RAMP_SIZE]; 3], neutral: &[[u16; RAMP_SIZE]; 3]) -> u64 {
         let mut total = 0u64;
@@ -463,6 +493,25 @@ mod tests {
         assert!(pivot_drift < quarter_drift, "neutral pivot must move least");
         assert!(vivid[0][40] < neutral[0][40], "below-mid values are pushed down");
         assert!(vivid[0][RAMP_SIZE - 41] > neutral[0][RAMP_SIZE - 41], "above-mid values are pushed up");
+    }
+
+    #[test]
+    fn linear_baseline_is_a_clean_identity_ramp() {
+        let linear = linear_ramp();
+        for index in 0..RAMP_SIZE {
+            let expected = (index as f64 / (RAMP_SIZE - 1) as f64 * u16::MAX as f64).round() as u16;
+            for channel in 0..3 {
+                assert_eq!(linear[channel][index], expected, "linear channel {channel} index {index}");
+            }
+        }
+    }
+
+    #[test]
+    fn neutral_apply_to_linear_baseline_writes_linear_not_a_tinted_ramp() {
+        let baseline = linear_ramp();
+        let neutral = ColorPayload::default();
+        let written = build_ramp_from(&baseline, &neutral);
+        assert_eq!(written, baseline, "neutral settings must reproduce the clean baseline exactly");
     }
 
     #[test]
