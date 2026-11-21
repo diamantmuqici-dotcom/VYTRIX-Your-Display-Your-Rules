@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0 — 2026-11-22
+
+- Added COMPLETE POTATO MODE 2.0: a dedicated graphics optimization center with four levels (LOW / MEDIUM / HIGH / ULTRA), collapsible explanations and advanced customization.
+- Added hardware detection with vendor abstraction for NVIDIA, AMD and Intel, a recommended level with manual override, and no automatic application of ULTRA.
+- Added ROB RUN first-profile setup: Steam, game-library, config and manual-path detection, writes limited to verified existing keys, unrelated entries preserved, running games never force-closed.
+- Added reusable game profiles with four-state comparison, labelled illustrative previews and a ten-step apply workflow with backup and integrity-checked restore.
+- Added benchmark, bottleneck, network, auto-mode, history and diagnostics tooling, plus EN/FR/DE/RU localization for all static UI strings.
+- Added `docs/POTATO_MODE.md` distinguishing shipped behavior from planned work; no invented FPS figures and no driver writes without a verified API.
+
 ## 0.1.1 — 2026-11-21
 
 - Added `misc` game-database category with short how-to details rendered in the library and detail pane.

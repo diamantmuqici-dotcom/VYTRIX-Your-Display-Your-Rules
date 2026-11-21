@@ -102,7 +102,7 @@ function Shell() {
           <div className="crumb"><small>{current.index} /</small> {t(`section.${current.id}` as Parameters<typeof t>[0])}</div>
           <div className="topbar-right">
             <span className="chip"><span className={`dot ${native ? "" : "warn"}`} /> {native ? t("shell.native") : t("shell.browser")}</span>
-            <span className="chip"><Radio size={11} /> v0.1.1</span>
+            <span className="chip"><Radio size={11} /> v0.2.0</span>
           </div>
         </header>
 

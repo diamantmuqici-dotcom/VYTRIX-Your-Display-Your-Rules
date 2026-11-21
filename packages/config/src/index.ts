@@ -1,7 +1,7 @@
 export const PRODUCT = {
   name: "VYTRIX",
   tagline: "YOUR DISPLAY. YOUR RULES.",
-  version: "0.1.1",
+  version: "0.2.0",
   website: "https://diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules/",
 } as const;
 
