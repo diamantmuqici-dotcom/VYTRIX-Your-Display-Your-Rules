@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+Disallow: /account
+Disallow: /api/
+
+Host: https://diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules
+Sitemap: https://diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules/sitemap.xml

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 512" role="img" aria-label="VYTRIX">
+  <g fill="#080B12">
+    <path d="M56 96 H152 L256 366 L360 96 H456 L296 448 H216 Z"/>
+    <path d="M170 96 H210 L256 232 L302 96 H342 L256 332 Z" fill="#FFFFFF"/>
+    <text x="556" y="338" font-family="Space Grotesk, Inter, sans-serif" font-size="176" font-weight="700" letter-spacing="10" fill="#080B12">VYTRIX</text>
+  </g>
+</svg>
