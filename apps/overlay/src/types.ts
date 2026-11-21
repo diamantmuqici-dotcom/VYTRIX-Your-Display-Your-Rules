@@ -27,9 +27,19 @@ export interface ZoomIndicatorConfig {
   label: string | null;
 }
 
+export type OverlayLayout = "center" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
+export interface OverlayGameVisibility {
+  hiddenForGames: string[];
+  onlyForGames: string[];
+}
+
 export interface OverlayConfig {
   crosshairEnabled: boolean;
   crosshair: CrosshairConfig;
   zoom: ZoomIndicatorConfig;
   hotkeyHint: string | null;
+  layout: OverlayLayout;
+  gameVisibility: OverlayGameVisibility;
+  visibleForGame: boolean;
 }

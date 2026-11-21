@@ -357,6 +357,9 @@ impl SmartSwitch {
             .spawn(move || {
                 while POLLING.load(Ordering::Relaxed) {
                     let game = crate::games::detect_foreground().map(|detected| detected.display_name);
+                    if let Some(app_state) = crate::APP_STATE.get() {
+                        app_state.overlay.apply_game_visibility(game.as_deref());
+                    }
                     if let Err(error) = switch.observe(game.as_deref()) {
                         let _ = switch.app.emit("vytrix://smart-switch", json!({
                             "kind": "error",

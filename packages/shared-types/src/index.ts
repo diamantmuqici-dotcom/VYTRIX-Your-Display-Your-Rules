@@ -249,11 +249,21 @@ export interface PresetFile {
   contentHash: string;
 }
 
+export type OverlayLayout = "center" | "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
+export interface OverlayGameVisibility {
+  hiddenForGames: string[];
+  onlyForGames: string[];
+}
+
 export interface OverlayView {
   crosshairEnabled: boolean;
   crosshair: CrosshairConfig;
   zoom: { enabled: boolean; level: number; label: string | null };
   hotkeyHint: string | null;
+  layout: OverlayLayout;
+  gameVisibility: OverlayGameVisibility;
+  visibleForGame: boolean;
 }
 
 export interface PhoneSession {

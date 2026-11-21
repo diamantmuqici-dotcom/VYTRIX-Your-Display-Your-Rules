@@ -64,12 +64,36 @@ impl Default for ZoomView {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct GameVisibilityView {
+    #[serde(default)]
+    pub hidden_for_games: Vec<String>,
+    #[serde(default)]
+    pub only_for_games: Vec<String>,
+}
+
+impl Default for GameVisibilityView {
+    fn default() -> Self {
+        Self { hidden_for_games: Vec::new(), only_for_games: Vec::new() }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OverlayView {
     pub crosshair_enabled: bool,
     pub crosshair: CrosshairView,
     pub zoom: ZoomView,
     pub hotkey_hint: Option<String>,
+    #[serde(default = "default_layout")]
+    pub layout: String,
+    #[serde(default)]
+    pub game_visibility: GameVisibilityView,
+    #[serde(default = "default_visible_for_game")]
+    pub visible_for_game: bool,
 }
+
+fn default_layout() -> String { "center".to_owned() }
+fn default_visible_for_game() -> bool { true }
 
 impl Default for OverlayView {
     fn default() -> Self {
@@ -78,6 +102,9 @@ impl Default for OverlayView {
             crosshair: CrosshairView::default(),
             zoom: ZoomView::default(),
             hotkey_hint: None,
+            layout: default_layout(),
+            game_visibility: GameVisibilityView::default(),
+            visible_for_game: default_visible_for_game(),
         }
     }
 }
@@ -113,11 +140,28 @@ pub fn sanitize(view: OverlayView) -> OverlayView {
     zoom.level = crate::security::clamp(zoom.level, 1.0, 8.0);
     zoom.label = zoom.label.as_deref().map(|label| bounded_text(label, 40, "1.0x")).filter(|_| zoom.level > 1.0);
 
+    let layouts = ["center", "top-left", "top-right", "bottom-left", "bottom-right"];
+    let layout = if layouts.contains(&view.layout.as_str()) { view.layout } else { default_layout() };
+    let clean_games = |list: Vec<String>| -> Vec<String> {
+        list.into_iter()
+            .map(|name| bounded_text(&name, 120, ""))
+            .filter(|name| !name.is_empty())
+            .take(50)
+            .collect()
+    };
+    let game_visibility = GameVisibilityView {
+        hidden_for_games: clean_games(view.game_visibility.hidden_for_games),
+        only_for_games: clean_games(view.game_visibility.only_for_games),
+    };
+
     OverlayView {
         crosshair_enabled: view.crosshair_enabled,
         crosshair,
         zoom,
         hotkey_hint: view.hotkey_hint.as_deref().map(|hint| bounded_text(hint, 80, "")).filter(|hint| !hint.is_empty()),
+        layout,
+        game_visibility,
+        visible_for_game: view.visible_for_game,
     }
 }
 
@@ -157,13 +201,49 @@ impl OverlayState {
 
     fn sync_window(&self, view: &OverlayView) {
         if let Some(window) = self.app.get_webview_window("overlay") {
-            let should_show = view.crosshair_enabled || view.zoom.enabled || view.hotkey_hint.is_some();
+            let should_show = view.visible_for_game
+                && (view.crosshair_enabled || view.zoom.enabled || view.hotkey_hint.is_some());
             if should_show {
                 let _ = window.show();
             } else {
                 let _ = window.hide();
             }
             let _ = window.set_ignore_cursor_events(true);
+        }
+    }
+
+    /// Recomputes per-game visibility from the foreground title. No rule is
+    /// ever evaluated against a game the app has not actually detected.
+    pub fn apply_game_visibility(&self, game: Option<&str>) -> bool {
+        let visible = {
+            let state = self.inner.lock();
+            game_is_visible(&state.game_visibility, game)
+        };
+        let view = {
+            let mut state = self.inner.lock();
+            if state.visible_for_game == visible { return visible; }
+            state.visible_for_game = visible;
+            state.clone()
+        };
+        self.sync_window(&view);
+        let _ = self.app.emit("vytrix://overlay-config", &view);
+        visible
+    }
+}
+
+/// Pure per-game visibility decision. Hidden rules win over allow rules.
+pub fn game_is_visible(rules: &GameVisibilityView, game: Option<&str>) -> bool {
+    match game.map(|name| name.trim().to_lowercase()) {
+        None => true,
+        Some(name) => {
+            let matches = |list: &Vec<String>| {
+                list.iter().any(|item| {
+                    let needle = item.trim().to_lowercase();
+                    !needle.is_empty() && name.contains(&needle)
+                })
+            };
+            !matches(&rules.hidden_for_games)
+                && (rules.only_for_games.is_empty() || matches(&rules.only_for_games))
         }
     }
 }
@@ -191,5 +271,37 @@ mod tests {
         let mut view = OverlayView::default();
         view.zoom.label = Some("2.0x".to_owned());
         assert_eq!(sanitize(view).zoom.label, None);
+    }
+
+    #[test]
+    fn layout_is_whitelisted_and_game_lists_are_bounded() {
+        let mut view = OverlayView::default();
+        view.layout = "../../evil".to_owned();
+        view.game_visibility.hidden_for_games = vec![" Rob Run ".to_owned(), "  ".to_owned()];
+        let clean = sanitize(view);
+        assert_eq!(clean.layout, "center");
+        assert_eq!(clean.game_visibility.hidden_for_games, vec!["Rob Run"]);
+    }
+
+    #[test]
+    fn hidden_rule_beats_allow_rule_and_unknown_game_is_visible() {
+        let rules = GameVisibilityView {
+            hidden_for_games: vec!["rob".to_owned()],
+            only_for_games: vec!["rob".to_owned(), "valorant".to_owned()],
+        };
+        assert!(!game_is_visible(&rules, Some("ROB RUN")));
+        assert!(game_is_visible(&rules, Some("Valorant")));
+        assert!(!game_is_visible(&rules, Some("Apex")));
+        assert!(game_is_visible(&rules, None));
+    }
+
+    #[test]
+    fn allow_list_hides_games_that_are_not_named() {
+        let rules = GameVisibilityView {
+            hidden_for_games: Vec::new(),
+            only_for_games: vec!["rob run".to_owned()],
+        };
+        assert!(game_is_visible(&rules, Some("Rob Run")));
+        assert!(!game_is_visible(&rules, Some("Cs2")));
     }
 }

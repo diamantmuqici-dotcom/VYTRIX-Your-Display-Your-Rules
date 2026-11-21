@@ -31,8 +31,8 @@ body {
 
 .crosshair {
   position: absolute;
-  left: calc(50% + var(--crosshair-x, 0px));
-  top: calc(50% + var(--crosshair-y, 0px));
+  left: calc(var(--anchor-x, 50%) + var(--crosshair-x, 0px));
+  top: calc(var(--anchor-y, 50%) + var(--crosshair-y, 0px));
   transform: translate(-50%, -50%);
   overflow: visible;
   filter: drop-shadow(0 0 2px rgb(0 0 0 / 0.85));

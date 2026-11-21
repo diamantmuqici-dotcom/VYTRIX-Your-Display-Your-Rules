@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Crosshair as CrosshairIcon, Save, Trash2, Download, Upload, Eye } from "lucide-react";
-import type { CrosshairConfig, CrosshairStyle } from "@vytrix/shared-types";
+import type { CrosshairConfig, CrosshairStyle, OverlayLayout } from "@vytrix/shared-types";
 import { useApp } from "@/stores/app";
-import { setOverlayCrosshair, setOverlayEnabled } from "@/services/overlay";
+import {
+  getOverlayConfig, setOverlayCrosshair, setOverlayEnabled,
+  setOverlayGameRules, setOverlayLayout,
+} from "@/services/overlay";
 import { useToast } from "@/hooks/useToast";
 import { PageHead, Panel } from "@/components/ui/Panel";
 import { ParamSlider } from "@/components/sliders/ParamSlider";
@@ -11,6 +14,9 @@ import { createPreset, serializePreset, parseShareCode } from "@vytrix/preset-fo
 import { downloadText } from "@/utils/download";
 
 const STYLES: CrosshairStyle[] = ["dot", "circle", "cross", "dynamic-cross"];
+const LAYOUTS: OverlayLayout[] = [
+  "center", "top-left", "top-right", "bottom-left", "bottom-right",
+];
 const DEFAULT_CONFIG: CrosshairConfig = {
   id: "", name: "New design", style: "cross", color: "#00D9FF", thickness: 2, gap: 6,
   length: 10, opacity: 0.95, outline: true, centerDot: true, rotation: 0, scale: 1,
@@ -56,7 +62,32 @@ export default function Crosshair() {
   const [config, setConfig] = useState<CrosshairConfig>({ ...DEFAULT_CONFIG });
   const [visible, setVisible] = useState(state.crosshairEnabled);
   const [shareInput, setShareInput] = useState("");
+  const [layout, setLayout] = useState<OverlayLayout>("center");
+  const [hiddenGames, setHiddenGames] = useState("");
+  const [onlyGames, setOnlyGames] = useState("");
   const patch = (p: Partial<CrosshairConfig>) => setConfig((c) => ({ ...c, ...p }));
+
+  useEffect(() => {
+    let active = true;
+    void getOverlayConfig().then((result) => {
+      if (!result.ok || !active) return;
+      setLayout(result.data.layout);
+      setHiddenGames(result.data.gameVisibility.hiddenForGames.join(", "));
+      setOnlyGames(result.data.gameVisibility.onlyForGames.join(", "));
+    });
+    return () => { active = false; };
+  }, []);
+
+  const savePlacement = () => {
+    const split = (value: string) => value.split(/[,\n]/).map((item) => item.trim()).filter(Boolean);
+    void setOverlayLayout(layout);
+    void setOverlayGameRules({
+      hiddenForGames: split(hiddenGames),
+      onlyForGames: split(onlyGames),
+    });
+    log(`Overlay layout ${layout}; game visibility rules updated`);
+    notify("Overlay placement saved");
+  };
   const hotkey = state.hotkeys.find((h) => h.action === "toggle-crosshair")?.keys.join("+") ?? "unbound";
 
   const save = () => {
@@ -129,6 +160,27 @@ export default function Crosshair() {
             ))}
             <div className="field" style={{ marginTop: 12 }}><label>Share code</label><textarea rows={2} value={shareInput} onChange={(e) => setShareInput(e.target.value)} /></div>
             <button className="btn" onClick={importDesign}><Upload size={14} /> Import code</button>
+          </Panel>
+
+          <Panel title="Placement & game visibility">
+            <div className="field">
+              <label>Anchor</label>
+              <select value={layout} onChange={(e) => setLayout(e.target.value as OverlayLayout)}>
+                {LAYOUTS.map((value) => <option key={value} value={value}>{value}</option>)}
+              </select>
+            </div>
+            <div className="field">
+              <label>Hide in games (comma separated)</label>
+              <textarea rows={2} value={hiddenGames} onChange={(e) => setHiddenGames(e.target.value)} placeholder="Rob Run, Elden Ring" />
+            </div>
+            <div className="field">
+              <label>Show only in games (comma separated)</label>
+              <textarea rows={2} value={onlyGames} onChange={(e) => setOnlyGames(e.target.value)} placeholder="Leave empty for all games" />
+            </div>
+            <div className="tiny" style={{ lineHeight: 1.5, marginBottom: 10 }}>
+              Rules match the detected foreground title. Hide rules win over show-only rules.
+            </div>
+            <button className="btn primary" onClick={savePlacement}><Save size={14} /> Save placement</button>
           </Panel>
         </div>
       </div>

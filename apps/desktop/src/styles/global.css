@@ -144,6 +144,11 @@ input[type="range"]::-webkit-slider-thumb:hover { box-shadow: 0 0 0 6px rgba(0,2
 .badge.error { color: var(--vy-error); border-color: rgba(239,68,68,.3); }
 .badge.accent { color: var(--vy-accent); border-color: rgba(0,217,255,.3); }
 
+.compare-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
+.compare-table th, .compare-table td { padding: 8px 10px; text-align: left; border-bottom: var(--vy-border); }
+.compare-table th { color: var(--vy-text-secondary); font-weight: 600; }
+.compare-table tr.diff td { color: var(--vy-accent); background: rgba(0,217,255,.05); }
+
 .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 16px; }
 .tab { padding: 7px 12px; border-radius: 99px; border: var(--vy-border); background: transparent; color: var(--vy-text-secondary); font-size: 12px; }
 .tab.active { background: var(--vy-card-elevated); color: var(--vy-text); border-color: rgba(0,217,255,.3); }

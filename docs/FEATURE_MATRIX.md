@@ -50,14 +50,14 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 
 | Feature | Status | Evidence / gap |
 | --- | --- | --- |
-| Crosshair editor | Partial | editor and native overlay sync exist |
-| Crosshair shapes/animation/export | Missing | advanced editor not implemented |
+| Crosshair editor | Working | editor, native overlay sync, and validated share-code export/import |
+| Crosshair shapes/animation/export | Partial | 4 shapes, rotation/scale/offset; no keyframed animation |
 | Transparent overlay window | Working | second Vite entry + native window |
-| Overlay widgets/themes/opacity/position | Partial | base overlay state; no widget manager |
-| Per-game overlay visibility | Missing | compatibility gating not implemented |
-| Preset library | Partial | import/export/validation and local library exist |
-| Preset comparison | Missing | no side-by-side diff |
-| Themes | Working | theme settings and UI present |
+| Overlay layouts/position | Working | 5 whitelisted anchors driven by CSS variables in the overlay webview |
+| Per-game overlay visibility | Working | `game_is_visible` hidden/allow rules evaluated on foreground poll |
+| Preset library | Partial | import/export/validation and local library exist; no community backend |
+| Preset comparison | Working | side-by-side table across 10 color fields with difference highlighting |
+| Themes | Working | theme settings, UI, and bounded JSON import/export |
 
 ## Diagnostics and performance
 

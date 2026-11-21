@@ -121,12 +121,30 @@ export default function App() {
     };
   }, []);
 
-  const showCrosshair = config.crosshairEnabled;
-  const showZoom = config.zoom.enabled;
-  const showHint = config.hotkeyHint !== null;
+  const anchors: Record<typeof config.layout, { x: string; y: string }> = {
+    center: { x: "50%", y: "50%" },
+    "top-left": { x: "12%", y: "12%" },
+    "top-right": { x: "88%", y: "12%" },
+    "bottom-left": { x: "12%", y: "88%" },
+    "bottom-right": { x: "88%", y: "88%" },
+  };
+  const anchor = anchors[config.layout] ?? anchors.center;
+  const gate = config.visibleForGame;
+  const showCrosshair = gate && config.crosshairEnabled;
+  const showZoom = gate && config.zoom.enabled;
+  const showHint = gate && config.hotkeyHint !== null;
 
   return (
-    <div className="overlay-root">
+    <div
+      className="overlay-root"
+      data-layout={config.layout}
+      style={
+        {
+          "--anchor-x": anchor.x,
+          "--anchor-y": anchor.y,
+        } as CSSProperties
+      }
+    >
       {showCrosshair ? <CrosshairMark config={config.crosshair} /> : null}
       {showZoom ? (
         <div className="zoom-chip">

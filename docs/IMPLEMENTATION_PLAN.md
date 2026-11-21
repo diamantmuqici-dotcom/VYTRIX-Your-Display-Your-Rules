@@ -60,11 +60,13 @@ Validation: 24 Rust tests pass, 12 desktop tests pass, typecheck and desktop bui
 
 ## Phase 6 — Customization
 
-Status: partial.
+Status: complete.
 
 Present: crosshair editor, overlay window, preset library, themes, display effects.
 
-Remaining: overlay layouts/position management, per-game visibility, crosshair export/import test coverage, preset comparison UI, theme import/export.
+Shipped this phase: five anchor layouts (`center` + four corners) whitelisted in native `sanitize` and mirrored in the overlay webview via CSS anchor variables; per-game visibility rules (`hiddenForGames`/`onlyForGames`) stored on `OverlayView`, sanitized to 50 bounded titles, and evaluated by pure `game_is_visible` (hidden wins, unknown game visible) on every SmartSwitch foreground poll with a `vytrix://overlay-config` emit on change; crosshair export/import round trip validated through `@vytrix/preset-format`; preset comparison table across ten color fields with difference highlighting; theme files exported/imported as inert JSON with every field bounded and hex-validated before apply.
+
+Acceptance: 3 new native tests (layout whitelist + bounded game lists, hidden-vs-allow precedence, allow-list gating) and a full UI wiring test pass. 27 Rust tests, 13 desktop tests, typecheck, and desktop build all green.
 
 ## Phase 7 — Diagnostics and system tools
 

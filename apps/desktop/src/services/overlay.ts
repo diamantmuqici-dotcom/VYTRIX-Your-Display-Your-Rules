@@ -1,4 +1,6 @@
-import type { CommandResult, CrosshairConfig, OverlayView } from "@vytrix/shared-types";
+import type {
+  CommandResult, CrosshairConfig, OverlayGameVisibility, OverlayLayout, OverlayView,
+} from "@vytrix/shared-types";
 import { invokeNative } from "./tauri";
 
 export function getOverlayConfig(): Promise<CommandResult<OverlayView>> {
@@ -23,5 +25,31 @@ export function toggleOverlayZoom(): Promise<CommandResult<OverlayView>> {
   return update((view) => ({
     ...view,
     zoom: { ...view.zoom, enabled: !view.zoom.enabled },
+  }));
+}
+
+const LAYOUTS: readonly OverlayLayout[] = [
+  "center", "top-left", "top-right", "bottom-left", "bottom-right",
+];
+
+export function setOverlayLayout(layout: OverlayLayout): Promise<CommandResult<OverlayView>> {
+  const safe = LAYOUTS.includes(layout) ? layout : "center";
+  return update((view) => ({ ...view, layout: safe }));
+}
+
+/** Both lists are bounded by the native sanitizer; cap here as well. */
+export function setOverlayGameRules(
+  rules: OverlayGameVisibility,
+): Promise<CommandResult<OverlayView>> {
+  const clean = (list: string[]) => list
+    .map((name) => name.replace(/[\u0000-\u001F\u007F]/g, "").trim().slice(0, 120))
+    .filter(Boolean)
+    .slice(0, 50);
+  return update((view) => ({
+    ...view,
+    gameVisibility: {
+      hiddenForGames: clean(rules.hiddenForGames),
+      onlyForGames: clean(rules.onlyForGames),
+    },
   }));
 }

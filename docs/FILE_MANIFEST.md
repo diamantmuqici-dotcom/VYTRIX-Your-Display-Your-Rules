@@ -75,7 +75,7 @@ Paths are relative to `VYTRIX/`. Generated outputs and ignored dependencies are 
 | `apps/desktop/src-tauri/src/main.rs` | Tauri native project config, icons, schemas, or entrypoint |
 | `apps/desktop/src-tauri/src/monitoring/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/optimizer/mod.rs` | Native Windows engine module |
-| `apps/desktop/src-tauri/src/overlay/mod.rs` | Native Windows engine module |
+| `apps/desktop/src-tauri/src/overlay/mod.rs` | Overlay layouts, per-game visibility rules, and game_is_visible evaluator |
 | `apps/desktop/src-tauri/src/phone/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/security/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/smart_switch/mod.rs` | Priority resolver, snapshot replay, and switch history |

@@ -1,6 +1,11 @@
-import type { CrosshairConfig, CrosshairStyle, OverlayConfig } from "./types";
+import type {
+  CrosshairConfig, CrosshairStyle, OverlayConfig, OverlayGameVisibility, OverlayLayout,
+} from "./types";
 
 export const CROSSHAIR_STYLES: readonly CrosshairStyle[] = ["dot", "circle", "cross", "dynamic-cross"];
+export const OVERLAY_LAYOUTS: readonly OverlayLayout[] = [
+  "center", "top-left", "top-right", "bottom-left", "bottom-right",
+];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -75,6 +80,9 @@ export const DEFAULT_OVERLAY_CONFIG: OverlayConfig = {
   },
   zoom: { enabled: false, level: 1, label: null },
   hotkeyHint: null,
+  layout: "center",
+  gameVisibility: { hiddenForGames: [], onlyForGames: [] },
+  visibleForGame: true,
 };
 
 export function normalizeOverlayConfig(raw: unknown): OverlayConfig {
@@ -97,5 +105,24 @@ export function normalizeOverlayConfig(raw: unknown): OverlayConfig {
     hotkeyHint: typeof source.hotkeyHint === "string" && source.hotkeyHint.trim().length > 0
       ? safeText(source.hotkeyHint, 80, "")
       : null,
+    layout: OVERLAY_LAYOUTS.some((item) => item === source.layout)
+      ? (source.layout as OverlayLayout)
+      : defaults.layout,
+    gameVisibility: gameVisibilityFrom(source.gameVisibility, defaults.gameVisibility),
+    visibleForGame: typeof source.visibleForGame === "boolean"
+      ? source.visibleForGame
+      : defaults.visibleForGame,
+  };
+}
+
+function gameVisibilityFrom(raw: unknown, fallback: OverlayGameVisibility): OverlayGameVisibility {
+  const source = isRecord(raw) ? raw : {};
+  const clean = (value: unknown) => Array.isArray(value)
+    ? value.slice(0, 50).map((item) => safeText(item, 120, "")).filter(Boolean)
+    : [];
+  const only = clean(source.onlyForGames);
+  return {
+    hiddenForGames: clean(source.hiddenForGames),
+    onlyForGames: only.length > 0 ? only : clean(fallback.onlyForGames),
   };
 }

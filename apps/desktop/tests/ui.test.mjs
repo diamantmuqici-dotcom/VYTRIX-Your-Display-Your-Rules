@@ -155,3 +155,42 @@ test("smart switch resolves conflicts and replays desktop restore", () => {
   assert.match(settings, /smartSwitchHistory/);
   assert.match(app, /SmartSwitchBridge/);
 });
+
+test("customization ships overlay layout, per-game rules, compare, and theme io", () => {
+  const native = readFileSync(new URL("../src-tauri/src/overlay/mod.rs", root), "utf8");
+  const smartSwitch = readFileSync(new URL("../src-tauri/src/smart_switch/mod.rs", root), "utf8");
+  const service = readFileSync(new URL("services/overlay.ts", root), "utf8");
+  const overlayApp = readFileSync(new URL("../../overlay/src/App.tsx", root), "utf8");
+  const overlayConfig = readFileSync(new URL("../../overlay/src/config.ts", root), "utf8");
+  const crosshair = readFileSync(new URL("pages/Crosshair/index.tsx", root), "utf8");
+  const presets = readFileSync(new URL("pages/PresetLibrary/index.tsx", root), "utf8");
+  const themes = readFileSync(new URL("pages/Themes/index.tsx", root), "utf8");
+  const shared = readFileSync(new URL("../../../packages/shared-types/src/index.ts", root), "utf8");
+
+  assert.match(native, /pub fn game_is_visible/);
+  assert.match(native, /pub fn apply_game_visibility/);
+  assert.match(native, /layout_is_whitelisted_and_game_lists_are_bounded/);
+  assert.match(smartSwitch, /apply_game_visibility\(game\.as_deref\(\)\)/);
+  assert.match(service, /setOverlayLayout/);
+  assert.match(service, /setOverlayGameRules/);
+  assert.match(overlayApp, /data-layout/);
+  assert.match(overlayApp, /visibleForGame/);
+  assert.match(overlayConfig, /OVERLAY_LAYOUTS/);
+  assert.match(shared, /export type OverlayLayout/);
+  assert.match(shared, /export interface OverlayGameVisibility/);
+
+  // crosshair export/import round trip is wired to the validated preset format
+  assert.match(crosshair, /createPreset\(\{ kind: "crosshair"/);
+  assert.match(crosshair, /serializePreset\(file\)/);
+  assert.match(crosshair, /parseShareCode\(shareInput\.trim\(\)\)/);
+  assert.match(crosshair, /file\.kind !== "crosshair"/);
+  assert.match(crosshair, /setOverlayGameRules/);
+
+  assert.match(presets, /COMPARE_FIELDS/);
+  assert.match(presets, /Preset comparison/);
+  assert.match(presets, /className=\{a === b \? "" : "diff"\}/);
+
+  assert.match(themes, /parseThemeFile/);
+  assert.match(themes, /\^#\[0-9a-fA-F\]\{6\}\$/);
+  assert.match(themes, /vytrix-theme\.json/);
+});
