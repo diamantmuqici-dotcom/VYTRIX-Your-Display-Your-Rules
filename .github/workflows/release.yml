@@ -67,7 +67,7 @@ jobs:
         run: echo "VYTRIX_RELEASE_PRIVATE_KEY is not configured; manifest.signature is empty. See docs/RELEASING.md before uploading to the website."
 
       - name: Upload workflow artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vytrix-${{ github.ref_name }}
           path: |
