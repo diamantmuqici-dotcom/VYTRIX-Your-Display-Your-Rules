@@ -9,7 +9,8 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | Tauri 2 shell | Working | `apps/desktop/src-tauri/src/lib.rs`, builds pass |
 | Sidebar and pages | Partial | 13 pages implemented; 24-entry navigation spec not fully covered |
 | Settings persistence | Working | SQLite storage commands + app store |
-| Native IPC | Working | 17 registered commands, fail-closed frontend bridge |
+| Native IPC | Working | 26 registered commands, fail-closed frontend bridge |
+| Localization (EN/FR/DE/RU) | Working | 192 keys in each dictionary; language selection rewrites shell and key pages |
 | Command palette / Ctrl+K | Missing | not implemented |
 | Global search | Missing | not implemented |
 | Favorites / reorder sidebar | Partial | preset favorites exist; sidebar ordering does not |
@@ -21,8 +22,9 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | --- | --- | --- |
 | Monitor enumeration | Working | `list_monitors` |
 | Resolution / refresh apply | Working | `display_apply`, validation, rollback |
-| Rollback | Working | `display_rollback` |
-| Saturation / vibrance / RGB / gamma / brightness | Partial | clamped values and UI exist; driver-level apply is backend-dependent |
+| Custom resolution / Hz | Working | bounded width 640-16384, height 360-8640, refresh 24-360 in `Display` |
+| Rollback | Working | `display_rollback`, confirmation timer cleared on confirm/rollback |
+| Saturation / vibrance / RGB / gamma / brightness | Working | `color_apply` writes bounded 3x256 ramps via documented `SetDeviceGammaRamp`; `color_reset` restores baseline |
 | RGB curves | Missing | no control or model |
 | Black/white point, shadows, highlights | Missing | no control or model |
 | Per-monitor profiles | Partial | monitor setting exists; full per-monitor profile map missing |
@@ -35,7 +37,8 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | Feature | Status | Evidence / gap |
 | --- | --- | --- |
 | Process/window detection | Working | `detect_game`, native foreground detection |
-| Verified game hints | Working | 29 verified, 65 partial, 66 manual; 140 native executable hints |
+| Steam library detection | Working | read-only `SteamPath`, `libraryfolders.vdf`, `appmanifest_*.acf` parsing via `steam_installations` |
+| Verified game hints | Working | 29 verified, 66 partial, 65 manual; 140 native executable hints |
 | 160 individual configurations | Working | 160 schema-valid records in `packages/game-database/data`; validation reports no duplicates |
 | Game search/filter | Working | query plus category, launcher, and detection filters in `GameProfiles` |
 | Custom games | Working | add-game flow with launcher and executable hint |

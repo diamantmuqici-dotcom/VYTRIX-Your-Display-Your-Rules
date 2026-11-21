@@ -24,7 +24,7 @@ No destructive Git command was run. No database, user file, or existing source f
 
 ## Existing working features
 
-- Native IPC commands registered: `system_summary`, `list_monitors`, `display_apply`, `display_rollback`, `sample_metrics`, `register_hotkey`, `gpu_backend`, `detect_game`, optimizer commands, SQLite storage commands, overlay commands, and phone commands.
+- Native IPC commands registered: `system_summary`, `list_monitors`, `display_apply`, `display_rollback`, `color_apply`, `color_reset`, `steam_installations`, `sample_metrics`, `register_hotkey`, `gpu_backend`, `detect_game`, optimizer commands, SQLite storage commands, overlay commands, and phone commands.
 - Windows display enumeration, validated apply payload, rollback path, and explicit confirmation flow.
 - Real foreground-process/window-title game detection. No game-file writes, memory reads, or injection.
 - Reversible optimizer allowlist with previous-value capture and restore.

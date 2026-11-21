@@ -46,6 +46,8 @@ Paths are relative to `VYTRIX/`. Generated outputs and ignored dependencies are 
 | `apps/desktop/src/pages/PresetLibrary/index.tsx` | Desktop UI page |
 | `apps/desktop/src/pages/Settings/index.tsx` | Desktop UI page |
 | `apps/desktop/src/pages/Themes/index.tsx` | Desktop UI page |
+| `apps/desktop/src/i18n/index.ts` | EN/FR/DE/RU dictionaries and translation hooks |
+| `apps/desktop/src/services/color.ts` | Debounced native gamma-ramp apply/reset bridge |
 | `apps/desktop/src/services/overlay.ts` | Frontend service wrapper for native IPC |
 | `apps/desktop/src/services/tauri.ts` | Frontend service wrapper for native IPC |
 | `apps/desktop/src/stores/app.tsx` | Shared desktop application state |
@@ -61,6 +63,8 @@ Paths are relative to `VYTRIX/`. Generated outputs and ignored dependencies are 
 | `apps/desktop/src-tauri/icons/icon.ico` | Tauri native project config, icons, schemas, or entrypoint |
 | `apps/desktop/src-tauri/icons/icon.png` | Tauri native project config, icons, schemas, or entrypoint |
 | `apps/desktop/src-tauri/src/commands/mod.rs` | Typed native IPC command implementations |
+| `apps/desktop/src-tauri/src/color.rs` | Bounded gamma-ramp state and native apply/reset |
+| `apps/desktop/src-tauri/src/steam.rs` | Read-only Steam library and manifest detection |
 | `apps/desktop/src-tauri/src/display/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/games/mod.rs` | Native Windows engine module |
 | `apps/desktop/src-tauri/src/gpu/mod.rs` | Native Windows engine module |
