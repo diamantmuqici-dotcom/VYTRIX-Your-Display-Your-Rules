@@ -1,0 +1,88 @@
+{
+  "id": "halo-infinite",
+  "name": "Halo Infinite",
+  "category": "shooters",
+  "launchers": [
+    "xbox"
+  ],
+  "executableNames": [
+    "haloinfinite.exe"
+  ],
+  "processNames": [
+    "haloinfinite.exe"
+  ],
+  "detection": {
+    "methods": [
+      "executable",
+      "process",
+      "store-package"
+    ],
+    "requiresManualPath": false,
+    "confidence": "verified",
+    "rules": [
+      {
+        "type": "executable",
+        "value": "haloinfinite.exe"
+      },
+      {
+        "type": "process",
+        "value": "haloinfinite.exe"
+      },
+      {
+        "type": "store-package",
+        "value": "xbox"
+      }
+    ]
+  },
+  "installationDetection": "store-package",
+  "icon": "assets/branding/vytrix-icon.svg",
+  "defaults": {
+    "colorProfileId": "vytrix-neutral-v1",
+    "displayProfileId": "hardware-detect-v1",
+    "resolutionProfileId": "detect-monitor-v1",
+    "refreshRateProfileId": "detect-supported-maximum-v1",
+    "restorationMode": "automatic-restore-v1",
+    "crosshairEnabled": false,
+    "overlayEnabled": false,
+    "monitoringEnabled": true
+  },
+  "capabilities": {
+    "automaticDetection": true,
+    "colorProfiles": true,
+    "displayProfiles": true,
+    "crosshair": "restricted",
+    "overlay": "unknown",
+    "performanceMonitoring": true,
+    "restoration": true
+  },
+  "compatibilityNotes": [
+    "Profiles declare capabilities, not claimed optimal game settings.",
+    "Settings apply only when the detected monitor and GPU backend expose support.",
+    "Original display state is restored on game exit, app exit, and failed apply.",
+    "No game files are modified and no code is injected.",
+    "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+  ],
+  "supportedFeatures": [
+    "detection",
+    "color-profiles",
+    "display-profiles",
+    "monitoring",
+    "restoration"
+  ],
+  "unsupportedFeatures": [
+    "game-file-modification",
+    "anti-cheat-bypass",
+    "guaranteed-fps-gain",
+    "crosshair",
+    "overlay"
+  ],
+  "configurationSource": "vytrix-catalog-seed-v1",
+  "releaseStatus": "released",
+  "verification": {
+    "status": "verified",
+    "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+    "lastVerifiedAt": null
+  },
+  "schemaVersion": 1,
+  "profileSchemaVersion": 1
+}

@@ -1,3 +1,4 @@
+import { GAME_CONFIGURATIONS } from "@vytrix/game-database";
 import type { GameEntry, Launcher } from "@vytrix/shared-types";
 
 // Executable hints are published process names. Entries without a verified
@@ -301,7 +302,29 @@ function seedGame(name: string, launcher: Launcher, verified: Verified[]): GameE
   };
 }
 
-export const GAME_CATALOG: GameEntry[] = [
+function fromConfiguration(config: (typeof GAME_CONFIGURATIONS)[number]): GameEntry {
+  return {
+    id: config.id,
+    name: config.name,
+    launcher: config.launchers[0] as Launcher,
+    executableHints: [...config.executableNames, ...config.processNames],
+    verifiedDetection: config.detection.confidence === "verified",
+    icon: "verified",
+    category: config.category,
+    launchers: config.launchers as Launcher[],
+    detectionConfidence: config.detection.confidence,
+    verificationStatus: config.verification.status,
+    supportedFeatures: [...config.supportedFeatures],
+    unsupportedFeatures: [...config.unsupportedFeatures],
+    configurationStatus: config.detection.requiresManualPath ? "manual" : "ready",
+    releaseStatus: config.releaseStatus,
+    configurationSource: config.configurationSource,
+  };
+}
+
+const NORMALIZE = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, "");
+
+const LEGACY_ENTRIES: GameEntry[] = [
   ...VERIFIED.map(([name, launcher, hints]) => seedGame(name, launcher, VERIFIED)),
   ...CATALOG.split("\n")
     .map((line) => line.trim())
@@ -310,4 +333,18 @@ export const GAME_CATALOG: GameEntry[] = [
       const [name, launcher] = line.split("|") as [string, Launcher];
       return seedGame(name.trim(), launcher, VERIFIED);
     }),
-].filter((game, index, all) => all.findIndex((g) => g.id === game.id) === index);
+];
+
+const DATABASE_ENTRIES = GAME_CONFIGURATIONS.map(fromConfiguration);
+const seenIds = new Set<string>();
+const seenNames = new Set<string>();
+
+export const GAME_CATALOG: GameEntry[] = [...DATABASE_ENTRIES, ...LEGACY_ENTRIES].filter((game) => {
+  const nameKey = NORMALIZE(game.name);
+  if (seenIds.has(game.id) || seenNames.has(nameKey)) return false;
+  seenIds.add(game.id);
+  seenNames.add(nameKey);
+  return true;
+});
+
+export const DATABASE_GAME_COUNT = DATABASE_ENTRIES.length;

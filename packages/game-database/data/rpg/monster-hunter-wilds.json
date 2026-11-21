@@ -1,0 +1,75 @@
+{
+  "id": "monster-hunter-wilds",
+  "name": "Monster Hunter Wilds",
+  "category": "rpg",
+  "launchers": [
+    "steam"
+  ],
+  "executableNames": [],
+  "processNames": [],
+  "detection": {
+    "methods": [
+      "launcher-library"
+    ],
+    "requiresManualPath": true,
+    "confidence": "manual",
+    "rules": [
+      {
+        "type": "launcher-library",
+        "value": "steam"
+      }
+    ]
+  },
+  "installationDetection": "launcher-library",
+  "icon": "assets/branding/vytrix-icon.svg",
+  "defaults": {
+    "colorProfileId": "vytrix-neutral-v1",
+    "displayProfileId": "hardware-detect-v1",
+    "resolutionProfileId": "detect-monitor-v1",
+    "refreshRateProfileId": "detect-supported-maximum-v1",
+    "restorationMode": "automatic-restore-v1",
+    "crosshairEnabled": false,
+    "overlayEnabled": false,
+    "monitoringEnabled": true
+  },
+  "capabilities": {
+    "automaticDetection": false,
+    "colorProfiles": true,
+    "displayProfiles": true,
+    "crosshair": "unknown",
+    "overlay": "unknown",
+    "performanceMonitoring": true,
+    "restoration": true
+  },
+  "compatibilityNotes": [
+    "Profiles declare capabilities, not claimed optimal game settings.",
+    "Settings apply only when the detected monitor and GPU backend expose support.",
+    "Original display state is restored on game exit, app exit, and failed apply.",
+    "No game files are modified and no code is injected.",
+    "Executable path must be supplied manually.",
+    "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+  ],
+  "supportedFeatures": [
+    "color-profiles",
+    "display-profiles",
+    "monitoring",
+    "restoration"
+  ],
+  "unsupportedFeatures": [
+    "game-file-modification",
+    "anti-cheat-bypass",
+    "guaranteed-fps-gain",
+    "detection",
+    "crosshair",
+    "overlay"
+  ],
+  "configurationSource": "vytrix-catalog-seed-v1",
+  "releaseStatus": "released",
+  "verification": {
+    "status": "unverified",
+    "source": "User-provided catalog; metadata not independently verified",
+    "lastVerifiedAt": null
+  },
+  "schemaVersion": 1,
+  "profileSchemaVersion": 1
+}

@@ -12,6 +12,7 @@
   "dependencies": {
     "@tauri-apps/api": "^2.8.0",
     "@vytrix/config": "0.1.0",
+    "@vytrix/game-database": "0.1.0",
     "@vytrix/design-system": "0.1.0",
     "@vytrix/preset-format": "0.1.0",
     "@vytrix/shared-types": "0.1.0",

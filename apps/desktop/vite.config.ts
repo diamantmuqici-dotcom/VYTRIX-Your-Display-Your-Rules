@@ -14,9 +14,15 @@ export default defineConfig({
       "@vytrix/validation": fileURLToPath(new URL("../../packages/validation/src/index.ts", import.meta.url)),
       "@vytrix/preset-format": fileURLToPath(new URL("../../packages/preset-format/src/index.ts", import.meta.url)),
       "@vytrix/config": fileURLToPath(new URL("../../packages/config/src/index.ts", import.meta.url)),
+      "@vytrix/game-database": fileURLToPath(new URL("../../packages/game-database/src/index.ts", import.meta.url)),
     },
   },
-  server: { port: 1420, strictPort: false },
+  server: {
+    port: 1420,
+    strictPort: false,
+    // Cargo locks vytrix.exe while Tauri compiles; watching target/ crashes Vite with EBUSY.
+    watch: { ignored: ["**/src-tauri/target/**"] },
+  },
   build: {
     outDir: "dist",
     target: "es2022",

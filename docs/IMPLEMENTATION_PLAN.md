@@ -36,19 +36,15 @@ Remaining: RGB curves, white point, shadow/highlight advanced controls, per-game
 
 ## Phase 4 — 160+ game database
 
-Status: next build target.
+Status: complete.
 
-Build `packages/game-database/`:
+Artifacts: `packages/game-database/`, `docs/GAME_DATABASE.md`, generated desktop catalog metadata, and generated Rust executable hints.
 
-1. `src/schema.ts` — `GameConfiguration` plus extended fields for status, profiles, restrictions.
-2. `src/validation.ts` — fail on duplicate ID, missing field, invalid category, invalid version, unsupported declared support.
-3. `src/registry.ts` — load/aggregate JSON entries.
-4. `data/<category>/<game>.json` — one full record per game, minimum 160 unique entries.
-5. `scripts/validate-database.ts`, `generate-index.ts`, `check-duplicates.ts`.
-6. Tests for count, duplicates, schema validity, search, and category filters.
-7. Wire registry into desktop game library and Rust detection matcher.
+Present: 160 individual schema-valid JSON records across 8 categories and 9 launchers; typed schema, validation, registry, search, compatibility summary, and version gates; deterministic generation and duplicate checks; desktop library filters and capability metadata; native detection with preserved legacy hints and generated database hints.
 
-Acceptance: `npm run validate:games` exits 0 and reports at least 160 valid unique configurations.
+Validation: 6 package tests pass; `npm run validate:games` reports 160 configurations with 29 verified, 65 partial, and 66 manual entries; `npm run check:games` reports no duplicate ids or names; desktop build/typecheck/tests pass; Rust check passes and 12 native tests pass.
+
+Acceptance met: `npm run validate:games` exits 0 and reports 160 valid unique configurations.
 
 ## Phase 5 — SmartSwitch
 
@@ -113,6 +109,8 @@ cd VYTRIX
 npm run build
 npm run typecheck
 npm test
+npm run validate:games
+npm run check:games
 cd apps/desktop/src-tauri
 cargo check --message-format=short
 cargo test --message-format=short

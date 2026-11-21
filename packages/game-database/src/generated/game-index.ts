@@ -1,0 +1,13433 @@
+import type { GameConfiguration } from "../schema.js";
+
+export const gameConfigurations: readonly GameConfiguration[] = 
+[
+  {
+    "id": "7-days-to-die",
+    "name": "7 Days to Die",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "7daystodie.exe"
+    ],
+    "processNames": [
+      "7daystodie.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "7daystodie.exe"
+        },
+        {
+          "type": "process",
+          "value": "7daystodie.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "a-plague-tale-requiem",
+    "name": "A Plague Tale: Requiem",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "aplaguetalerequiem.exe"
+    ],
+    "processNames": [
+      "aplaguetalerequiem.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "age-of-empires-iv",
+    "name": "Age of Empires IV",
+    "category": "strategy",
+    "launchers": [
+      "xbox"
+    ],
+    "executableNames": [
+      "aoe4.exe"
+    ],
+    "processNames": [
+      "aoe4.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "store-package"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "aoe4.exe"
+        },
+        {
+          "type": "process",
+          "value": "aoe4.exe"
+        },
+        {
+          "type": "store-package",
+          "value": "xbox"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "alan-wake-2",
+    "name": "Alan Wake 2",
+    "category": "horror",
+    "launchers": [
+      "epic"
+    ],
+    "executableNames": [
+      "alanwake2.exe"
+    ],
+    "processNames": [
+      "alanwake2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "alanwake2.exe"
+        },
+        {
+          "type": "process",
+          "value": "alanwake2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "epic"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "american-truck-simulator",
+    "name": "American Truck Simulator",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "amtrucks.exe"
+    ],
+    "processNames": [
+      "amtrucks.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "amtrucks.exe"
+        },
+        {
+          "type": "process",
+          "value": "amtrucks.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "among-us",
+    "name": "Among Us",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "among us.exe"
+    ],
+    "processNames": [
+      "among us.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "among us.exe"
+        },
+        {
+          "type": "process",
+          "value": "among us.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "anno-1800",
+    "name": "Anno 1800",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "anno1800.exe"
+    ],
+    "processNames": [
+      "anno1800.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "apex-legends",
+    "name": "Apex Legends",
+    "category": "shooters",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [
+      "r5apex.exe"
+    ],
+    "processNames": [
+      "r5apex.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "r5apex.exe"
+        },
+        {
+          "type": "process",
+          "value": "r5apex.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "ark-survival-ascended",
+    "name": "ARK: Survival Ascended",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "arksurvivalascended.exe"
+    ],
+    "processNames": [
+      "arksurvivalascended.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "arksurvivalascended.exe"
+        },
+        {
+          "type": "process",
+          "value": "arksurvivalascended.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "ark-survival-evolved",
+    "name": "ARK: Survival Evolved",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "ark.exe"
+    ],
+    "processNames": [
+      "ark.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "ark.exe"
+        },
+        {
+          "type": "process",
+          "value": "ark.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "arma-reforger",
+    "name": "Arma Reforger",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "armareforger.exe"
+    ],
+    "processNames": [
+      "armareforger.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "assetto-corsa",
+    "name": "Assetto Corsa",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "acs.exe"
+    ],
+    "processNames": [
+      "acs.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "acs.exe"
+        },
+        {
+          "type": "process",
+          "value": "acs.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "assetto-corsa-competizione",
+    "name": "Assetto Corsa Competizione",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "ac2.exe"
+    ],
+    "processNames": [
+      "ac2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "ac2.exe"
+        },
+        {
+          "type": "process",
+          "value": "ac2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "back-4-blood",
+    "name": "Back 4 Blood",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "back4blood.exe"
+    ],
+    "processNames": [
+      "back4blood.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "back4blood.exe"
+        },
+        {
+          "type": "process",
+          "value": "back4blood.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "battlefield-2042",
+    "name": "Battlefield 2042",
+    "category": "shooters",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "battlefield-6",
+    "name": "Battlefield 6",
+    "category": "shooters",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "battlefield-v",
+    "name": "Battlefield V",
+    "category": "shooters",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [
+      "battlefieldv.exe"
+    ],
+    "processNames": [
+      "battlefieldv.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "beamng-drive",
+    "name": "BeamNG.drive",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "beamng.drive.exe"
+    ],
+    "processNames": [
+      "beamng.drive.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "beamng.drive.exe"
+        },
+        {
+          "type": "process",
+          "value": "beamng.drive.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "black-desert-online",
+    "name": "Black Desert Online",
+    "category": "additional",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [
+      "blackdesert64.exe"
+    ],
+    "processNames": [
+      "blackdesert64.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "manual-path"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "blackdesert64.exe"
+        },
+        {
+          "type": "process",
+          "value": "blackdesert64.exe"
+        },
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "black-myth-wukong",
+    "name": "Black Myth: Wukong",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "blackmythwukong.exe"
+    ],
+    "processNames": [
+      "blackmythwukong.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "brawlhalla",
+    "name": "Brawlhalla",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "brawlhalla.exe"
+    ],
+    "processNames": [
+      "brawlhalla.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "brawlhalla.exe"
+        },
+        {
+          "type": "process",
+          "value": "brawlhalla.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "buckshot-roulette",
+    "name": "Buckshot Roulette",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "buckshotroulette.exe"
+    ],
+    "processNames": [
+      "buckshotroulette.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "call-of-duty",
+    "name": "Call of Duty",
+    "category": "shooters",
+    "launchers": [
+      "battle-net"
+    ],
+    "executableNames": [
+      "cod.exe",
+      "modernwarfare.exe"
+    ],
+    "processNames": [
+      "cod.exe",
+      "modernwarfare.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "cod.exe"
+        },
+        {
+          "type": "executable",
+          "value": "modernwarfare.exe"
+        },
+        {
+          "type": "process",
+          "value": "cod.exe"
+        },
+        {
+          "type": "process",
+          "value": "modernwarfare.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "battle-net"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "call-of-duty-warzone",
+    "name": "Call of Duty: Warzone",
+    "category": "shooters",
+    "launchers": [
+      "battle-net"
+    ],
+    "executableNames": [
+      "mw2-warzone.exe"
+    ],
+    "processNames": [
+      "mw2-warzone.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "mw2-warzone.exe"
+        },
+        {
+          "type": "process",
+          "value": "mw2-warzone.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "battle-net"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "carx-drift-racing-online",
+    "name": "CarX Drift Racing Online",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "carxdriftracingonline.exe"
+    ],
+    "processNames": [
+      "carxdriftracingonline.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "cities-skylines-ii",
+    "name": "Cities: Skylines II",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "cities2.exe"
+    ],
+    "processNames": [
+      "cities2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "civilization-vi",
+    "name": "Civilization VI",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "civilizationvi.exe"
+    ],
+    "processNames": [
+      "civilizationvi.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "civilizationvi.exe"
+        },
+        {
+          "type": "process",
+          "value": "civilizationvi.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "civilization-vii",
+    "name": "Civilization VII",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "company-of-heroes-3",
+    "name": "Company of Heroes 3",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "companyofheroes3.exe"
+    ],
+    "processNames": [
+      "companyofheroes3.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "conan-exiles",
+    "name": "Conan Exiles",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "conanexiles.exe"
+    ],
+    "processNames": [
+      "conanexiles.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "conanexiles.exe"
+        },
+        {
+          "type": "process",
+          "value": "conanexiles.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "content-warning",
+    "name": "Content Warning",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "contentwarning.exe"
+    ],
+    "processNames": [
+      "contentwarning.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "control",
+    "name": "Control",
+    "category": "horror",
+    "launchers": [
+      "epic"
+    ],
+    "executableNames": [
+      "control.exe"
+    ],
+    "processNames": [
+      "control.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "control.exe"
+        },
+        {
+          "type": "process",
+          "value": "control.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "epic"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "counter-strike-2",
+    "name": "Counter-Strike 2",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "cs2.exe"
+    ],
+    "processNames": [
+      "cs2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "cs2.exe"
+        },
+        {
+          "type": "process",
+          "value": "cs2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "crab-game",
+    "name": "Crab Game",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "crabgame.exe"
+    ],
+    "processNames": [
+      "crabgame.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "crusader-kings-iii",
+    "name": "Crusader Kings III",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "ck3.exe"
+    ],
+    "processNames": [
+      "ck3.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "cyberpunk-2077",
+    "name": "Cyberpunk 2077",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "cyberpunk2077.exe"
+    ],
+    "processNames": [
+      "cyberpunk2077.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "cyberpunk2077.exe"
+        },
+        {
+          "type": "process",
+          "value": "cyberpunk2077.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "dark-souls-iii",
+    "name": "Dark Souls III",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "darksoulsiii.exe"
+    ],
+    "processNames": [
+      "darksoulsiii.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "day-of-infamy",
+    "name": "Day of Infamy",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "dayofinfamy.exe"
+    ],
+    "processNames": [
+      "dayofinfamy.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "dayz",
+    "name": "DayZ",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "dayz.exe"
+    ],
+    "processNames": [
+      "dayz.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "dayz.exe"
+        },
+        {
+          "type": "process",
+          "value": "dayz.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "dead-by-daylight",
+    "name": "Dead by Daylight",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "deadbydaylight.exe"
+    ],
+    "processNames": [
+      "deadbydaylight.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "deadbydaylight.exe"
+        },
+        {
+          "type": "process",
+          "value": "deadbydaylight.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "dead-island-2",
+    "name": "Dead Island 2",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "deadisland2.exe"
+    ],
+    "processNames": [
+      "deadisland2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "deadisland2.exe"
+        },
+        {
+          "type": "process",
+          "value": "deadisland2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "deadlock",
+    "name": "Deadlock",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "deep-rock-galactic",
+    "name": "Deep Rock Galactic",
+    "category": "additional",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "deeprockgalactic.exe"
+    ],
+    "processNames": [
+      "deeprockgalactic.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "deeprockgalactic.exe"
+        },
+        {
+          "type": "process",
+          "value": "deeprockgalactic.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "delta-force",
+    "name": "Delta Force",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "destiny-2",
+    "name": "Destiny 2",
+    "category": "shooters",
+    "launchers": [
+      "battle-net"
+    ],
+    "executableNames": [
+      "destiny2.exe"
+    ],
+    "processNames": [
+      "destiny2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "destiny2.exe"
+        },
+        {
+          "type": "process",
+          "value": "destiny2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "battle-net"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "don-t-starve-together",
+    "name": "Don't Starve Together",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "dontstarve_steam.exe"
+    ],
+    "processNames": [
+      "dontstarve_steam.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "dontstarve_steam.exe"
+        },
+        {
+          "type": "process",
+          "value": "dontstarve_steam.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "doom-eternal",
+    "name": "DOOM Eternal",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "doometernal.exe"
+    ],
+    "processNames": [
+      "doometernal.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "doometernal.exe"
+        },
+        {
+          "type": "process",
+          "value": "doometernal.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "doom-the-dark-ages",
+    "name": "DOOM: The Dark Ages",
+    "category": "horror",
+    "launchers": [
+      "xbox"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "store-package"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "store-package",
+          "value": "xbox"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "dota-2",
+    "name": "Dota 2",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "dota2.exe"
+    ],
+    "processNames": [
+      "dota2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "dota2.exe"
+        },
+        {
+          "type": "process",
+          "value": "dota2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "dying-light-2",
+    "name": "Dying Light 2",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "dyinglight2.exe"
+    ],
+    "processNames": [
+      "dyinglight2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "dyinglight2.exe"
+        },
+        {
+          "type": "process",
+          "value": "dyinglight2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "dyson-sphere-program",
+    "name": "Dyson Sphere Program",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "dysonsphereprogram.exe"
+    ],
+    "processNames": [
+      "dysonsphereprogram.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "elden-ring",
+    "name": "Elden Ring",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "eldenring.exe"
+    ],
+    "processNames": [
+      "eldenring.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "eldenring.exe"
+        },
+        {
+          "type": "process",
+          "value": "eldenring.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "enshrouded",
+    "name": "Enshrouded",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "enshrouded.exe"
+    ],
+    "processNames": [
+      "enshrouded.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "enshrouded.exe"
+        },
+        {
+          "type": "process",
+          "value": "enshrouded.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "escape-from-tarkov",
+    "name": "Escape from Tarkov",
+    "category": "shooters",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [
+      "eft.exe"
+    ],
+    "processNames": [
+      "eft.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "manual-path"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "eft.exe"
+        },
+        {
+          "type": "process",
+          "value": "eft.exe"
+        },
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "euro-truck-simulator-2",
+    "name": "Euro Truck Simulator 2",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "eurotrucks2.exe"
+    ],
+    "processNames": [
+      "eurotrucks2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "eurotrucks2.exe"
+        },
+        {
+          "type": "process",
+          "value": "eurotrucks2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "europa-universalis-iv",
+    "name": "Europa Universalis IV",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "eu4.exe"
+    ],
+    "processNames": [
+      "eu4.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "f1-24",
+    "name": "F1 24",
+    "category": "racing",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [
+      "f124.exe"
+    ],
+    "processNames": [
+      "f124.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "f124.exe"
+        },
+        {
+          "type": "process",
+          "value": "f124.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "f1-25",
+    "name": "F1 25",
+    "category": "racing",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "factorio",
+    "name": "Factorio",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "factorio.exe"
+    ],
+    "processNames": [
+      "factorio.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "factorio.exe"
+        },
+        {
+          "type": "process",
+          "value": "factorio.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "fallout-4",
+    "name": "Fallout 4",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "fallout4.exe"
+    ],
+    "processNames": [
+      "fallout4.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "fallout4.exe"
+        },
+        {
+          "type": "process",
+          "value": "fallout4.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "farming-simulator-25",
+    "name": "Farming Simulator 25",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "fortnite",
+    "name": "Fortnite",
+    "category": "shooters",
+    "launchers": [
+      "epic"
+    ],
+    "executableNames": [
+      "fortniteclient-win64-shipping.exe"
+    ],
+    "processNames": [
+      "fortniteclient-win64-shipping.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "fortniteclient-win64-shipping.exe"
+        },
+        {
+          "type": "process",
+          "value": "fortniteclient-win64-shipping.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "epic"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "forza-horizon-5",
+    "name": "Forza Horizon 5",
+    "category": "racing",
+    "launchers": [
+      "xbox"
+    ],
+    "executableNames": [
+      "forzahorizon5.exe"
+    ],
+    "processNames": [
+      "forzahorizon5.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "store-package"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "forzahorizon5.exe"
+        },
+        {
+          "type": "process",
+          "value": "forzahorizon5.exe"
+        },
+        {
+          "type": "store-package",
+          "value": "xbox"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "forza-motorsport",
+    "name": "Forza Motorsport",
+    "category": "racing",
+    "launchers": [
+      "xbox"
+    ],
+    "executableNames": [
+      "forzamotorsport.exe"
+    ],
+    "processNames": [
+      "forzamotorsport.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "store-package"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "forzamotorsport.exe"
+        },
+        {
+          "type": "process",
+          "value": "forzamotorsport.exe"
+        },
+        {
+          "type": "store-package",
+          "value": "xbox"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "garry-s-mod",
+    "name": "Garry's Mod",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "gmod.exe"
+    ],
+    "processNames": [
+      "gmod.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "gmod.exe"
+        },
+        {
+          "type": "process",
+          "value": "gmod.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "genshin-impact",
+    "name": "Genshin Impact",
+    "category": "rpg",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [
+      "yuanshen.exe"
+    ],
+    "processNames": [
+      "yuanshen.exe"
+    ],
+    "detection": {
+      "methods": [
+        "manual-path"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "geometry-dash",
+    "name": "Geometry Dash",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "geometrydash.exe"
+    ],
+    "processNames": [
+      "geometrydash.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "geometrydash.exe"
+        },
+        {
+          "type": "process",
+          "value": "geometrydash.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "god-of-war",
+    "name": "God of War",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "godofwar.exe"
+    ],
+    "processNames": [
+      "godofwar.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "godofwar.exe"
+        },
+        {
+          "type": "process",
+          "value": "godofwar.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "god-of-war-ragnaro-k",
+    "name": "God of War Ragnarök",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "godofwarragnarok.exe"
+    ],
+    "processNames": [
+      "godofwarragnarok.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "grand-theft-auto-v",
+    "name": "Grand Theft Auto V",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "gta5.exe"
+    ],
+    "processNames": [
+      "gta5.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "gta5.exe"
+        },
+        {
+          "type": "process",
+          "value": "gta5.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "grand-theft-auto-v-enhanced",
+    "name": "Grand Theft Auto V Enhanced",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "gta5_enhanced.exe"
+    ],
+    "processNames": [
+      "gta5_enhanced.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "grounded",
+    "name": "Grounded",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "grounded.exe"
+    ],
+    "processNames": [
+      "grounded.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "grounded.exe"
+        },
+        {
+          "type": "process",
+          "value": "grounded.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "halo-infinite",
+    "name": "Halo Infinite",
+    "category": "shooters",
+    "launchers": [
+      "xbox"
+    ],
+    "executableNames": [
+      "haloinfinite.exe"
+    ],
+    "processNames": [
+      "haloinfinite.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "store-package"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "haloinfinite.exe"
+        },
+        {
+          "type": "process",
+          "value": "haloinfinite.exe"
+        },
+        {
+          "type": "store-package",
+          "value": "xbox"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "hearts-of-iron-iv",
+    "name": "Hearts of Iron IV",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "hoi4.exe"
+    ],
+    "processNames": [
+      "hoi4.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "hell-let-loose",
+    "name": "Hell Let Loose",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "hellletloose.exe"
+    ],
+    "processNames": [
+      "hellletloose.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "hellletloose.exe"
+        },
+        {
+          "type": "process",
+          "value": "hellletloose.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "helldivers-2",
+    "name": "Helldivers 2",
+    "category": "additional",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "helldivers2.exe"
+    ],
+    "processNames": [
+      "helldivers2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "helldivers2.exe"
+        },
+        {
+          "type": "process",
+          "value": "helldivers2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "hogwarts-legacy",
+    "name": "Hogwarts Legacy",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "hogwarts_legacy.exe"
+    ],
+    "processNames": [
+      "hogwarts_legacy.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "hogwarts_legacy.exe"
+        },
+        {
+          "type": "process",
+          "value": "hogwarts_legacy.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "honkai-star-rail",
+    "name": "Honkai: Star Rail",
+    "category": "rpg",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "manual-path"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "human-fall-flat",
+    "name": "Human: Fall Flat",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "humanfallflat.exe"
+    ],
+    "processNames": [
+      "humanfallflat.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "humanfallflat.exe"
+        },
+        {
+          "type": "process",
+          "value": "humanfallflat.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "hunt-showdown",
+    "name": "Hunt: Showdown",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "huntshowdown.exe"
+    ],
+    "processNames": [
+      "huntshowdown.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "insurgency-sandstorm",
+    "name": "Insurgency: Sandstorm",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "insurgencysandstorm.exe"
+    ],
+    "processNames": [
+      "insurgencysandstorm.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "iracing",
+    "name": "iRacing",
+    "category": "racing",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [
+      "iracing.exe"
+    ],
+    "processNames": [
+      "iracing.exe"
+    ],
+    "detection": {
+      "methods": [
+        "manual-path"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "kingdom-come-deliverance-ii",
+    "name": "Kingdom Come: Deliverance II",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "league-of-legends",
+    "name": "League of Legends",
+    "category": "strategy",
+    "launchers": [
+      "riot"
+    ],
+    "executableNames": [
+      "leagueoflegends.exe"
+    ],
+    "processNames": [
+      "leagueoflegends.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "leagueoflegends.exe"
+        },
+        {
+          "type": "process",
+          "value": "leagueoflegends.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "riot"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "left-4-dead-2",
+    "name": "Left 4 Dead 2",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "left4dead2.exe"
+    ],
+    "processNames": [
+      "left4dead2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "left4dead2.exe"
+        },
+        {
+          "type": "process",
+          "value": "left4dead2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "lethal-company",
+    "name": "Lethal Company",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "lethal company.exe"
+    ],
+    "processNames": [
+      "lethal company.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "marvel-s-spider-man-remastered",
+    "name": "Marvel's Spider-Man Remastered",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "spiderman.exe"
+    ],
+    "processNames": [
+      "spiderman.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "metro-exodus",
+    "name": "Metro Exodus",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "metroexodus.exe"
+    ],
+    "processNames": [
+      "metroexodus.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "metroexodus.exe"
+        },
+        {
+          "type": "process",
+          "value": "metroexodus.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "microsoft-flight-simulator",
+    "name": "Microsoft Flight Simulator",
+    "category": "racing",
+    "launchers": [
+      "xbox"
+    ],
+    "executableNames": [
+      "flightsimulator.exe"
+    ],
+    "processNames": [
+      "flightsimulator.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "store-package"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "flightsimulator.exe"
+        },
+        {
+          "type": "process",
+          "value": "flightsimulator.exe"
+        },
+        {
+          "type": "store-package",
+          "value": "xbox"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "minecraft-bedrock-edition",
+    "name": "Minecraft Bedrock Edition",
+    "category": "additional",
+    "launchers": [
+      "microsoft-store"
+    ],
+    "executableNames": [
+      "minecraft.exe"
+    ],
+    "processNames": [
+      "minecraft.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "store-package"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "minecraft.exe"
+        },
+        {
+          "type": "process",
+          "value": "minecraft.exe"
+        },
+        {
+          "type": "store-package",
+          "value": "microsoft-store"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "minecraft-java-edition",
+    "name": "Minecraft Java Edition",
+    "category": "additional",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [
+      "javaw.exe"
+    ],
+    "processNames": [
+      "javaw.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "manual-path"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "javaw.exe"
+        },
+        {
+          "type": "process",
+          "value": "javaw.exe"
+        },
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "monster-hunter-wilds",
+    "name": "Monster Hunter Wilds",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "monster-hunter-world",
+    "name": "Monster Hunter World",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "monsterhunterworld.exe"
+    ],
+    "processNames": [
+      "monsterhunterworld.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "monsterhunterworld.exe"
+        },
+        {
+          "type": "process",
+          "value": "monsterhunterworld.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "need-for-speed-heat",
+    "name": "Need for Speed Heat",
+    "category": "racing",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [
+      "needforspeedheat.exe"
+    ],
+    "processNames": [
+      "needforspeedheat.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "need-for-speed-payback",
+    "name": "Need for Speed Payback",
+    "category": "racing",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [
+      "needforspeedpayback.exe"
+    ],
+    "processNames": [
+      "needforspeedpayback.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "need-for-speed-unbound",
+    "name": "Need for Speed Unbound",
+    "category": "racing",
+    "launchers": [
+      "ea-app"
+    ],
+    "executableNames": [
+      "needforspeedunbound.exe"
+    ],
+    "processNames": [
+      "needforspeedunbound.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ea-app"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "no-man-s-sky",
+    "name": "No Man's Sky",
+    "category": "additional",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "nms.exe"
+    ],
+    "processNames": [
+      "nms.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "nms.exe"
+        },
+        {
+          "type": "process",
+          "value": "nms.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "once-human",
+    "name": "Once Human",
+    "category": "additional",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "oncehuman.exe"
+    ],
+    "processNames": [
+      "oncehuman.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "outlast-2",
+    "name": "Outlast 2",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "outlast2.exe"
+    ],
+    "processNames": [
+      "outlast2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "outlast2.exe"
+        },
+        {
+          "type": "process",
+          "value": "outlast2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "overwatch-2",
+    "name": "Overwatch 2",
+    "category": "shooters",
+    "launchers": [
+      "battle-net"
+    ],
+    "executableNames": [
+      "overwatch.exe"
+    ],
+    "processNames": [
+      "overwatch.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "overwatch.exe"
+        },
+        {
+          "type": "process",
+          "value": "overwatch.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "battle-net"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "overwatch-classic-where-available",
+    "name": "Overwatch Classic where available",
+    "category": "additional",
+    "launchers": [
+      "battle-net"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "battle-net"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "paladins",
+    "name": "Paladins",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "paladins.exe"
+    ],
+    "processNames": [
+      "paladins.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "palworld",
+    "name": "Palworld",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "palworld.exe"
+    ],
+    "processNames": [
+      "palworld.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "palworld.exe"
+        },
+        {
+          "type": "process",
+          "value": "palworld.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "peak",
+    "name": "Peak",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "people-playground",
+    "name": "People Playground",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "peopleplayground.exe"
+    ],
+    "processNames": [
+      "peopleplayground.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "phasmophobia",
+    "name": "Phasmophobia",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "phasmophobia.exe"
+    ],
+    "processNames": [
+      "phasmophobia.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "phasmophobia.exe"
+        },
+        {
+          "type": "process",
+          "value": "phasmophobia.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "project-zomboid",
+    "name": "Project Zomboid",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "projectzomboid.exe"
+    ],
+    "processNames": [
+      "projectzomboid.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "projectzomboid.exe"
+        },
+        {
+          "type": "process",
+          "value": "projectzomboid.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "pubg-battlegrounds",
+    "name": "PUBG: Battlegrounds",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "tslgame.exe"
+    ],
+    "processNames": [
+      "tslgame.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "tslgame.exe"
+        },
+        {
+          "type": "process",
+          "value": "tslgame.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "quake-champions",
+    "name": "Quake Champions",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "quakechampions.exe"
+    ],
+    "processNames": [
+      "quakechampions.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "r-e-p-o",
+    "name": "R.E.P.O.",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "repo.exe"
+    ],
+    "processNames": [
+      "repo.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "raft",
+    "name": "Raft",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "raft.exe"
+    ],
+    "processNames": [
+      "raft.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "raft.exe"
+        },
+        {
+          "type": "process",
+          "value": "raft.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "rainbow-six-siege",
+    "name": "Rainbow Six Siege",
+    "category": "shooters",
+    "launchers": [
+      "ubisoft-connect"
+    ],
+    "executableNames": [
+      "rainbowsix.exe"
+    ],
+    "processNames": [
+      "rainbowsix.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "rainbowsix.exe"
+        },
+        {
+          "type": "process",
+          "value": "rainbowsix.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "ubisoft-connect"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "ready-or-not",
+    "name": "Ready or Not",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "readyornot.exe"
+    ],
+    "processNames": [
+      "readyornot.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "red-dead-redemption-2",
+    "name": "Red Dead Redemption 2",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "rdr2.exe"
+    ],
+    "processNames": [
+      "rdr2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "rdr2.exe"
+        },
+        {
+          "type": "process",
+          "value": "rdr2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "resident-evil-4-remake",
+    "name": "Resident Evil 4 Remake",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "re4.exe"
+    ],
+    "processNames": [
+      "re4.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "re4.exe"
+        },
+        {
+          "type": "process",
+          "value": "re4.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "resident-evil-village",
+    "name": "Resident Evil Village",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "re8.exe"
+    ],
+    "processNames": [
+      "re8.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "re8.exe"
+        },
+        {
+          "type": "process",
+          "value": "re8.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "rob-run",
+    "name": "ROB RUN",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "roblox",
+    "name": "Roblox",
+    "category": "sandbox",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [
+      "robloxplayerbeta.exe"
+    ],
+    "processNames": [
+      "robloxplayerbeta.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "manual-path"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "robloxplayerbeta.exe"
+        },
+        {
+          "type": "process",
+          "value": "robloxplayerbeta.exe"
+        },
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "rust",
+    "name": "Rust",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "rust.exe"
+    ],
+    "processNames": [
+      "rust.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "rust.exe"
+        },
+        {
+          "type": "process",
+          "value": "rust.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "satisfactory",
+    "name": "Satisfactory",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "factorygame.exe"
+    ],
+    "processNames": [
+      "factorygame.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "factorygame.exe"
+        },
+        {
+          "type": "process",
+          "value": "factorygame.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "schedule-i",
+    "name": "Schedule I",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "scum",
+    "name": "SCUM",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "scum.exe"
+    ],
+    "processNames": [
+      "scum.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "sea-of-thieves",
+    "name": "Sea of Thieves",
+    "category": "additional",
+    "launchers": [
+      "xbox"
+    ],
+    "executableNames": [
+      "seathieves.exe"
+    ],
+    "processNames": [
+      "seathieves.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "store-package"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "seathieves.exe"
+        },
+        {
+          "type": "process",
+          "value": "seathieves.exe"
+        },
+        {
+          "type": "store-package",
+          "value": "xbox"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "sekiro",
+    "name": "Sekiro",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "sekiro.exe"
+    ],
+    "processNames": [
+      "sekiro.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "silent-hill-2-remake",
+    "name": "Silent Hill 2 Remake",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "skyrim-special-edition",
+    "name": "Skyrim Special Edition",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "skyrimse.exe"
+    ],
+    "processNames": [
+      "skyrimse.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "skyrimse.exe"
+        },
+        {
+          "type": "process",
+          "value": "skyrimse.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "smite-2",
+    "name": "SMITE 2",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "snowrunner",
+    "name": "SnowRunner",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "snowrunner.exe"
+    ],
+    "processNames": [
+      "snowrunner.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "sons-of-the-forest",
+    "name": "Sons of the Forest",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "sonsoftheforest.exe"
+    ],
+    "processNames": [
+      "sonsoftheforest.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "sonsoftheforest.exe"
+        },
+        {
+          "type": "process",
+          "value": "sonsoftheforest.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "splitgate",
+    "name": "Splitgate",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "splitgate.exe"
+    ],
+    "processNames": [
+      "splitgate.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "discontinued",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "splitgate-2",
+    "name": "Splitgate 2",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "squad",
+    "name": "Squad",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "squad.exe"
+    ],
+    "processNames": [
+      "squad.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "squad.exe"
+        },
+        {
+          "type": "process",
+          "value": "squad.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "starcraft-ii",
+    "name": "StarCraft II",
+    "category": "strategy",
+    "launchers": [
+      "battle-net"
+    ],
+    "executableNames": [
+      "starcraft ii.exe"
+    ],
+    "processNames": [
+      "starcraft ii.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "battle-net"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "stardew-valley",
+    "name": "Stardew Valley",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "stardewvalley.exe"
+    ],
+    "processNames": [
+      "stardewvalley.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "stardewvalley.exe"
+        },
+        {
+          "type": "process",
+          "value": "stardewvalley.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "starfield",
+    "name": "Starfield",
+    "category": "rpg",
+    "launchers": [
+      "xbox"
+    ],
+    "executableNames": [
+      "starfield.exe"
+    ],
+    "processNames": [
+      "starfield.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "store-package"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "starfield.exe"
+        },
+        {
+          "type": "process",
+          "value": "starfield.exe"
+        },
+        {
+          "type": "store-package",
+          "value": "xbox"
+        }
+      ]
+    },
+    "installationDetection": "store-package",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "subnautica",
+    "name": "Subnautica",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "subnautica.exe"
+    ],
+    "processNames": [
+      "subnautica.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "subnautica.exe"
+        },
+        {
+          "type": "process",
+          "value": "subnautica.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "subnautica-below-zero",
+    "name": "Subnautica: Below Zero",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "subnauticazero.exe"
+    ],
+    "processNames": [
+      "subnauticazero.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "team-fortress-2",
+    "name": "Team Fortress 2",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "hl2.exe"
+    ],
+    "processNames": [
+      "hl2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "hl2.exe"
+        },
+        {
+          "type": "process",
+          "value": "hl2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "teamfight-tactics",
+    "name": "Teamfight Tactics",
+    "category": "strategy",
+    "launchers": [
+      "riot"
+    ],
+    "executableNames": [
+      "leagueoflegends.exe"
+    ],
+    "processNames": [
+      "leagueoflegends.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "leagueoflegends.exe"
+        },
+        {
+          "type": "process",
+          "value": "leagueoflegends.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "riot"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "teardown",
+    "name": "Teardown",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "teardown.exe"
+    ],
+    "processNames": [
+      "teardown.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "teardown.exe"
+        },
+        {
+          "type": "process",
+          "value": "teardown.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "terraria",
+    "name": "Terraria",
+    "category": "sandbox",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "terraria.exe"
+    ],
+    "processNames": [
+      "terraria.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "terraria.exe"
+        },
+        {
+          "type": "process",
+          "value": "terraria.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "the-crew-2",
+    "name": "The Crew 2",
+    "category": "racing",
+    "launchers": [
+      "ubisoft-connect"
+    ],
+    "executableNames": [
+      "thecrew2.exe"
+    ],
+    "processNames": [
+      "thecrew2.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "thecrew2.exe"
+        },
+        {
+          "type": "process",
+          "value": "thecrew2.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "ubisoft-connect"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "the-crew-motorfest",
+    "name": "The Crew Motorfest",
+    "category": "racing",
+    "launchers": [
+      "ubisoft-connect"
+    ],
+    "executableNames": [
+      "thecrew motorfest.exe"
+    ],
+    "processNames": [
+      "thecrew motorfest.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ubisoft-connect"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "the-finals",
+    "name": "The Finals",
+    "category": "shooters",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "discovery.exe"
+    ],
+    "processNames": [
+      "discovery.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "discovery.exe"
+        },
+        {
+          "type": "process",
+          "value": "discovery.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "the-forest",
+    "name": "The Forest",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "theforest.exe"
+    ],
+    "processNames": [
+      "theforest.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "theforest.exe"
+        },
+        {
+          "type": "process",
+          "value": "theforest.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "the-last-of-us-part-i",
+    "name": "The Last of Us Part I",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "thelastofusparti.exe"
+    ],
+    "processNames": [
+      "thelastofusparti.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "the-outlast-trials",
+    "name": "The Outlast Trials",
+    "category": "horror",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "outlasttrials.exe"
+    ],
+    "processNames": [
+      "outlasttrials.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "outlasttrials.exe"
+        },
+        {
+          "type": "process",
+          "value": "outlasttrials.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "the-witcher-3",
+    "name": "The Witcher 3",
+    "category": "rpg",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "witcher3.exe"
+    ],
+    "processNames": [
+      "witcher3.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "witcher3.exe"
+        },
+        {
+          "type": "process",
+          "value": "witcher3.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "total-war-warhammer-iii",
+    "name": "Total War: Warhammer III",
+    "category": "strategy",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "totalwarwarhammer3.exe"
+    ],
+    "processNames": [
+      "totalwarwarhammer3.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "trackmania",
+    "name": "Trackmania",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "trackmania.exe"
+    ],
+    "processNames": [
+      "trackmania.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "trackmania.exe"
+        },
+        {
+          "type": "process",
+          "value": "trackmania.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "unturned",
+    "name": "Unturned",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "unturned.exe"
+    ],
+    "processNames": [
+      "unturned.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "unturned.exe"
+        },
+        {
+          "type": "process",
+          "value": "unturned.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "v-rising",
+    "name": "V Rising",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "vrising.exe"
+    ],
+    "processNames": [
+      "vrising.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "vrising.exe"
+        },
+        {
+          "type": "process",
+          "value": "vrising.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "valheim",
+    "name": "Valheim",
+    "category": "survival",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "valheim.exe"
+    ],
+    "processNames": [
+      "valheim.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "valheim.exe"
+        },
+        {
+          "type": "process",
+          "value": "valheim.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "valorant",
+    "name": "VALORANT",
+    "category": "shooters",
+    "launchers": [
+      "riot"
+    ],
+    "executableNames": [
+      "valorant.exe"
+    ],
+    "processNames": [
+      "valorant.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "launcher-library"
+      ],
+      "requiresManualPath": false,
+      "confidence": "verified",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "valorant.exe"
+        },
+        {
+          "type": "process",
+          "value": "valorant.exe"
+        },
+        {
+          "type": "launcher-library",
+          "value": "riot"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "VYTRIX desktop catalog audit 2026-11-21; published process name",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "warcraft-iii",
+    "name": "Warcraft III",
+    "category": "strategy",
+    "launchers": [
+      "battle-net"
+    ],
+    "executableNames": [
+      "warcraft iii.exe"
+    ],
+    "processNames": [
+      "warcraft iii.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "battle-net"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "warframe",
+    "name": "Warframe",
+    "category": "additional",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [
+      "warframe.exe"
+    ],
+    "processNames": [
+      "warframe.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "manual-path"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "warframe.exe"
+        },
+        {
+          "type": "process",
+          "value": "warframe.exe"
+        },
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "VYTRIX catalog seed; published process hint, not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "where-winds-meet",
+    "name": "Where Winds Meet",
+    "category": "rpg",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "manual-path"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "Release availability and launcher state were not verified.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "unknown",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "wreckfest",
+    "name": "Wreckfest",
+    "category": "racing",
+    "launchers": [
+      "steam"
+    ],
+    "executableNames": [
+      "wreckfest.exe"
+    ],
+    "processNames": [
+      "wreckfest.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "steam"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "wuthering-waves",
+    "name": "Wuthering Waves",
+    "category": "rpg",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "manual-path"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "xdefiant",
+    "name": "XDefiant",
+    "category": "shooters",
+    "launchers": [
+      "ubisoft-connect"
+    ],
+    "executableNames": [
+      "xdefiant.exe"
+    ],
+    "processNames": [
+      "xdefiant.exe"
+    ],
+    "detection": {
+      "methods": [
+        "launcher-library"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "launcher-library",
+          "value": "ubisoft-connect"
+        }
+      ]
+    },
+    "installationDetection": "launcher-library",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": true
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": true,
+      "displayProfiles": true,
+      "crosshair": "restricted",
+      "overlay": "unknown",
+      "performanceMonitoring": true,
+      "restoration": true
+    },
+    "compatibilityNotes": [
+      "Profiles declare capabilities, not claimed optimal game settings.",
+      "Settings apply only when the detected monitor and GPU backend expose support.",
+      "Original display state is restored on game exit, app exit, and failed apply.",
+      "No game files are modified and no code is injected.",
+      "Executable path must be supplied manually.",
+      "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+    ],
+    "supportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "monitoring",
+      "restoration"
+    ],
+    "unsupportedFeatures": [
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain",
+      "detection",
+      "crosshair",
+      "overlay"
+    ],
+    "configurationSource": "vytrix-catalog-seed-v1",
+    "releaseStatus": "discontinued",
+    "verification": {
+      "status": "unverified",
+      "source": "User-provided catalog; metadata not independently verified",
+      "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  }
+];

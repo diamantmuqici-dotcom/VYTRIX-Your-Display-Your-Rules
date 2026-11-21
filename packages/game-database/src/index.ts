@@ -1,0 +1,11 @@
+export * from "./schema.js";
+export * from "./categories.js";
+export * from "./launchers.js";
+export * from "./capabilities.js";
+export * from "./defaults.js";
+export * from "./versioning.js";
+export * from "./validation.js";
+export * from "./registry.js";
+export * from "./search.js";
+export * from "./compatibility.js";
+export { gameConfigurations } from "./generated/game-index.js";

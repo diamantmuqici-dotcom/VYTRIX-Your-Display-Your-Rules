@@ -41,7 +41,7 @@ No destructive Git command was run. No database, user file, or existing source f
 ## Missing or incomplete against master specification
 
 1. **Audit documents** — `PROJECT_AUDIT.md`, `IMPLEMENTATION_PLAN.md`, `FILE_MANIFEST.md`, and `FEATURE_MATRIX.md` were absent. This commit adds them.
-2. **Game database package** — `packages/game-database/` does not exist. Current game data lives in `apps/desktop/src/data/games.ts` as 41 verified entries plus a text catalog of roughly 236 names; those names are not individual schema-valid profile records.
+2. **Game database package** — was absent at audit time. Phase 4 added `packages/game-database/` with 160 individual schema-valid records, validation, registry, search, generation scripts, desktop filters, and native executable hints. See `docs/GAME_DATABASE.md`.
 3. **Desktop page coverage** — implemented pages are 13. The specification requires additional surfaces including Vision Lab, Diagnostics, SmartSwitch, Device Manager, Gaming Intelligence, About, Admin, and several dedicated game/library/detail routes.
 4. **Feature modules** — `src/features/` tree is absent. Logic currently sits in pages, hooks, services, and stores.
 5. **Native module granularity** — Rust modules are consolidated (`commands/mod.rs`, `gpu/mod.rs`, etc.) rather than split into the requested per-concern files.
@@ -68,10 +68,10 @@ No destructive Git command was run. No database, user file, or existing source f
 
 ## Duplication and drift
 
-- Game names overlap between verified entries and the text catalog; this must be normalized in the game-database phase.
+- Game name overlap was normalized in Phase 4: database records load first, legacy entries are appended only when their id and normalized name are new.
 - `docs/ARCHITECTURE.md` describes GPU vendor backends as if available; implementation currently reports software/unavailable. Update the doc during the GPU phase.
 - Root `package.json` description contains a mojibake character; fix during the root-files phase.
 
 ## Audit conclusion
 
-The repository is a working foundation, not a finished commercial release. The next highest-value work is the 160+ individual game-configuration database with validation, followed by SmartSwitch restoration, Vision Lab, missing desktop/website/cloud surfaces, and release provisioning. Build the missing functionality in complete units; keep all existing green builds green.
+The repository is a working foundation, not a finished commercial release. Phase 4 closed the game-database gap. The next highest-value work is SmartSwitch restoration, followed by Vision Lab, missing desktop/website/cloud surfaces, and release provisioning. Build the missing functionality in complete units; keep all existing green builds green.

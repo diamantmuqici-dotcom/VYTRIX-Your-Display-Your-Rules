@@ -64,6 +64,15 @@ export interface GameEntry {
   executableHints: string[];
   verifiedDetection: boolean;
   icon: string;
+  category?: string;
+  launchers?: Launcher[];
+  detectionConfidence?: "verified" | "partial" | "manual";
+  verificationStatus?: "verified" | "community" | "unverified";
+  supportedFeatures?: string[];
+  unsupportedFeatures?: string[];
+  configurationStatus?: "ready" | "manual";
+  releaseStatus?: "released" | "unreleased" | "discontinued" | "unknown";
+  configurationSource?: string;
 }
 
 export interface GameProfile {

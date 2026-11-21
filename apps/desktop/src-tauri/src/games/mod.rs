@@ -3,6 +3,8 @@
 
 use serde::Serialize;
 
+mod generated_hints;
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DetectedGame {
@@ -11,30 +13,60 @@ pub struct DetectedGame {
     pub display_name: String,
 }
 
-fn known_game(executable: &str) -> Option<&'static str> {
-    let name = executable.rsplit(['\\', '/']).next().unwrap_or(executable).to_ascii_lowercase();
+fn legacy_game(name: &str) -> Option<&'static str> {
     let table: &[(&str, &str)] = &[
         ("cs2.exe", "Counter-Strike 2"),
         ("hl2.exe", "Half-Life 2 / Source"),
         ("valorant.exe", "VALORANT"),
         ("lol.exe", "League of Legends"),
         ("fortnitegames.exe", "Fortnite"),
+        ("fortniteclient-win64-shipping.exe", "Fortnite"),
         ("overwatch.exe", "Overwatch"),
         ("wow.exe", "World of Warcraft"),
         ("gta5.exe", "Grand Theft Auto V"),
         ("r6siege.exe", "Tom Clancy's Rainbow Six Siege"),
+        ("rainbowsix.exe", "Rainbow Six Siege"),
         ("apexlegends.exe", "Apex Legends"),
+        ("r5apex.exe", "Apex Legends"),
         ("alien isolation.exe", "Alien: Isolation"),
         ("cyberpunk2077.exe", "Cyberpunk 2077"),
         ("eldenring.exe", "Elden Ring"),
         ("dota2.exe", "Dota 2"),
+        ("underlords.exe", "DoTA Underlords"),
         ("rocketleague.exe", "Rocket League"),
         ("minecraft.exe", "Minecraft"),
         ("javaw.exe", "Minecraft (Java, manual)"),
+        ("tslgame.exe", "PUBG: Battlegrounds"),
+        ("cod.exe", "Call of Duty"),
+        ("modernwarfare.exe", "Call of Duty"),
+        ("mw2-warzone.exe", "Call of Duty: Warzone"),
+        ("discovery.exe", "The Finals"),
+        ("eft.exe", "Escape from Tarkov"),
+        ("逃离塔科夫.exe", "Escape from Tarkov"),
+        ("bg3.exe", "Baldur's Gate 3"),
+        ("witcher3.exe", "The Witcher 3"),
+        ("tesv.exe", "Skyrim"),
+        ("me1.exe", "Mass Effect Legendary Edition"),
+        ("me2.exe", "Mass Effect Legendary Edition"),
+        ("me3.exe", "Mass Effect Legendary Edition"),
+        ("gears5.exe", "Gears 5"),
+        ("hades.exe", "Hades"),
+        ("hollow_knight.exe", "Hollow Knight"),
+        ("among us.exe", "Among Us"),
         ("steam.exe", "Steam"),
         ("epicgameslauncher.exe", "Epic Games Launcher"),
     ];
     table.iter().find(|(exe, _)| name == *exe).map(|(_, label)| *label)
+}
+
+fn known_game(executable: &str) -> Option<&'static str> {
+    let name = executable.rsplit(['\\', '/']).next().unwrap_or(executable).to_ascii_lowercase();
+    legacy_game(&name).or_else(|| {
+        generated_hints::GAME_HINTS
+            .iter()
+            .find(|(exe, _)| name == *exe)
+            .map(|(_, label)| *label)
+    })
 }
 
 #[cfg(windows)]
@@ -96,4 +128,22 @@ fn process_executable(pid: u32) -> Option<String> {
 extern "system" {
     fn GetForegroundWindow() -> *mut core::ffi::c_void;
     fn GetWindowThreadProcessId(hwnd: *mut core::ffi::c_void, pid: *mut u32) -> u32;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::known_game;
+
+    #[test]
+    fn generated_hints_resolve_from_full_path() {
+        assert_eq!(known_game("C:\\Games\\R.E.P.O.\\repo.exe"), Some("R.E.P.O."));
+        assert_eq!(known_game("/games/cyberpunk/cyberpunk2077.exe"), Some("Cyberpunk 2077"));
+    }
+
+    #[test]
+    fn legacy_hints_are_preserved() {
+        assert_eq!(known_game("lol.exe"), Some("League of Legends"));
+        assert_eq!(known_game("bg3.exe"), Some("Baldur's Gate 3"));
+        assert_eq!(known_game("unknown.exe"), None);
+    }
 }

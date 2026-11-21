@@ -1,0 +1,17 @@
+{
+  "name": "@vytrix/game-database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "generate": "npm run build && node scripts/generate-seed-data.mjs && node scripts/generate-index.mjs",
+    "validate": "npm run build && node scripts/validate-database.mjs",
+    "check-duplicates": "node scripts/check-duplicates.mjs"
+  },
+  "devDependencies": { "typescript": "^5.9.2" }
+}

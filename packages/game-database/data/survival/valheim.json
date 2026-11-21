@@ -1,0 +1,88 @@
+{
+  "id": "valheim",
+  "name": "Valheim",
+  "category": "survival",
+  "launchers": [
+    "steam"
+  ],
+  "executableNames": [
+    "valheim.exe"
+  ],
+  "processNames": [
+    "valheim.exe"
+  ],
+  "detection": {
+    "methods": [
+      "executable",
+      "process",
+      "launcher-library"
+    ],
+    "requiresManualPath": false,
+    "confidence": "partial",
+    "rules": [
+      {
+        "type": "executable",
+        "value": "valheim.exe"
+      },
+      {
+        "type": "process",
+        "value": "valheim.exe"
+      },
+      {
+        "type": "launcher-library",
+        "value": "steam"
+      }
+    ]
+  },
+  "installationDetection": "launcher-library",
+  "icon": "assets/branding/vytrix-icon.svg",
+  "defaults": {
+    "colorProfileId": "vytrix-neutral-v1",
+    "displayProfileId": "hardware-detect-v1",
+    "resolutionProfileId": "detect-monitor-v1",
+    "refreshRateProfileId": "detect-supported-maximum-v1",
+    "restorationMode": "automatic-restore-v1",
+    "crosshairEnabled": false,
+    "overlayEnabled": false,
+    "monitoringEnabled": true
+  },
+  "capabilities": {
+    "automaticDetection": true,
+    "colorProfiles": true,
+    "displayProfiles": true,
+    "crosshair": "unknown",
+    "overlay": "unknown",
+    "performanceMonitoring": true,
+    "restoration": true
+  },
+  "compatibilityNotes": [
+    "Profiles declare capabilities, not claimed optimal game settings.",
+    "Settings apply only when the detected monitor and GPU backend expose support.",
+    "Original display state is restored on game exit, app exit, and failed apply.",
+    "No game files are modified and no code is injected.",
+    "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
+  ],
+  "supportedFeatures": [
+    "detection",
+    "color-profiles",
+    "display-profiles",
+    "monitoring",
+    "restoration"
+  ],
+  "unsupportedFeatures": [
+    "game-file-modification",
+    "anti-cheat-bypass",
+    "guaranteed-fps-gain",
+    "crosshair",
+    "overlay"
+  ],
+  "configurationSource": "vytrix-catalog-seed-v1",
+  "releaseStatus": "released",
+  "verification": {
+    "status": "community",
+    "source": "VYTRIX catalog seed; published process hint, not independently verified",
+    "lastVerifiedAt": null
+  },
+  "schemaVersion": 1,
+  "profileSchemaVersion": 1
+}

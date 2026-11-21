@@ -35,11 +35,11 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | Feature | Status | Evidence / gap |
 | --- | --- | --- |
 | Process/window detection | Working | `detect_game`, native foreground detection |
-| Verified game hints | Partial | 41 verified entries in `games.ts` |
-| 160 individual configurations | Missing | `packages/game-database/` not yet created |
-| Game search/filter | Partial | basic UI search; no full category/launcher/detection filters |
-| Custom games | Missing | no custom entry flow |
-| Profile duplicate/export/import | Partial | color presets exist; game-profile version missing |
+| Verified game hints | Working | 29 verified, 65 partial, 66 manual; 140 native executable hints |
+| 160 individual configurations | Working | 160 schema-valid records in `packages/game-database/data`; validation reports no duplicates |
+| Game search/filter | Working | query plus category, launcher, and detection filters in `GameProfiles` |
+| Custom games | Working | add-game flow with launcher and executable hint |
+| Profile duplicate/export/import | Partial | game-profile duplicate and export exist; import and version migration missing |
 | Automatic switching | Missing | no resolver/restore orchestrator |
 | Switch history | Missing | no persisted transition log |
 

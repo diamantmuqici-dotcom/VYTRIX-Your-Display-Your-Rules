@@ -10,6 +10,7 @@
       "@vytrix/validation": ["../../packages/validation/src/index.ts"],
       "@vytrix/preset-format": ["../../packages/preset-format/src/index.ts"],
       "@vytrix/config": ["../../packages/config/src/index.ts"],
+      "@vytrix/game-database": ["../../packages/game-database/src/index.ts"],
       "@/*": ["src/*"]
     }
   },
