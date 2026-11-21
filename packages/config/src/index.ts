@@ -35,6 +35,7 @@ export function setApiBaseUrl(url: string): void {
 export const SECTIONS = [
   "overview", "game-profiles", "color-studio", "display", "preset-library", "crosshair",
   "effects", "optimizer", "performance", "hotkeys", "phone-control", "themes", "settings", "misc",
+  "graphics-center",
 ] as const;
 
 export type SectionId = (typeof SECTIONS)[number];

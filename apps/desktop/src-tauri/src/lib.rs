@@ -10,6 +10,7 @@ pub mod monitoring;
 pub mod optimizer;
 pub mod overlay;
 pub mod phone;
+pub mod potato;
 pub mod security;
 pub mod smart_switch;
 pub mod startup;
@@ -33,6 +34,7 @@ pub struct AppState {
     pub overlay: Arc<overlay::OverlayState>,
     pub smart_switch: Arc<smart_switch::SmartSwitch>,
     pub zoom: Arc<zoom::ZoomController>,
+    pub potato: Arc<potato::PotatoState>,
 }
 
 pub static APP_STATE: OnceLock<AppState> = OnceLock::new();
@@ -56,6 +58,7 @@ pub fn run() {
                 overlay: Arc::new(overlay::OverlayState::new(handle.clone())),
                 smart_switch: Arc::new(smart_switch::SmartSwitch::new(handle.clone())),
                 zoom: Arc::new(zoom::ZoomController::default()),
+                potato: Arc::new(potato::PotatoState::new(data_dir.clone())),
             };
             let _ = APP_STATE.set(state.clone());
             // Clear any ramp a previous crashed session left on the displays.
@@ -106,6 +109,28 @@ pub fn run() {
             commands::zoom_configure,
             commands::zoom_toggle,
             commands::zoom_release,
+            commands::potato_levels,
+            commands::potato_hardware,
+            commands::potato_refresh_hardware,
+            commands::potato_games,
+            commands::potato_settings,
+            commands::potato_compatibility,
+            commands::potato_recommend,
+            commands::potato_plan,
+            commands::potato_apply,
+            commands::potato_restore,
+            commands::potato_backup_info,
+            commands::potato_history,
+            commands::potato_set_manual_path,
+            commands::potato_benchmark_start,
+            commands::potato_benchmark_tick,
+            commands::potato_benchmark_status,
+            commands::potato_benchmark_stop,
+            commands::potato_benchmark_history,
+            commands::potato_bottleneck,
+            commands::potato_bottleneck_window,
+            commands::potato_net_probe,
+            commands::potato_diagnostics,
         ])
         .build(tauri::generate_context!())
         .expect("VYTRIX failed to build");

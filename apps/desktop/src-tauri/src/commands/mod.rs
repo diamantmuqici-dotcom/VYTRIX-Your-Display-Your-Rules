@@ -311,3 +311,146 @@ pub fn zoom_toggle(state: State<'_, AppState>) -> Result<crate::zoom::ZoomStatus
 pub fn zoom_release(state: State<'_, AppState>) -> crate::zoom::ZoomStatus {
     state.zoom.release()
 }
+
+// ---------------------------------------------------------------------------
+// Potato Mode 2.0 — graphics optimization center
+// ---------------------------------------------------------------------------
+
+#[tauri::command]
+pub fn potato_levels() -> Vec<crate::potato::LevelInfo> {
+    [0, 1, 2, 3].into_iter()
+        .map(|level| crate::potato::level_info(crate::potato::PotatoLevel::from_i32(level)))
+        .collect()
+}
+
+#[tauri::command]
+pub fn potato_hardware(state: State<'_, AppState>) -> crate::potato::HardwareInfo {
+    state.potato.hardware()
+}
+
+#[tauri::command]
+pub fn potato_refresh_hardware(state: State<'_, AppState>) -> crate::potato::HardwareInfo {
+    state.potato.refresh_hardware()
+}
+
+#[tauri::command]
+pub fn potato_games(state: State<'_, AppState>) -> Vec<crate::potato::GameInfo> {
+    crate::potato::detect::games(&state.potato)
+}
+
+#[tauri::command]
+pub fn potato_settings(state: State<'_, AppState>, game_id: String) -> Result<Vec<crate::potato::GraphicsSetting>, String> {
+    let safe = crate::security::safe_id(&game_id).ok_or_else(|| "invalid game identifier".to_owned())?;
+    let mut game = crate::potato::detect::games(&state.potato).into_iter()
+        .find(|game| game.id == safe)
+        .ok_or_else(|| "unknown game identifier".to_owned())?;
+    game.level = state.potato.level(&safe);
+    Ok(crate::potato::settings_for(&state.potato, &game))
+}
+
+#[tauri::command]
+pub fn potato_compatibility(state: State<'_, AppState>) -> Vec<crate::potato::CompatibilityRow> {
+    crate::potato::detect::compatibility(&state.potato.hardware())
+}
+
+#[tauri::command]
+pub fn potato_recommend(state: State<'_, AppState>) -> crate::potato::Recommendation {
+    let (level, reason) = crate::potato::recommend(&state.potato.hardware());
+    crate::potato::Recommendation { level, reason }
+}
+
+#[tauri::command]
+pub fn potato_plan(state: State<'_, AppState>, game_id: String, level: i32)
+    -> Result<crate::potato::ApplyPlan, String> {
+    let safe = crate::security::safe_id(&game_id).ok_or_else(|| "invalid game identifier".to_owned())?;
+    crate::potato::plan(&state.potato, &safe, level)
+}
+
+#[tauri::command]
+pub fn potato_apply(state: State<'_, AppState>, game_id: String, level: i32)
+    -> Result<crate::potato::ApplyResult, String> {
+    let safe = crate::security::safe_id(&game_id).ok_or_else(|| "invalid game identifier".to_owned())?;
+    crate::potato::apply(&state.potato, &safe, level)
+}
+
+#[tauri::command]
+pub fn potato_restore(state: State<'_, AppState>, game_id: String)
+    -> Result<crate::potato::ApplyResult, String> {
+    let safe = crate::security::safe_id(&game_id).ok_or_else(|| "invalid game identifier".to_owned())?;
+    crate::potato::restore(&state.potato, &safe)
+}
+
+#[tauri::command]
+pub fn potato_backup_info(state: State<'_, AppState>, game_id: String)
+    -> Result<Option<crate::potato::BackupInfo>, String> {
+    let safe = crate::security::safe_id(&game_id).ok_or_else(|| "invalid game identifier".to_owned())?;
+    Ok(crate::potato::backup_info(&state.potato, &safe))
+}
+
+#[tauri::command]
+pub fn potato_history(state: State<'_, AppState>, limit: Option<usize>) -> Vec<crate::potato::HistoryEntry> {
+    crate::potato::history(&state.potato, limit.unwrap_or(50).min(200))
+}
+
+#[tauri::command]
+pub fn potato_set_manual_path(state: State<'_, AppState>, game_id: String, path: String) -> Result<(), String> {
+    let safe = crate::security::safe_id(&game_id).ok_or_else(|| "invalid game identifier".to_owned())?;
+    if path.len() > 1024 { return Err("path exceeds length limit".to_owned()); }
+    state.potato.set_manual_path(&safe, &path)
+}
+
+#[tauri::command]
+pub fn potato_benchmark_start(state: State<'_, AppState>, game_id: String, level: i32)
+    -> Result<crate::potato::BenchmarkResult, String> {
+    let safe = crate::security::safe_id(&game_id).ok_or_else(|| "invalid game identifier".to_owned())?;
+    crate::potato::measure::start_benchmark(&state.potato, &safe, level)
+}
+
+#[tauri::command]
+pub fn potato_benchmark_tick(state: State<'_, AppState>) -> Result<crate::potato::BenchmarkResult, String> {
+    crate::potato::measure::record_sample(&state.potato)?;
+    crate::potato::measure::sample_benchmark(&state.potato)
+}
+
+#[tauri::command]
+pub fn potato_benchmark_status(state: State<'_, AppState>) -> Result<crate::potato::BenchmarkResult, String> {
+    crate::potato::measure::sample_benchmark(&state.potato)
+}
+
+#[tauri::command]
+pub fn potato_benchmark_stop(state: State<'_, AppState>) -> Result<crate::potato::BenchmarkResult, String> {
+    crate::potato::measure::stop_benchmark(&state.potato)
+}
+
+#[tauri::command]
+pub fn potato_benchmark_history(state: State<'_, AppState>, limit: Option<usize>) -> Vec<crate::potato::BenchmarkResult> {
+    crate::potato::measure::benchmark_history(&state.potato, limit.unwrap_or(20))
+}
+
+#[tauri::command]
+pub fn potato_bottleneck(state: State<'_, AppState>) -> crate::potato::BottleneckReport {
+    crate::potato::measure::bottleneck_from_benchmark(&state.potato)
+}
+
+#[tauri::command]
+pub async fn potato_bottleneck_window(state: State<'_, AppState>, seconds: Option<u32>, interval_ms: Option<u64>)
+    -> Result<crate::potato::BottleneckReport, String> {
+    let potato = state.potato.clone();
+    let seconds = seconds.unwrap_or(10);
+    let interval_ms = interval_ms.unwrap_or(1000);
+    Ok(tauri::async_runtime::spawn_blocking(move || {
+        crate::potato::measure::sample_window(&potato, seconds, interval_ms)
+    }).await.map_err(|e| e.to_string())?)
+}
+
+#[tauri::command]
+pub fn potato_net_probe(host: String, port: Option<u16>, count: Option<u32>)
+    -> Result<crate::potato::NetProbeResult, String> {
+    let host = host.trim().to_owned();
+    crate::potato::measure::net_probe(&host, port.unwrap_or(443), count.unwrap_or(4))
+}
+
+#[tauri::command]
+pub fn potato_diagnostics(state: State<'_, AppState>, game_id: String) -> String {
+    crate::potato::diagnostics(&state.potato, &game_id)
+}

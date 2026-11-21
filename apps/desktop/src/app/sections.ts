@@ -1,7 +1,7 @@
 import type { SectionId } from "@vytrix/config";
 import {
   LayoutDashboard, Gamepad2, Palette, Monitor, Library, Crosshair,
-  WandSparkles, Wrench, Activity, Keyboard, Smartphone, Paintbrush, Settings, Boxes,
+  WandSparkles, Wrench, Activity, Keyboard, Smartphone, Paintbrush, Settings, Boxes, SlidersHorizontal,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -28,4 +28,5 @@ export const SECTION_DEFS: SectionDefinition[] = [
   { id: "themes", index: "12", label: "Themes", description: "Appearance and personalization.", icon: Paintbrush },
   { id: "settings", index: "13", label: "Settings", description: "Application configuration and data.", icon: Settings },
   { id: "misc", index: "14", label: "Misc", description: "Utilities and input tools: zoom and SnapTap.", icon: Boxes },
+  { id: "graphics-center", index: "15", label: "Graphics Center", description: "Reversible game graphics optimization.", icon: SlidersHorizontal },
 ];

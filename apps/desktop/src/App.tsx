@@ -20,6 +20,7 @@ import PhoneControl from "@/pages/PhoneControl";
 import Themes from "@/pages/Themes";
 import Settings from "@/pages/Settings";
 import Misc from "@/pages/Misc";
+import PotatoMode from "@/pages/PotatoMode";
 import { ToastProvider } from "@/hooks/useToast";
 import { PhoneBridge } from "@/hooks/usePhoneBridge";
 import { HotkeyBridge } from "@/hooks/useHotkeyBridge";
@@ -41,6 +42,7 @@ const PAGES: Record<string, () => React.JSX.Element> = {
   "themes": Themes,
   "settings": Settings,
   "misc": Misc,
+  "graphics-center": PotatoMode,
 };
 
 function Shell() {
