@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { PanelLeftClose, PanelLeftOpen, Boxes, Github, Radio } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen, Boxes, Radio } from "lucide-react";
 import { SECTION_DEFS } from "@/app/sections";
 import { useApp } from "@/stores/app";
 import { LogoMark } from "@/components/ui/Logo";
 import { isTauriRuntime } from "@/services/tauri";
+import { useT } from "@/i18n";
 import Overview from "@/pages/Overview";
 import GameProfiles from "@/pages/GameProfiles";
 import ColorStudio from "@/pages/ColorStudio";
@@ -40,6 +41,7 @@ const PAGES: Record<string, () => React.JSX.Element> = {
 
 function Shell() {
   const { state, setSection } = useApp();
+  const t = useT();
   const [collapsed, setCollapsed] = useState(false);
   const current = SECTION_DEFS.find((section) => section.id === state.section) ?? SECTION_DEFS[0]!;
   const Page = useMemo(() => PAGES[current.id] ?? Overview, [current.id]);
@@ -53,13 +55,13 @@ function Shell() {
           {!collapsed ? (
             <div>
               <div className="brand-name">VYTRIX</div>
-              <div className="brand-tag">YOUR DISPLAY. YOUR RULES.</div>
+              <div className="brand-tag">{t("shell.brandTag")}</div>
             </div>
           ) : null}
         </div>
 
         <div className="nav-scroll">
-          <div className="nav-label">{collapsed ? "•••" : "CONTROL CENTER"}</div>
+          <div className="nav-label">{collapsed ? "•••" : t("shell.controlCenter")}</div>
           {SECTION_DEFS.map((section) => {
             const Icon = section.icon;
             return (
@@ -67,11 +69,11 @@ function Shell() {
                 key={section.id}
                 className={`nav-item ${state.section === section.id ? "active" : ""}`}
                 onClick={() => setSection(section.id)}
-                title={collapsed ? section.label : undefined}
+                title={collapsed ? t(`section.${section.id}` as Parameters<typeof t>[0]) : undefined}
               >
                 <span className="nav-index">{section.index}</span>
                 <Icon size={16} style={{ flex: "none" }} />
-                {!collapsed ? <span className="nav-text">{section.label}</span> : null}
+                {!collapsed ? <span className="nav-text">{t(`section.${section.id}` as Parameters<typeof t>[0])}</span> : null}
               </button>
             );
           })}
@@ -80,20 +82,20 @@ function Shell() {
         <div className="sidebar-foot">
           <button className="nav-item" onClick={() => setCollapsed((value) => !value)} title="Toggle sidebar">
             {collapsed ? <PanelLeftOpen size={16} /> : <PanelLeftClose size={16} />}
-            {!collapsed ? <span className="nav-text">Collapse</span> : null}
+            {!collapsed ? <span className="nav-text">{t("shell.collapse")}</span> : null}
           </button>
           <div className="nav-item" style={{ cursor: "default" }}>
             <Boxes size={16} />
-            {!collapsed ? <span className="nav-note tiny" style={{ lineHeight: 1.5 }}>{current.description}</span> : null}
+            {!collapsed ? <span className="nav-note tiny" style={{ lineHeight: 1.5 }}>{t(`desc.${current.id}` as Parameters<typeof t>[0])}</span> : null}
           </div>
         </div>
       </aside>
 
       <main className="main">
         <header className="topbar">
-          <div className="crumb"><small>{current.index} /</small> {current.label}</div>
+          <div className="crumb"><small>{current.index} /</small> {t(`section.${current.id}` as Parameters<typeof t>[0])}</div>
           <div className="topbar-right">
-            <span className="chip"><span className={`dot ${native ? "" : "warn"}`} /> {native ? "native runtime" : "browser preview"}</span>
+            <span className="chip"><span className={`dot ${native ? "" : "warn"}`} /> {native ? t("shell.native") : t("shell.browser")}</span>
             <span className="chip"><Radio size={11} /> v0.1.0</span>
           </div>
         </header>

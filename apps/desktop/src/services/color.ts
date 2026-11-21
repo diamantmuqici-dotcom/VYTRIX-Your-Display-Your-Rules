@@ -1,0 +1,63 @@
+import type { ColorSettings } from "@vytrix/shared-types";
+import { invokeNative, isTauriRuntime } from "./tauri";
+
+export interface ColorApplyStatus {
+  ok: boolean;
+  message: string;
+  backend: string;
+}
+
+type Listener = (status: ColorApplyStatus) => void;
+
+let timer: number | null = null;
+let queued: ColorSettings | null = null;
+let queuedListener: Listener | undefined;
+
+
+/** Queue a gamma-ramp write so slider drags do not flood the native runtime. */
+export function applyColor(color: ColorSettings, onResult?: Listener): void {
+  queued = { ...color };
+  queuedListener = onResult;
+  if (timer !== null) window.clearTimeout(timer);
+  timer = window.setTimeout(() => {
+    timer = null;
+    const payload = queued;
+    const listener = queuedListener;
+    queued = null;
+    queuedListener = undefined;
+    if (payload) void dispatch(payload, listener);
+  }, 90);
+}
+
+export function applyColorNow(color: ColorSettings, onResult?: Listener): Promise<ColorApplyStatus | null> {
+  if (timer !== null) { window.clearTimeout(timer); timer = null; }
+  queued = null;
+  queuedListener = undefined;
+  return dispatch(color, onResult);
+}
+
+function dispatch(color: ColorSettings, onResult?: Listener): Promise<ColorApplyStatus | null> {
+  if (!isTauriRuntime()) return Promise.resolve(null);
+  return invokeNative<ColorApplyStatus>("color_apply", { color }).then((result) => {
+    if (!result.ok) {
+      const failure: ColorApplyStatus = {
+        ok: false, message: result.error.message, backend: "unavailable",
+      };
+      onResult?.(failure);
+      return failure;
+    }
+    onResult?.(result.data);
+    return result.data;
+  });
+}
+
+export function resetColor(onResult?: Listener): Promise<ColorApplyStatus | null> {
+  if (!isTauriRuntime()) return Promise.resolve(null);
+  return invokeNative<ColorApplyStatus>("color_reset", {}).then((result) => {
+    const status: ColorApplyStatus = result.ok
+      ? result.data
+      : { ok: false, message: result.error.message, backend: "unavailable" };
+    onResult?.(status);
+    return status;
+  });
+}

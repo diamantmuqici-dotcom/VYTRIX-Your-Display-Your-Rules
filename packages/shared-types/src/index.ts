@@ -36,6 +36,8 @@ export interface ColorSettings {
 
 export type ColorField = keyof ColorSettings;
 
+export type Language = "en" | "fr" | "de" | "ru";
+
 export interface ColorPreset {
   id: string;
   name: string;
@@ -187,7 +189,7 @@ export interface AppSettings {
   startWithWindows: boolean;
   minimizeToTray: boolean;
   notifications: boolean;
-  language: string;
+  language: Language;
   autoGameSwitch: boolean;
   telemetryOptIn: boolean;
   monitorId: string | null;

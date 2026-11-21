@@ -9760,10 +9760,12 @@
     "processNames": [],
     "detection": {
       "methods": [
+        "executable",
+        "process",
         "launcher-library"
       ],
-      "requiresManualPath": true,
-      "confidence": "manual",
+      "requiresManualPath": false,
+      "confidence": "partial",
       "rules": [
         {
           "type": "launcher-library",
@@ -9784,7 +9786,7 @@
       "monitoringEnabled": true
     },
     "capabilities": {
-      "automaticDetection": false,
+      "automaticDetection": true,
       "colorProfiles": true,
       "displayProfiles": true,
       "crosshair": "unknown",
@@ -9797,11 +9799,12 @@
       "Settings apply only when the detected monitor and GPU backend expose support.",
       "Original display state is restored on game exit, app exit, and failed apply.",
       "No game files are modified and no code is injected.",
-      "Executable path must be supplied manually.",
-      "Release availability and launcher state were not verified.",
+      "Steam library manifests are read to resolve the installed title and executable at runtime; no process name is assumed.",
+      "Release availability and launcher state were not independently verified.",
       "External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted."
     ],
     "supportedFeatures": [
+      "detection",
       "color-profiles",
       "display-profiles",
       "monitoring",
@@ -9811,15 +9814,14 @@
       "game-file-modification",
       "anti-cheat-bypass",
       "guaranteed-fps-gain",
-      "detection",
       "crosshair",
       "overlay"
     ],
     "configurationSource": "vytrix-catalog-seed-v1",
     "releaseStatus": "unknown",
     "verification": {
-      "status": "unverified",
-      "source": "User-provided catalog; metadata not independently verified",
+      "status": "community",
+      "source": "Operator-confirmed Steam title; executable resolved from local Steam manifests",
       "lastVerifiedAt": null
     },
     "schemaVersion": 1,

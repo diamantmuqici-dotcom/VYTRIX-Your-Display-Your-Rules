@@ -59,21 +59,28 @@ fn legacy_game(name: &str) -> Option<&'static str> {
     table.iter().find(|(exe, _)| name == *exe).map(|(_, label)| *label)
 }
 
-fn known_game(executable: &str) -> Option<&'static str> {
+fn known_game(executable: &str) -> Option<String> {
     let name = executable.rsplit(['\\', '/']).next().unwrap_or(executable).to_ascii_lowercase();
-    legacy_game(&name).or_else(|| {
+    if let Some(label) = legacy_game(&name).or_else(|| {
         generated_hints::GAME_HINTS
             .iter()
             .find(|(exe, _)| name == *exe)
             .map(|(_, label)| *label)
-    })
+    }) {
+        return Some(label.to_owned());
+    }
+    // Steam manifests expose the real install directory and executables, so a
+    // title such as ROB RUN resolves without inventing a process name.
+    #[cfg(windows)]
+    if let Some(label) = crate::steam::game_for_executable(executable) { return Some(label); }
+    None
 }
 
 #[cfg(windows)]
 pub fn foreground_game_name() -> Option<String> {
     let pid = foreground_pid()?;
     let executable = process_executable(pid)?;
-    known_game(&executable).map(str::to_owned)
+    known_game(&executable)
 }
 
 #[cfg(not(windows))]
@@ -83,7 +90,7 @@ pub fn foreground_game_name() -> Option<String> { None }
 pub fn detect_foreground() -> Option<DetectedGame> {
     let process_id = foreground_pid()?;
     let executable = process_executable(process_id)?;
-    let display_name = known_game(&executable)?.to_owned();
+    let display_name = known_game(&executable)?;
     Some(DetectedGame { process_id, executable, display_name })
 }
 
@@ -136,14 +143,14 @@ mod tests {
 
     #[test]
     fn generated_hints_resolve_from_full_path() {
-        assert_eq!(known_game("C:\\Games\\R.E.P.O.\\repo.exe"), Some("R.E.P.O."));
-        assert_eq!(known_game("/games/cyberpunk/cyberpunk2077.exe"), Some("Cyberpunk 2077"));
+        assert_eq!(known_game("C:\\Games\\R.E.P.O.\\repo.exe").as_deref(), Some("R.E.P.O."));
+        assert_eq!(known_game("/games/cyberpunk/cyberpunk2077.exe").as_deref(), Some("Cyberpunk 2077"));
     }
 
     #[test]
     fn legacy_hints_are_preserved() {
-        assert_eq!(known_game("lol.exe"), Some("League of Legends"));
-        assert_eq!(known_game("bg3.exe"), Some("Baldur's Gate 3"));
+        assert_eq!(known_game("lol.exe").as_deref(), Some("League of Legends"));
+        assert_eq!(known_game("bg3.exe").as_deref(), Some("Baldur's Gate 3"));
         assert_eq!(known_game("unknown.exe"), None);
     }
 }

@@ -48,3 +48,77 @@ test("phone bridge forwards inbound commands into the store", () => {
   assert.match(bridge, /setOverlayEnabled/);
   assert.match(bridge, /phone_presets/);
 });
+
+test("display exposes a bounded custom resolution and refresh control", () => {
+  const page = readFileSync(new URL("pages/Display/index.tsx", root), "utf8");
+  for (const token of ["display.custom", "display.width", "display.height", "display.hz", "display.useCustom", "display_apply"]) {
+    assert.ok(page.includes(token), `missing custom mode token ${token}`);
+  }
+  assert.match(page, /WIDTH_BOUNDS/);
+  assert.match(page, /HEIGHT_BOUNDS/);
+  assert.match(page, /HZ_BOUNDS/);
+  assert.match(page, /customWidth.*customHeight.*customHz/s);
+});
+
+test("language selection ships German and Russian and rewrites the shell", () => {
+  const settings = readFileSync(new URL("pages/Settings/index.tsx", root), "utf8");
+  const i18n = readFileSync(new URL("i18n/index.ts", root), "utf8");
+  const app = readFileSync(new URL("App.tsx", root), "utf8");
+  const panel = readFileSync(new URL("components/ui/Panel.tsx", root), "utf8");
+  assert.match(i18n, /value: "de"/);
+  assert.match(i18n, /value: "ru"/);
+  assert.match(i18n, /const DE:/);
+  assert.match(i18n, /const RU:/);
+  assert.match(settings, /LANGUAGE_OPTIONS/);
+  assert.match(settings, /setSetting\("language"/);
+  assert.match(app, /useT\(\)/);
+  assert.match(panel, /useTranslateText\(\)/);
+});
+
+test("every English UI string has German, French and Russian translations", () => {
+  const source = readFileSync(new URL("i18n/index.ts", root), "utf8");
+  const sections = source.split(/const (EN|FR|DE|RU)\b/).slice(1);
+  const dictionaries = new Map();
+  for (let index = 0; index < sections.length; index += 2) {
+    const keys = [...sections[index + 1].matchAll(/^[ \t]{2}"([^"]+)":/gm)].map((match) => match[1]);
+    dictionaries.set(sections[index], new Set(keys));
+  }
+  const english = dictionaries.get("EN");
+  assert.ok(english.size >= 180, `expected full UI coverage, found ${english.size}`);
+  for (const language of ["FR", "DE", "RU"]) {
+    const translated = dictionaries.get(language);
+    assert.ok(translated, `missing ${language} dictionary`);
+    const missing = [...english].filter((key) => !translated.has(key));
+    assert.deepEqual(missing, [], `${language} is missing ${missing.length} UI keys`);
+  }
+});
+
+test("color changes reach the native gamma-ramp backend", () => {
+  const store = readFileSync(new URL("stores/app.tsx", root), "utf8");
+  const service = readFileSync(new URL("services/color.ts", root), "utf8");
+  const native = readFileSync(new URL("../src-tauri/src/color.rs", root), "utf8");
+  const lib = readFileSync(new URL("../src-tauri/src/lib.rs", root), "utf8");
+  assert.match(store, /pushColor\(color\)/);
+  assert.match(service, /"color_apply"/);
+  assert.match(service, /"color_reset"/);
+  assert.match(native, /SetDeviceGammaRamp/);
+  assert.match(native, /GetDeviceGammaRamp/);
+  assert.match(lib, /commands::color_apply/);
+  assert.match(lib, /commands::color_reset/);
+});
+
+test("Rob Run resolves through read-only Steam manifests", () => {
+  const steam = readFileSync(new URL("../src-tauri/src/steam.rs", root), "utf8");
+  const gameProfiles = readFileSync(new URL("pages/GameProfiles/index.tsx", root), "utf8");
+  const config = readFileSync(new URL("../../../packages/game-database/data/sandbox/rob-run.json", root), "utf8");
+  const parsed = JSON.parse(config);
+  assert.match(steam, /libraryfolders\.vdf/);
+  assert.match(steam, /appmanifest_/);
+  assert.match(steam, /SteamPath/);
+  assert.match(gameProfiles, /"steam_installations"/);
+  assert.match(gameProfiles, /steamMatch/);
+  assert.match(gameProfiles, /applyColorNow/);
+  assert.deepEqual(parsed.launchers, ["steam"]);
+  assert.ok(parsed.detection.methods.includes("launcher-library"));
+  assert.equal(parsed.detection.requiresManualPath, false);
+});

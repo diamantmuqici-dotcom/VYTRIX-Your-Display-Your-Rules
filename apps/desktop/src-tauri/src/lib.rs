@@ -1,5 +1,6 @@
 //! VYTRIX native library. Documented Windows APIs, bounded buffers, fail closed.
 
+pub mod color;
 pub mod commands;
 pub mod display;
 pub mod games;
@@ -10,6 +11,7 @@ pub mod optimizer;
 pub mod overlay;
 pub mod phone;
 pub mod security;
+pub mod steam;
 pub mod storage;
 pub mod system;
 pub mod win;
@@ -21,6 +23,7 @@ use tauri::Manager;
 pub struct AppState {
     pub storage: Arc<storage::Storage>,
     pub display: Arc<display::DisplayState>,
+    pub color: Arc<color::ColorState>,
     pub monitor: Arc<monitoring::MonitorState>,
     pub hotkeys: Arc<hotkeys::HotkeyRegistry>,
     pub phone: Arc<phone::PhoneAgent>,
@@ -41,6 +44,7 @@ pub fn run() {
             let state = AppState {
                 storage: Arc::new(store),
                 display: Arc::new(display::DisplayState::default()),
+                color: Arc::new(color::ColorState::default()),
                 monitor: Arc::new(monitoring::MonitorState::default()),
                 hotkeys: Arc::new(hotkeys::HotkeyRegistry::default()),
                 phone: Arc::new(phone::PhoneAgent::new(handle.clone())),
@@ -58,6 +62,9 @@ pub fn run() {
             commands::list_monitors,
             commands::display_apply,
             commands::display_rollback,
+            commands::color_apply,
+            commands::color_reset,
+            commands::steam_installations,
             commands::sample_metrics,
             commands::register_hotkey,
             commands::gpu_backend,

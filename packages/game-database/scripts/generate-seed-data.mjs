@@ -4,6 +4,10 @@ import { fileURLToPath } from "node:url";
 
 // Seed rows: name|category|launchers|process hints|confidence|release status.
 // Hints are included only where a published process name is already known.
+// Titles confirmed by the operator as Steam installs. Their executables are
+// resolved from local manifests at runtime, so no process hint is fabricated.
+const STEAM_LIBRARY_DETECTED = new Set(["ROB RUN"]);
+
 const SEED = [
   "Counter-Strike 2|shooters|steam|cs2.exe|verified|released",
   "VALORANT|shooters|riot|valorant.exe|verified|released",
@@ -58,7 +62,7 @@ const SEED = [
   "Raft|survival|steam|raft.exe|partial|released",
 
   "Roblox|sandbox|manual|robloxplayerbeta.exe|partial|released",
-  "ROB RUN|sandbox|steam||manual|unknown",
+  "ROB RUN|sandbox|steam||partial|unknown",
   "Geometry Dash|sandbox|steam|geometrydash.exe|partial|released",
   "Terraria|sandbox|steam|terraria.exe|verified|released",
   "Stardew Valley|sandbox|steam|stardewvalley.exe|verified|released",
@@ -227,19 +231,22 @@ const configurations = SEED.map((row) => {
   const hints = hintText.split(",").map((item) => item.trim().toLowerCase()).filter(Boolean);
   const primary = launchers[0];
   const installationDetection = LAUNCHER_INSTALL[primary] ?? "manual-path";
-  const needsManualPath = hints.length === 0 || confidence === "manual";
-  const effectiveConfidence = needsManualPath && hints.length === 0 ? "manual" : confidence;
+  const steamLibraryDetected = primary === "steam" && STEAM_LIBRARY_DETECTED.has(name);
+  const needsManualPath = !steamLibraryDetected && (hints.length === 0 || confidence === "manual");
+  const effectiveConfidence = steamLibraryDetected ? "partial" : (needsManualPath && hints.length === 0 ? "manual" : confidence);
   const automaticDetection = !needsManualPath;
   const verificationStatus = effectiveConfidence === "verified"
     ? "verified"
     : effectiveConfidence === "partial"
       ? "community"
       : "unverified";
-  const verificationSource = effectiveConfidence === "verified"
-    ? "VYTRIX desktop catalog audit 2026-11-21; published process name"
-    : effectiveConfidence === "partial"
-      ? "VYTRIX catalog seed; published process hint, not independently verified"
-      : "User-provided catalog; metadata not independently verified";
+  const verificationSource = steamLibraryDetected
+    ? "Operator-confirmed Steam title; executable resolved from local Steam manifests"
+    : effectiveConfidence === "verified"
+      ? "VYTRIX desktop catalog audit 2026-11-21; published process name"
+      : effectiveConfidence === "partial"
+        ? "VYTRIX catalog seed; published process hint, not independently verified"
+        : "User-provided catalog; metadata not independently verified";
 
   const methods = [...new Set([
     ...(automaticDetection ? ["executable", "process"] : []),
@@ -270,7 +277,10 @@ const configurations = SEED.map((row) => {
 
   const compatibilityNotes = [...BASE_NOTES];
   if (needsManualPath) compatibilityNotes.push("Executable path must be supplied manually.");
-  if (releaseStatus === "unknown") compatibilityNotes.push("Release availability and launcher state were not verified.");
+  if (steamLibraryDetected) compatibilityNotes.push("Steam library manifests are read to resolve the installed title and executable at runtime; no process name is assumed.");
+  if (releaseStatus === "unknown") compatibilityNotes.push(steamLibraryDetected
+    ? "Release availability and launcher state were not independently verified."
+    : "Release availability and launcher state were not verified.");
   if (capabilities.overlay !== "supported" || capabilities.crosshair !== "supported") {
     compatibilityNotes.push("External overlay use may be restricted by the title or its anti-cheat; VYTRIX uses a transparent native window only where permitted.");
   }

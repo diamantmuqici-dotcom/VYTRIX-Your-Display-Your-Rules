@@ -114,6 +114,22 @@ pub fn display_rollback(state: State<'_, AppState>) -> Result<crate::display::Ap
 }
 
 #[tauri::command]
+pub fn color_apply(color: crate::color::ColorPayload, state: State<'_, AppState>)
+    -> Result<crate::color::ColorApplyResult, String> {
+    state.color.apply(&color)
+}
+
+#[tauri::command]
+pub fn color_reset(state: State<'_, AppState>) -> Result<crate::color::ColorApplyResult, String> {
+    state.color.reset()
+}
+
+#[tauri::command]
+pub fn steam_installations() -> Vec<crate::steam::SteamInstallation> {
+    crate::steam::installations()
+}
+
+#[tauri::command]
 pub fn sample_metrics(state: State<'_, AppState>) -> crate::monitoring::MetricSample {
     state.monitor.sample()
 }

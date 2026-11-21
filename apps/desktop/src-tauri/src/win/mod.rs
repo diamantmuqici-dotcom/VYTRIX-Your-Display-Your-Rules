@@ -265,6 +265,15 @@ extern "system" {
     pub fn DefWindowProcW(hwnd: *mut c_void, message: u32, w_param: usize, l_param: isize) -> isize;
     pub fn PostQuitMessage(code: i32);
     pub fn GetSystemMetrics(index: i32) -> i32;
+    pub fn GetDC(hwnd: *mut c_void) -> *mut c_void;
+    pub fn ReleaseDC(hwnd: *mut c_void, dc: *mut c_void) -> i32;
+}
+
+// Gamma ramps live in gdi32, not user32; linking them in the user32 block breaks cargo test.
+#[link(name = "gdi32")]
+extern "system" {
+    pub fn GetDeviceGammaRamp(dc: *mut c_void, ramp: *mut c_void) -> i32;
+    pub fn SetDeviceGammaRamp(dc: *mut c_void, ramp: *const c_void) -> i32;
 }
 
 #[link(name = "kernel32")]

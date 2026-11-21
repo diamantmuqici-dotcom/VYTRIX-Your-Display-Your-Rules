@@ -10,6 +10,8 @@ import { createPreset, serializePreset, parseShareCode, shareCode } from "@vytri
 import { presetCss } from "@/data/presets";
 import { downloadText } from "@/utils/download";
 import { clampColorSettings } from "@vytrix/validation";
+import { applyColorNow } from "@/services/color";
+import { useT } from "@/i18n";
 
 type MonitorInfo = { id: string; name: string; backend: string };
 const RANGES: Record<ColorField, [number, number, string]> = {
@@ -21,6 +23,7 @@ const RANGES: Record<ColorField, [number, number, string]> = {
 export default function ColorStudio() {
   const { state, setColorField, setColor, setBaseline, applyPreset, upsertPreset, log } = useApp();
   const { notify } = useToast();
+  const t = useT();
   const [monitors, setMonitors] = useState<MonitorInfo[]>([]);
   const [presetName, setPresetName] = useState("");
   const [shareInput, setShareInput] = useState("");
@@ -35,7 +38,7 @@ export default function ColorStudio() {
   const activeBackend = monitors[0]?.backend ?? (isTauriRuntime() ? "detecting" : "local preview");
 
   const savePreset = () => {
-    if (!presetName.trim()) { notify("Name the preset first", "error"); return; }
+    if (!presetName.trim()) { notify(t("color.nameFirst"), "error"); return; }
     const preset: ColorPreset = {
       id: `custom-${Date.now()}`, name: presetName.trim(), description: "User created color preset",
       category: "Custom", settings: { ...state.color }, thumbnail: "linear-gradient(135deg,#00D9FF,#A855F7)", builtIn: false,
@@ -43,13 +46,13 @@ export default function ColorStudio() {
     upsertPreset(preset);
     setPresetName("");
     log(`Saved color preset ${preset.name}`);
-    notify("Preset saved");
+    notify(t("color.presetSaved"));
   };
 
   const importShare = () => {
     try {
       const file = parseShareCode(shareInput.trim());
-      if (file.kind !== "color") { notify("Not a color preset", "error"); return; }
+      if (file.kind !== "color") { notify(t("color.notColorPreset"), "error"); return; }
       const settings = clampColorSettings(file.payload as Record<string, number | null>);
       const imported: ColorPreset = {
         id: `import-${Date.now()}`, name: file.name, description: file.description, category: "Imported",
@@ -60,29 +63,29 @@ export default function ColorStudio() {
       log(`Imported color preset ${file.name}`);
       notify(`Imported ${file.name}`);
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Invalid share code", "error");
+      notify(error instanceof Error ? error.message : t("color.invalidCode"), "error");
     }
   };
 
   return (
     <div className="page">
-      <PageHead title="Color Studio" description="Calibrate saturation, vibrance, gamma, brightness, contrast and individual channels. The active backend is shown honestly — a software filter is never labelled as hardware vibrance." />
+      <PageHead title={t("color.title")} description={t("color.subtitle")} />
 
       <div className="preview-pair" style={{ marginBottom: 14 }}>
         <div className="preview-pane" style={{ background: "linear-gradient(135deg,#0b2a4a,#5a2a7a 55%,#d97706)" }}>
           <div className="preview-overlay" style={{ ...presetCss({ ...state.presets[0]!, settings: state.baseline }), background: "linear-gradient(135deg,#0b2a4a,#5a2a7a 55%,#d97706)" }} />
-          <span className="label">Before · baseline</span>
+          <span className="label">{t("color.before")}</span>
         </div>
         <div className="preview-pane" style={{ background: "linear-gradient(135deg,#0b2a4a,#5a2a7a 55%,#d97706)" }}>
           <div className="preview-overlay" style={{ ...presetCss({ ...state.presets[0]!, settings: state.color }), background: "linear-gradient(135deg,#0b2a4a,#5a2a7a 55%,#d97706)" }} />
-          <span className="label">After · live</span>
+          <span className="label">{t("color.after")}</span>
         </div>
       </div>
 
       <div className="grid" style={{ gridTemplateColumns: "minmax(0,1fr) 320px" }}>
-        <Panel title="Color controls" action={<span className="badge accent">{activeBackend}</span>}>
-          <div className="field"><label>Target display</label><select value={state.settings.monitorId ?? ""} onChange={(e) => log(`Target display ${e.target.value}`)}>
-            <option value="">Default display</option>
+        <Panel title={t("color.controls")} action={<span className={`badge ${state.colorApplyStatus && !state.colorApplyStatus.ok ? "warning" : "accent"}`}>{state.colorApplyStatus ? (state.colorApplyStatus.ok ? state.colorApplyStatus.backend : state.colorApplyStatus.message) : activeBackend}</span>}>
+          <div className="field"><label>{t("color.targetDisplay")}</label><select value={state.settings.monitorId ?? ""} onChange={(e) => log(`Target display ${e.target.value}`)}>
+            <option value="">{t("color.defaultDisplay")}</option>
             {monitors.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
           </select></div>
           <div className="grid grid-2">
@@ -95,16 +98,17 @@ export default function ColorStudio() {
             })}
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            <button className="btn primary" onClick={() => { setBaseline({ ...state.color }); notify("Baseline captured"); }}><Save size={14} /> Set baseline</button>
-            <button className="btn" onClick={() => { setColor({ ...state.baseline }); notify("Restored baseline"); }}><RotateCcw size={14} /> Restore baseline</button>
-            <button className="btn" onClick={() => { const file = createPreset({ kind: "color", name: "Current", description: "", author: "VYTRIX", payload: { ...state.color } }); downloadText("vytrix-color.vytrixpreset", serializePreset(file)); }}><Download size={14} /> Export</button>
+            <button className="btn primary" onClick={() => { setBaseline({ ...state.color }); notify(t("color.baselineCaptured")); }}><Save size={14} /> {t("color.setBaseline")}</button>
+            <button className="btn" onClick={() => { setColor({ ...state.baseline }); notify(t("color.baselineRestored")); }}><RotateCcw size={14} /> {t("color.restoreBaseline")}</button>
+            <button className="btn" onClick={() => { void applyColorNow(state.color).then((status) => notify(status?.ok ? t("color.appliedLive") : t("color.applyFailed"), status?.ok ? undefined : "error")); }}><Monitor size={14} /> {t("color.applyNow")}</button>
+            <button className="btn" onClick={() => { const file = createPreset({ kind: "color", name: "Current", description: "", author: "VYTRIX", payload: { ...state.color } }); downloadText("vytrix-color.vytrixpreset", serializePreset(file)); }}><Download size={14} /> {t("common.export")}</button>
           </div>
         </Panel>
 
         <div className="grid" style={{ gap: 14 }}>
-          <Panel title="Presets">
-            <div className="field"><label>New preset name</label><input type="text" value={presetName} onChange={(e) => setPresetName(e.target.value)} placeholder="My look" /></div>
-            <button className="btn primary" onClick={savePreset}>Save current</button>
+          <Panel title={t("color.presets")}>
+            <div className="field"><label>{t("color.newPresetName")}</label><input type="text" value={presetName} onChange={(e) => setPresetName(e.target.value)} placeholder="My look" /></div>
+            <button className="btn primary" onClick={savePreset}>{t("color.saveCurrent")}</button>
             <div style={{ marginTop: 12, maxHeight: 260, overflowY: "auto" }}>
               {state.presets.filter((p) => p.category !== "Imported").map((preset) => (
                 <button key={preset.id} className="nav-item" onClick={() => { applyPreset(preset); notify(`Applied ${preset.name}`); }}>
@@ -114,16 +118,16 @@ export default function ColorStudio() {
               ))}
             </div>
           </Panel>
-          <Panel title="Share code">
-            <div className="field"><label>Import VYTRIX1 code</label><textarea rows={3} value={shareInput} onChange={(e) => setShareInput(e.target.value)} placeholder="VYTRIX1...." /></div>
+          <Panel title={t("color.shareCode")}>
+            <div className="field"><label>{t("color.importCode")}</label><textarea rows={3} value={shareInput} onChange={(e) => setShareInput(e.target.value)} placeholder="VYTRIX1...." /></div>
             <div style={{ display: "flex", gap: 8 }}>
-              <button className="btn" onClick={importShare}><Upload size={14} /> Import</button>
+              <button className="btn" onClick={importShare}><Upload size={14} /> {t("color.import")}</button>
               <button className="btn" onClick={() => {
                 const file = createPreset({ kind: "color", name: "Shared", description: "", author: "VYTRIX", payload: { ...state.color } });
-                const code = shareCode(file); void navigator.clipboard?.writeText(code); notify("Share code copied");
-              }}><Share2 size={14} /> Copy share code</button>
+                const code = shareCode(file); void navigator.clipboard?.writeText(code); notify(t("color.shareCopied"));
+              }}><Share2 size={14} /> {t("color.copyShareCode")}</button>
             </div>
-            <div className="tiny" style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 6 }}><Monitor size={12} /> Preset files are inert JSON; scripts and paths are rejected on import.</div>
+            <div className="tiny" style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 6 }}><Monitor size={12} /> {t("color.inertHint")}</div>
           </Panel>
         </div>
       </div>

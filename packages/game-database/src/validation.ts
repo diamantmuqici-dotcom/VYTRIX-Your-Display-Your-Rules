@@ -155,7 +155,10 @@ export function validateGameConfiguration(input: unknown, basePath = "game"): Ga
   });
 
   const hints = [...executableNames, ...processNames];
-  if (confidence !== "manual" && hints.length === 0) fail("game.detection.confidence", "automatic or partial confidence requires a process hint");
+  const launcherLibraryDetected = methods.includes("launcher-library") && !requiresManualPath;
+  if (confidence !== "manual" && hints.length === 0 && !launcherLibraryDetected) {
+    fail("game.detection.confidence", "automatic or partial confidence requires a process hint or launcher-library detection");
+  }
   if (confidence === "manual" && !requiresManualPath) fail("game.detection.requiresManualPath", "manual confidence requires manual path");
 
   const installationDetection = string(raw["installationDetection"], "game.installationDetection", 40);

@@ -9,6 +9,7 @@ import { DEFAULT_COLOR_SETTINGS, clampColorSettings } from "@vytrix/validation";
 import { BUILTIN_PRESETS } from "@/data/presets";
 import { GAME_CATALOG } from "@/data/games";
 import { OPTIMIZER_TASKS } from "@/data/optimizer";
+import { applyColor, resetColor, type ColorApplyStatus } from "@/services/color";
 
 const STORAGE_KEY = "vytrix.state.v1";
 
@@ -27,6 +28,7 @@ interface AppState {
   phonePermissions: PhonePermissions;
   favorites: string[];
   history: { time: number; text: string }[];
+  colorApplyStatus: ColorApplyStatus | null;
 }
 
 interface AppApi {
@@ -88,7 +90,12 @@ function defaultState(): AppState {
     },
     favorites: [],
     history: [],
+    colorApplyStatus: null,
   };
+}
+
+function validLanguage(value: unknown): "en" | "fr" | "de" | "ru" {
+  return value === "fr" || value === "de" || value === "ru" ? value : "en";
 }
 
 function load(): AppState {
@@ -103,7 +110,7 @@ function load(): AppState {
       ...parsed,
       color: clampColorSettings(parsed.color ?? base.color),
       baseline: clampColorSettings(parsed.baseline ?? base.baseline),
-      settings: { ...base.settings, ...parsed.settings },
+      settings: { ...base.settings, ...parsed.settings, language: validLanguage(parsed.settings?.language) },
     };
   } catch {
     return defaultState();
@@ -130,16 +137,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setState((s) => ({ ...s, history: [{ time: Date.now(), text }, ...s.history].slice(0, 200) }));
   }, []);
 
+  const reportColor = useCallback((status: ColorApplyStatus) => {
+    setState((s) => ({ ...s, colorApplyStatus: status }));
+  }, []);
+
+  const pushColor = useCallback((color: ColorSettings) => {
+    applyColor(color, reportColor);
+  }, [reportColor]);
+
   const api = useMemo<AppApi>(() => ({
     state,
     setSection: (section) => setState((s) => ({ ...s, section })),
-    setColorField: (field, value) => setState((s) => ({
-      ...s, color: clampColorSettings({ ...s.color, [field]: value }),
-    })),
-    setColor: (color) => setState((s) => ({ ...s, color: clampColorSettings(color) })),
+    setColorField: (field, value) => setState((s) => {
+      const color = clampColorSettings({ ...s.color, [field]: value });
+      pushColor(color);
+      return { ...s, color };
+    }),
+    setColor: (color) => setState((s) => {
+      const next = clampColorSettings(color);
+      pushColor(next);
+      return { ...s, color: next };
+    }),
     setBaseline: (baseline) => setState((s) => ({ ...s, baseline: clampColorSettings(baseline) })),
     setSetting: (key, value) => setState((s) => ({ ...s, settings: { ...s.settings, [key]: value } })),
-    applyPreset: (preset) => setState((s) => ({ ...s, color: clampColorSettings(preset.settings) })),
+    applyPreset: (preset) => setState((s) => {
+      const color = clampColorSettings(preset.settings);
+      pushColor(color);
+      return { ...s, color };
+    }),
     upsertPreset: (preset) => setState((s) => ({
       ...s, presets: [...s.presets.filter((p) => p.id !== preset.id), preset],
     })),
@@ -175,8 +200,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ...s, phonePermissions: { ...s.phonePermissions, [key]: enabled },
     })),
     log,
-    reset: () => setState(defaultState()),
-  }), [state, log]);
+    reset: () => {
+      setState(defaultState());
+      void resetColor(reportColor);
+    },
+  }), [state, log, pushColor, reportColor]);
 
   return <AppContext.Provider value={api}>{children}</AppContext.Provider>;
 }
