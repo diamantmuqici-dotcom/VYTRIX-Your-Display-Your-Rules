@@ -1,0 +1,90 @@
+import { useEffect, useState } from "react";
+import { Eye, Zap } from "lucide-react";
+import type { ZoomMode, ZoomStatus } from "@vytrix/shared-types";
+import { useApp } from "@/stores/app";
+import { useToast } from "@/hooks/useToast";
+import { Panel } from "@/components/ui/Panel";
+import { getZoomStatus, normalizeZoomLevel, releaseZoom, toggleZoom } from "@/services/zoom";
+import { isTauriRuntime } from "@/services/tauri";
+import { useT } from "@/i18n";
+
+/** Full-screen magnifier control moved from Display Effects into Misc. */
+export default function ZoomPanel() {
+  const { state, setSetting, log } = useApp();
+  const { notify } = useToast();
+  const t = useT();
+  const [zoomStatus, setZoomStatus] = useState<ZoomStatus | null>(null);
+
+  const zoomMode = state.settings.zoomMode;
+  const zoomLevel = state.settings.zoomLevel;
+  const zoomBind = state.hotkeys.find((item) => item.action === "toggle-zoom");
+
+  useEffect(() => {
+    if (!isTauriRuntime()) return;
+    let active = true;
+    let dispose = () => {};
+    void getZoomStatus().then((result) => {
+      if (active && result.ok) setZoomStatus(result.data);
+    });
+    void (async () => {
+      const { listen } = await import("@tauri-apps/api/event");
+      const unlisten = await listen<ZoomStatus>("vytrix://zoom", (event) => {
+        if (active) setZoomStatus(event.payload);
+      });
+      if (active) dispose = unlisten;
+      else unlisten();
+    })();
+    return () => { active = false; dispose(); };
+  }, []);
+
+  const runZoom = (command: "toggle" | "release") => {
+    const task = command === "toggle" ? toggleZoom() : releaseZoom();
+    void task.then((result) => {
+      if (result.ok) {
+        setZoomStatus(result.data);
+        log(`Zoom ${result.data.detail}`);
+      } else {
+        notify(result.error.message, "error");
+      }
+    });
+  };
+
+  return (
+    <div className="grid grid-2">
+      <Panel title={t("effects.zoom.title")} icon={Eye} className="elevated">
+        <div className="tiny" style={{ lineHeight: 1.6 }}>{t("effects.zoom.detail")}</div>
+        <div className="field" style={{ marginTop: 12 }}>
+          <label>{t("effects.zoom.mode")}</label>
+          <select value={zoomMode} onChange={(event) => setSetting("zoomMode", event.target.value as ZoomMode)}>
+            <option value="toggle">{t("effects.zoom.toggle")}</option>
+            <option value="hold">{t("effects.zoom.hold")}</option>
+          </select>
+        </div>
+        <div className="field">
+          <label>{t("effects.zoom.level")}: {zoomLevel.toFixed(2).replace(/\.00$/, "").replace(/0$/, "")}x</label>
+          <input
+            type="range"
+            min={1}
+            max={8}
+            step={0.25}
+            value={zoomLevel}
+            onChange={(event) => setSetting("zoomLevel", normalizeZoomLevel(Number(event.target.value)))}
+          />
+        </div>
+        <div className="row"><span className="muted">{t("effects.zoom.bind")}</span><b className="mono">{zoomBind?.enabled === false ? "disabled" : zoomBind?.keys.join(" + ") || "none"}</b></div>
+        <div className="row"><span className="muted">{t("effects.zoom.status")}</span><b className="mono">{zoomStatus?.detail ?? "idle"}</b></div>
+        {zoomMode === "hold" ? <div className="tiny" style={{ lineHeight: 1.6 }}>{t("effects.zoom.holdHint")}</div> : null}
+        <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+          <button className="btn primary" disabled={zoomMode === "hold"} onClick={() => runZoom("toggle")}>{t("effects.zoom.toggleNow")}</button>
+          <button className="btn" onClick={() => runZoom("release")}>{t("effects.zoom.release")}</button>
+        </div>
+      </Panel>
+      <Panel title={t("misc.zoom.about.title")} icon={Zap}>
+        <div className="tiny" style={{ lineHeight: 1.7 }}>
+          {t("misc.zoom.about.body")}
+        </div>
+        <div className="badge accent" style={{ marginTop: 12 }}>{t("misc.zoom.about.badge")}</div>
+      </Panel>
+    </div>
+  );
+}

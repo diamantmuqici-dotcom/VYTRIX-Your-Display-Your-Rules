@@ -19,7 +19,7 @@ import Hotkeys from "@/pages/Hotkeys";
 import PhoneControl from "@/pages/PhoneControl";
 import Themes from "@/pages/Themes";
 import Settings from "@/pages/Settings";
-import SnapTap from "@/pages/SnapTap";
+import Misc from "@/pages/Misc";
 import { ToastProvider } from "@/hooks/useToast";
 import { PhoneBridge } from "@/hooks/usePhoneBridge";
 import { HotkeyBridge } from "@/hooks/useHotkeyBridge";
@@ -40,7 +40,7 @@ const PAGES: Record<string, () => React.JSX.Element> = {
   "phone-control": PhoneControl,
   "themes": Themes,
   "settings": Settings,
-  "snaptap": SnapTap,
+  "misc": Misc,
 };
 
 function Shell() {

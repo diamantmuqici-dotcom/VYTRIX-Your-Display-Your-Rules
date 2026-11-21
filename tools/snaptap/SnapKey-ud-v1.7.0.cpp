@@ -47,6 +47,7 @@
 
 #include <windows.h>
 #include <shellapi.h>
+#include <shlobj.h>
 #include <tlhelp32.h>
 #include <mmsystem.h>
 #include <psapi.h>
@@ -85,6 +86,7 @@ namespace fs = std::filesystem;
 #define ID_TRAY_LAYOUTS                 3007
 #define ID_TRAY_AUTODETECT              3008
 #define ID_TRAY_DETECTED                3009
+#define ID_STARTUP_BASE                 4200   // 4200..4202: off / registry / folder
 #define WM_TRAYICON                     (WM_USER + 1)
 #define ID_LAYOUT_BASE                  4000
 
@@ -101,6 +103,9 @@ enum AcTier { TIER_NONE = 0, TIER_SOFT = 1, TIER_HARD = 2, TIER_KEEN = 3 };
 // snap-tap policy / enforcement likelihood, independent of AC strength.
 // AC tier says how hard the client looks; risk says what a snap gets you.
 enum BanRisk { RISK_LOW = 0, RISK_MEDIUM = 1, RISK_HIGH = 2, RISK_EXTREME = 3 };
+
+// logon entry point. registry = per-user Run key, folder = shell:startup .cmd
+enum StartupMode { STARTUP_OFF = 0, STARTUP_REGISTRY = 1, STARTUP_FOLDER = 2 };
 
 // ------------------------------------------------------------- state
 
@@ -143,6 +148,7 @@ static bool   isLocked     = false;
 
 // config v4
 static bool     cfgUniversal       = true;  // v1.9.0: run in every window, no title gating
+static int      cfgStartupMode     = STARTUP_REGISTRY; // v1.10.0: logon entry method
 static bool     cfgAutoDetect      = true;
 static bool     cfgRequireFullscreen = true;
 static int      cfgCoverPct        = 95;   // unknown titles: monitor % area required
@@ -226,6 +232,8 @@ void CreateDefaultConfig(const std::string& filename);
 void RestoreConfigFromBackup(const std::string& backupFilename, const std::string& destinationFilename);
 std::string GetVersionInfo();
 void SendKey(int target, bool keyDown);
+static bool ApplyStartupMode(int mode, string* errorOut);
+static string TrimStr(const string& s);
 static void CancelAllPending();
 static void DrainPendingQueue(const char* reason);
 
@@ -325,6 +333,11 @@ static string Narrow(const wstring& w) {
 
 static wstring LowerW(wstring s) {
     for (auto& c : s) c = (wchar_t)towlower(c);
+    return s;
+}
+
+static string LowerStr(string s) {
+    for (auto& c : s) c = (char)tolower((unsigned char)c);
     return s;
 }
 
@@ -1125,6 +1138,7 @@ bool LoadConfig(const std::string& filename, bool firstLoad) {
     }
 
     // v4 defaults — a value only sticks if the file carries the line
+    int      newStartupMode = STARTUP_REGISTRY; // v1.10.0: logon entry method
     bool     newUniversal  = true;   // v1.9.0: default on, set 0 for detection mode
     int      newJitterMin  = 8;
     int      newJitterMax  = 18;
@@ -1217,6 +1231,13 @@ bool LoadConfig(const std::string& filename, bool firstLoad) {
 
         // root
         if (name == "universal")            { newUniversal = atoi(valueStr.c_str()) != 0; continue; }
+        if (name == "startupMode") {
+            string v = LowerStr(valueStr);
+            if (v == "off" || v == "0") newStartupMode = STARTUP_OFF;
+            else if (v == "folder" || v == "startup" || v == "2") newStartupMode = STARTUP_FOLDER;
+            else newStartupMode = STARTUP_REGISTRY;
+            continue;
+        }
         if (name == "autoDetect")           { newAutoDetect = atoi(valueStr.c_str()) != 0; continue; }
         if (name == "requireFullscreen")    { newRequireFs  = atoi(valueStr.c_str()) != 0; continue; }
         if (name == "coverPct")             { newCoverPct   = atoi(valueStr.c_str()); continue; }
@@ -1307,6 +1328,7 @@ bool LoadConfig(const std::string& filename, bool firstLoad) {
     }
 
     cfgUniversal  = newUniversal;
+    cfgStartupMode = newStartupMode;
     cfgJitterMin  = newJitterMin;
     cfgJitterMax  = newJitterMax;
     cfgSettleMs   = newSettleMs;
@@ -1596,6 +1618,151 @@ static void SetLocked(bool locked) {
     LogEvent(isLocked ? "locked (dormant)" : "unlocked (active)");
 }
 
+// ------------------------------------------------------------- logon startup
+// registry = HKCU Run value quoted exe path; folder = shell:startup launcher.
+// Both are per-user, need no elevation, and anchor cwd to the exe directory
+// so config.cfg / icons / profiles resolve at logon.
+
+static wstring OwnExePath() {
+    WCHAR buf[MAX_PATH + 1] = {0};
+    DWORD n = GetModuleFileNameW(NULL, buf, MAX_PATH);
+    return n > 0 && n < MAX_PATH ? wstring(buf, n) : wstring();
+}
+
+static wstring StartupFolder() {
+    WCHAR buf[MAX_PATH + 1] = {0};
+    if (SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_STARTUP, NULL,
+                                   SHGFP_TYPE_CURRENT, buf))) {
+        return wstring(buf);
+    }
+    WCHAR appData[MAX_PATH + 1] = {0};
+    DWORD n = GetEnvironmentVariableW(L"APPDATA", appData, MAX_PATH);
+    if (n > 0 && n < MAX_PATH) {
+        return wstring(appData) +
+               L"\\Microsoft\\Windows\\Start Menu\\Programs\\Startup";
+    }
+    return wstring();
+}
+
+static wstring StartupLauncherPath() {
+    wstring folder = StartupFolder();
+    return folder.empty() ? wstring() : folder + L"\\SnapKey.cmd";
+}
+
+static bool RemoveStartupRegistry() {
+    HKEY key = NULL;
+    if (RegOpenKeyExW(HKEY_CURRENT_USER,
+                      L"Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                      0, KEY_SET_VALUE, &key) != ERROR_SUCCESS) return false;
+    LONG rc = RegDeleteValueW(key, L"SnapKey");
+    RegCloseKey(key);
+    return rc == ERROR_SUCCESS || rc == ERROR_FILE_NOT_FOUND;
+}
+
+static bool InstallStartupRegistry(const wstring& exe) {
+    if (exe.empty()) return false;
+    HKEY key = NULL;
+    if (RegCreateKeyExW(HKEY_CURRENT_USER,
+                        L"Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+                        0, NULL, REG_OPTION_NON_VOLATILE, KEY_SET_VALUE,
+                        NULL, &key, NULL) != ERROR_SUCCESS) return false;
+    const wstring command = L"\"" + exe + L"\"";
+    LONG rc = RegSetValueExW(key, L"SnapKey", 0, REG_SZ,
+                             (const BYTE*)command.c_str(),
+                             (DWORD)((command.size() + 1) * sizeof(WCHAR)));
+    RegCloseKey(key);
+    return rc == ERROR_SUCCESS;
+}
+
+static bool WriteAnsiFile(const wstring& path, const string& content) {
+    int needed = MultiByteToWideChar(CP_UTF8, 0, content.c_str(),
+                                     (int)content.size(), NULL, 0);
+    if (needed <= 0) return false;
+    vector<wchar_t> wide((size_t)needed + 1, 0);
+    MultiByteToWideChar(CP_UTF8, 0, content.c_str(), (int)content.size(),
+                        wide.data(), needed);
+    int bytes = WideCharToMultiByte(CP_ACP, 0, wide.data(), needed,
+                                    NULL, 0, NULL, NULL);
+    if (bytes <= 0) return false;
+    vector<char> ansi((size_t)bytes + 1, 0);
+    WideCharToMultiByte(CP_ACP, 0, wide.data(), needed,
+                        ansi.data(), bytes, NULL, NULL);
+    ofstream out(path.c_str(), ios::binary | ios::trunc);
+    if (!out.is_open()) return false;
+    out.write(ansi.data(), bytes);
+    return out.good();
+}
+
+static bool InstallStartupFolder(const wstring& exe) {
+    wstring launcher = StartupLauncherPath();
+    if (exe.empty() || launcher.empty()) return false;
+    size_t slash = exe.find_last_of(L"\\/");
+    wstring dir = slash == wstring::npos ? wstring() : exe.substr(0, slash);
+    // cmd /c start with an explicit title token: quoted exe paths stay one arg
+    string body = "@echo off\r\ncd /d \"" + Narrow(dir) + "\"\r\n" +
+                  "start \"SnapKey\" \"" + Narrow(exe) + "\"\r\n";
+    return WriteAnsiFile(launcher, body);
+}
+
+static bool RemoveStartupFolder() {
+    wstring launcher = StartupLauncherPath();
+    if (launcher.empty()) return false;
+    if (!fs::exists(launcher)) return true;
+    error_code ec;
+    return fs::remove(launcher, ec) || ec.value() == 0;
+}
+
+static bool ApplyStartupMode(int mode, string* errorOut) {
+    if (mode < STARTUP_OFF || mode > STARTUP_FOLDER) {
+        if (errorOut) *errorOut = "startupMode must be 0, 1 or 2";
+        return false;
+    }
+    const wstring exe = OwnExePath();
+    if (mode != STARTUP_OFF && exe.empty()) {
+        if (errorOut) *errorOut = "cannot resolve own executable path";
+        return false;
+    }
+
+    bool ok = RemoveStartupRegistry() && RemoveStartupFolder();
+    if (mode == STARTUP_REGISTRY) ok = InstallStartupRegistry(exe) && ok;
+    else if (mode == STARTUP_FOLDER) ok = InstallStartupFolder(exe) && ok;
+
+    if (!ok && errorOut) *errorOut = "logon entry write failed (per-user policy?)";
+    LogEvent(string("startup mode applied: ") +
+             (mode == STARTUP_OFF ? "off" :
+              mode == STARTUP_REGISTRY ? "registry Run key" : "shell:startup"));
+    return ok;
+}
+
+static const char* StartupModeName(int mode) {
+    return mode == STARTUP_FOLDER ? "folder" :
+           mode == STARTUP_REGISTRY ? "registry" : "off";
+}
+
+// rewrite only the startupMode line so the tray choice survives a restart;
+// other keys and comments stay byte-identical.
+static bool WriteStartupMode(int mode) {
+    ifstream in("config.cfg");
+    if (!in.is_open()) return false;
+    vector<string> lines;
+    string line;
+    bool found = false;
+    while (getline(in, line)) {
+        string probe = TrimStr(line);
+        if (probe.rfind("startupMode", 0) == 0) {
+            line = string("startupMode=") + StartupModeName(mode);
+            found = true;
+        }
+        lines.push_back(line);
+    }
+    in.close();
+    if (!found) lines.push_back(string("startupMode=") + StartupModeName(mode));
+    ofstream out("config.cfg", ios::binary | ios::trunc);
+    if (!out.is_open()) return false;
+    for (const string& l : lines) out << l << "\n";
+    return out.good();
+}
+
 // ------------------------------------------------------------- stealth names
 
 // stable hash of the exe path: same install -> same mutex (single-instance
@@ -1648,6 +1815,11 @@ int main() {
     if (!LoadConfig("config.cfg", true)) {
         DBG("LoadConfig failed");
         return 1;
+    }
+    // reconcile the logon entry with the persisted choice on every launch
+    {
+        string startupErr;
+        if (!ApplyStartupMode(cfgStartupMode, &startupErr)) LogEvent("startup reconcile: " + startupErr);
     }
     DBG("config ok");
     // log rotation: a session log grows unbounded (v1.6.1 log hit 18kB in
@@ -1738,7 +1910,7 @@ int main() {
     SetTimer(hwnd, TIMER_WATCHDOG, (UINT)RandRange(1600, 2400), NULL);
     SetTimer(hwnd, TIMER_POLL, (UINT)cfgPollMs, NULL);
 
-    LogEvent("started v1.9.0");
+    LogEvent("started v1.10.0");
     LogEvent(cfgUniversal ? "universal mode (all windows)"
                           : (cfgAutoDetect ? "autodetect on" : "whitelist mode"));
     LogEvent("gate " + (cfgAutoDetect ? string("autodetect")
@@ -1977,18 +2149,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                         : string("Detected: none (hover tray tip)"));
                 AppendMenuA(hMenu, MF_STRING, ID_TRAY_DETECTED, det.c_str());
             }
+            HMENU hStartup = CreatePopupMenu();
+            {
+                AppendMenuA(hStartup, MF_STRING | (cfgStartupMode == STARTUP_OFF ? MF_CHECKED : 0),
+                            ID_STARTUP_BASE + 0, "Off");
+                AppendMenuA(hStartup, MF_STRING | (cfgStartupMode == STARTUP_REGISTRY ? MF_CHECKED : 0),
+                            ID_STARTUP_BASE + 1, "Registry Run key");
+                AppendMenuA(hStartup, MF_STRING | (cfgStartupMode == STARTUP_FOLDER ? MF_CHECKED : 0),
+                            ID_STARTUP_BASE + 2, "shell:startup folder");
+                AppendMenu(hMenu, MF_POPUP, (UINT_PTR)hStartup, TEXT("Start with Windows"));
+            }
             AppendMenu(hMenu, MF_STRING, ID_TRAY_LOCK_FUNCTION, isLocked ? TEXT("Disable SnapKey") : TEXT("Enable SnapKey"));
             AppendMenu(hMenu, MF_STRING, ID_TRAY_RESTART_SNAPKEY, TEXT("Restart SnapKey"));
             AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
             AppendMenu(hMenu, MF_STRING, ID_TRAY_HELP, TEXT("Get Help"));
             AppendMenu(hMenu, MF_STRING, ID_TRAY_CHECKUPDATE, TEXT("Check Updates"));
-            AppendMenu(hMenu, MF_STRING, ID_TRAY_VERSION_INFO, TEXT("Version Info (1.9.0)"));
+            AppendMenu(hMenu, MF_STRING, ID_TRAY_VERSION_INFO, TEXT("Version Info (1.10.0)"));
             AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
             AppendMenu(hMenu, MF_STRING, ID_TRAY_EXIT_CONTEXT_MENU_ITEM, TEXT("Exit SnapKey"));
 
             TrackPopupMenu(hMenu, TPM_BOTTOMALIGN | TPM_LEFTALIGN, curPoint.x, curPoint.y, 0, hwnd, NULL);
             DestroyMenu(hMenu);
             DestroyMenu(hSubMenu);
+            DestroyMenu(hStartup);
         } else if (lParam == WM_LBUTTONDBLCLK) {
             SetLocked(!isLocked);
         }
@@ -2013,6 +2196,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
                            TEXT("Update SnapKey"),
                            MB_YESNO | MB_ICONQUESTION) == IDYES) {
                 ShellExecute(NULL, TEXT("open"), TEXT("https://github.com/cafali/SnapKey/releases"), NULL, NULL, SW_SHOWNORMAL);
+            }
+        } else if (LOWORD(wParam) >= ID_STARTUP_BASE && LOWORD(wParam) < ID_STARTUP_BASE + 3) {
+            int chosen = (int)(LOWORD(wParam) - ID_STARTUP_BASE);
+            string error;
+            if (!ApplyStartupMode(chosen, &error)) {
+                MessageBoxA(hwnd, error.c_str(), "SnapKey startup", MB_OK | MB_ICONERROR);
+            } else {
+                cfgStartupMode = chosen;
+                if (!WriteStartupMode(chosen)) {
+                    LogEvent("startup mode applied but config.cfg write failed");
+                }
+                LogEvent(string("startup mode selected: ") + StartupModeName(cfgStartupMode));
             }
         } else if (LOWORD(wParam) == ID_TRAY_AUTODETECT) {
             cfgUniversal = !cfgUniversal;
@@ -2076,7 +2271,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 // ------------------------------------------------------------- version
 
 std::string GetVersionInfo() {
-    return "SnapKey v1.9.0\n"
+    return "SnapKey v1.10.0\n"
            "Keyboard group input handler — universal mode, glitch-hardened.\n"
            "Base: github.com/cafali/SnapKey (MIT)\n"
            "Mode:   universal=1 (default): group transform active in every window,\n"
@@ -2084,6 +2279,8 @@ std::string GetVersionInfo() {
            "        universal=0: legacy autodetect (~150-title table + suffix +\n"
            "        GPU/coverage heuristic) or whitelist (activeOn) mode.\n"
            "Startup: working dir anchored to exe dir.\n"
+           "Logon:   startupMode=registry (per-user Run key) / folder (shell:startup)\n"
+           "         / off. Choose from the tray 'Start with Windows' menu.\n"
            "Config: universal / autoDetect / autoExclude / autoInclude /\n"
            "        requireFullscreen / coverPct / closeDebounceMs / gfxRescanMs /\n"
            "        minHoldMs / jitterMinMs / jitterMaxMs / tier*MinMs / tier*MaxMs /\n"

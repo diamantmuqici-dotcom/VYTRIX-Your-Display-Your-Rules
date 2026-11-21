@@ -5,6 +5,7 @@ import { useApp } from "@/stores/app";
 import { useToast } from "@/hooks/useToast";
 import { PageHead, Panel } from "@/components/ui/Panel";
 import { ToggleRow } from "@/components/ui/ToggleRow";
+import { StartupChooser } from "@/components/ui/StartupChooser";
 import { downloadText } from "@/utils/download";
 import { LANGUAGE_OPTIONS, useT } from "@/i18n";
 
@@ -33,17 +34,25 @@ export default function Settings() {
       <PageHead title={t("settings.title")} description={t("settings.subtitle")} />
       <div className="tabs">{TABS.map((value) => <button key={value} className={`tab ${tab === value ? "active" : ""}`} onClick={() => setTab(value)}>{t(`common.${value.toLowerCase()}` as Parameters<typeof t>[0])}</button>)}</div>
 
-      {tab === "General" ? <Panel title={t("common.general")} icon={SettingsIcon}>
-        <ToggleRow label={t("settings.startWithWindows")} checked={state.settings.startWithWindows} onChange={(v) => setSetting("startWithWindows", v)} detail={t("settings.startWithWindowsDetail")} />
-        <ToggleRow label={t("settings.minimizeToTray")} checked={state.settings.minimizeToTray} onChange={(v) => setSetting("minimizeToTray", v)} />
-        <ToggleRow label={t("settings.notifications")} checked={state.settings.notifications} onChange={(v) => setSetting("notifications", v)} />
-        <div className="field" style={{ marginTop: 12 }}>
-          <label>{t("common.language")}</label>
-          <select value={state.settings.language} onChange={(e) => setSetting("language", e.target.value as Language)}>
-            {LANGUAGE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </div>
-      </Panel> : null}
+      {tab === "General" ? <div className="grid" style={{ gap: 14 }}>
+        <Panel title={t("common.general")} icon={SettingsIcon}>
+          <ToggleRow label={t("settings.minimizeToTray")} checked={state.settings.minimizeToTray} onChange={(v) => setSetting("minimizeToTray", v)} />
+          <ToggleRow label={t("settings.notifications")} checked={state.settings.notifications} onChange={(v) => setSetting("notifications", v)} />
+          <div className="field" style={{ marginTop: 12 }}>
+            <label>{t("common.language")}</label>
+            <select value={state.settings.language} onChange={(e) => setSetting("language", e.target.value as Language)}>
+              {LANGUAGE_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          </div>
+        </Panel>
+        <Panel title={t("settings.startup")}>
+          <div className="tiny muted" style={{ marginBottom: 12 }}>{t("settings.startupDetail")}</div>
+          <div className="grid" style={{ gap: 16 }}>
+            <StartupChooser target="vytrix" label={t("startup.target.vytrix")} />
+            <StartupChooser target="snaptap" label={t("startup.target.snaptap")} />
+          </div>
+        </Panel>
+      </div> : null}
 
       {tab === "Display" ? <Panel title={t("common.display")}>
         <div className="field"><label>{t("settings.defaultProfile")}</label><input type="text" value={state.profiles[0]?.name ?? "None"} readOnly /></div>

@@ -1,7 +1,7 @@
 import type { SectionId } from "@vytrix/config";
 import {
   LayoutDashboard, Gamepad2, Palette, Monitor, Library, Crosshair,
-  WandSparkles, Wrench, Activity, Keyboard, Smartphone, Paintbrush, Settings,
+  WandSparkles, Wrench, Activity, Keyboard, Smartphone, Paintbrush, Settings, Boxes,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -27,5 +27,5 @@ export const SECTION_DEFS: SectionDefinition[] = [
   { id: "phone-control", index: "11", label: "Phone Control", description: "LAN-only paired companion.", icon: Smartphone },
   { id: "themes", index: "12", label: "Themes", description: "Appearance and personalization.", icon: Paintbrush },
   { id: "settings", index: "13", label: "Settings", description: "Application configuration and data.", icon: Settings },
-  { id: "snaptap", index: "14", label: "SnapTap", description: "Vendored keyboard snap-tap utility in misc.", icon: Keyboard },
+  { id: "misc", index: "14", label: "Misc", description: "Utilities and input tools: zoom and SnapTap.", icon: Boxes },
 ];

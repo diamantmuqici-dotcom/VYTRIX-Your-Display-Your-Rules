@@ -9,8 +9,8 @@ Profiles library as `SnapTap` so it appears beside the game configurations.
 
 | Path | Purpose |
 | --- | --- |
-| `SnapKey-ud-v1.7.0.cpp` | Full v1.9.0 source, MIT, upstream `cafali/SnapKey` base |
-| `config.cfg` | Group bindings and the complete v1.8.0 settings block |
+| `SnapKey-ud-v1.7.0.cpp` | Full v1.10.0 source, MIT, upstream `cafali/SnapKey` base |
+| `config.cfg` | Group bindings and the complete v1.10.0 settings block |
 | `profiles/*.cfg` | WASD, ESDF, ARROW, AZERTY and CUSTOM profiles |
 | `bin/SnapKey_v1.7.0.exe` | Prebuilt binary; the filename is fixed by the upstream autostart Run key |
 | `icon.ico`, `icon_off.ico` | Tray states |
@@ -27,7 +27,7 @@ MinGW-w64, verified against the shipped binary:
 ```bat
 g++ -std=c++17 -O2 -mwindows -static -static-libgcc -static-libstdc++ ^
     -Wall -Wextra -Wno-missing-field-initializers SnapKey-ud-v1.7.0.cpp ^
-    -o SnapKey_v1.7.0.exe -lwinmm -lshell32 -lpsapi
+    -o SnapKey_v1.7.0.exe -lwinmm -lshell32 -lpsapi -ladvapi32
 ```
 
 MSVC:
@@ -36,6 +36,8 @@ MSVC:
 cl /std:c++17 /O2 /EHsc /DNDEBUG /link /SUBSYSTEM:WINDOWS winmm.lib shell32.lib psapi.lib ^
     SnapKey-ud-v1.7.0.cpp /Fe:SnapKey_v1.7.0.exe
 ```
+(MSVC links `advapi32` through the default libraries; MinGW needs it listed
+explicitly for the per-user Run key calls.)
 
 ## Run
 
@@ -51,6 +53,25 @@ classification, no per-title risk policy and no idle unhook. It uses the global
 or whitelist mode, which keeps the title table, per-tier jitter ranges,
 `coverPct`, `idleUnhookMs`, `skipChancePct` and `banRiskLog`. All settings are
 documented in `config.cfg` and `README.upstream.md`.
+
+## Start with Windows
+
+The tray menu has a **Start with Windows** submenu with three choices. All three
+are per-user and need no elevation or service:
+
+- **Off** — no automatic start.
+- **Registry Run key** — writes
+  `HKCU\Software\Microsoft\Windows\CurrentVersion\Run\SnapKey` to the quoted
+  executable path. This is the default (`startupMode=registry`).
+- **shell:startup folder** — writes a `SnapKey.cmd` launcher into the current
+  user's Startup folder that `cd`s to the exe directory before launching, so
+  `config.cfg`, icons and profiles resolve at logon.
+
+Selecting a choice removes the other two entry points, applies the new one, and
+persists `startupMode` in `config.cfg`. On every launch the tool reconciles the
+logon entry with the saved choice. The VYTRIX app exposes the same chooser under
+Settings → Startup for both VYTRIX and SnapTap. The executable filename stays
+`SnapKey_v1.7.0.exe` because the upstream autostart key depends on it.
 
 ## Boundary
 

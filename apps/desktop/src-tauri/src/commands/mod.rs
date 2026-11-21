@@ -196,6 +196,16 @@ pub fn storage_delete(state: State<'_, AppState>, kind: String, id: String) -> R
 pub fn storage_export(state: State<'_, AppState>) -> Result<String, String> { state.storage.export_backup() }
 
 #[tauri::command]
+pub fn startup_status(target: String) -> Result<crate::startup::StartupView, String> {
+    crate::startup::status(&target)
+}
+
+#[tauri::command]
+pub fn startup_configure(target: String, mode: String) -> Result<crate::startup::StartupView, String> {
+    crate::startup::configure(&target, &mode)
+}
+
+#[tauri::command]
 pub fn overlay_config(state: State<'_, AppState>) -> crate::overlay::OverlayView {
     state.overlay.view()
 }

@@ -1,12 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { Eye, Moon, Accessibility, Zap } from "lucide-react";
-import type { ColorSettings, ZoomMode, ZoomStatus } from "@vytrix/shared-types";
+import { useRef, useState } from "react";
+import { Moon, Accessibility } from "lucide-react";
+import type { ColorSettings } from "@vytrix/shared-types";
 import { useApp } from "@/stores/app";
-import { useToast } from "@/hooks/useToast";
 import { PageHead, Panel } from "@/components/ui/Panel";
-import { getZoomStatus, normalizeZoomLevel, releaseZoom, toggleZoom } from "@/services/zoom";
-import { isTauriRuntime } from "@/services/tauri";
-import { useT } from "@/i18n";
 
 interface Effect { id: string; name: string; detail: string; settings: Partial<ColorSettings> }
 
@@ -21,34 +17,9 @@ const EFFECTS: Effect[] = [
 ];
 
 export default function Effects() {
-  const { state, setColor, setSetting, log } = useApp();
-  const { notify } = useToast();
-  const t = useT();
+  const { state, setColor, log } = useApp();
   const [held, setHeld] = useState<string | null>(null);
   const previous = useRef<ColorSettings | null>(null);
-  const [zoomStatus, setZoomStatus] = useState<ZoomStatus | null>(null);
-
-  const zoomMode = state.settings.zoomMode;
-  const zoomLevel = state.settings.zoomLevel;
-  const zoomBind = state.hotkeys.find((item) => item.action === "toggle-zoom");
-
-  useEffect(() => {
-    if (!isTauriRuntime()) return;
-    let active = true;
-    let dispose = () => {};
-    void getZoomStatus().then((result) => {
-      if (active && result.ok) setZoomStatus(result.data);
-    });
-    void (async () => {
-      const { listen } = await import("@tauri-apps/api/event");
-      const unlisten = await listen<ZoomStatus>("vytrix://zoom", (event) => {
-        if (active) setZoomStatus(event.payload);
-      });
-      if (active) dispose = unlisten;
-      else unlisten();
-    })();
-    return () => { active = false; dispose(); };
-  }, []);
 
   const hold = (effect: Effect) => {
     previous.current = { ...state.color };
@@ -62,21 +33,9 @@ export default function Effects() {
     setHeld(null);
   };
 
-  const runZoom = (command: "toggle" | "release") => {
-    const task = command === "toggle" ? toggleZoom() : releaseZoom();
-    void task.then((result) => {
-      if (result.ok) {
-        setZoomStatus(result.data);
-        log(`Zoom ${result.data.detail}`);
-      } else {
-        notify(result.error.message, "error");
-      }
-    });
-  };
-
   return (
     <div className="page">
-      <PageHead title="Display Effects" description="Reversible, transparent visual adjustments and accessibility themes. No effect reveals information a game intentionally hides." />
+      <PageHead title="Display Effects" description="Reversible, transparent visual adjustments and accessibility themes. No effect reveals information a game intentionally hides. Utility zoom now lives under Misc." />
       <div className="grid grid-3">
         {EFFECTS.map((effect) => (
           <Panel key={effect.id} title={effect.name} icon={effect.id === "night" ? Moon : Accessibility}>
@@ -88,35 +47,6 @@ export default function Effects() {
             {held === effect.id ? <div className="badge accent" style={{ marginTop: 10 }}>active while held</div> : null}
           </Panel>
         ))}
-        <Panel title={t("effects.zoom.title")} icon={Eye} className="elevated">
-          <div className="tiny" style={{ lineHeight: 1.6 }}>{t("effects.zoom.detail")}</div>
-          <div className="field" style={{ marginTop: 12 }}>
-            <label>{t("effects.zoom.mode")}</label>
-            <select value={zoomMode} onChange={(event) => setSetting("zoomMode", event.target.value as ZoomMode)}>
-              <option value="toggle">{t("effects.zoom.toggle")}</option>
-              <option value="hold">{t("effects.zoom.hold")}</option>
-            </select>
-          </div>
-          <div className="field">
-            <label>{t("effects.zoom.level")}: {zoomLevel.toFixed(2).replace(/\.00$/, "").replace(/0$/, "")}x</label>
-            <input
-              type="range"
-              min={1}
-              max={8}
-              step={0.25}
-              value={zoomLevel}
-              onChange={(event) => setSetting("zoomLevel", normalizeZoomLevel(Number(event.target.value)))}
-            />
-          </div>
-          <div className="row"><span className="muted">{t("effects.zoom.bind")}</span><b className="mono">{zoomBind?.enabled === false ? "disabled" : zoomBind?.keys.join(" + ") || "none"}</b></div>
-          <div className="row"><span className="muted">{t("effects.zoom.status")}</span><b className="mono">{zoomStatus?.detail ?? "idle"}</b></div>
-          {zoomMode === "hold" ? <div className="tiny" style={{ lineHeight: 1.6 }}>{t("effects.zoom.holdHint")}</div> : null}
-          <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-            <button className="btn primary" disabled={zoomMode === "hold"} onClick={() => runZoom("toggle")}>{t("effects.zoom.toggleNow")}</button>
-            <button className="btn" onClick={() => runZoom("release")}>{t("effects.zoom.release")}</button>
-          </div>
-          <button className="btn" style={{ marginTop: 10 }} onClick={() => { setColor({ ...state.color, gamma: 100, brightness: 100, contrast: 100, saturation: 100 }); notify("Colors reset"); }}><Zap size={14} /> Reset color effects</button>
-        </Panel>
       </div>
     </div>
   );

@@ -12,6 +12,7 @@ pub mod overlay;
 pub mod phone;
 pub mod security;
 pub mod smart_switch;
+pub mod startup;
 pub mod steam;
 pub mod storage;
 pub mod system;
@@ -86,6 +87,8 @@ pub fn run() {
             commands::storage_upsert,
             commands::storage_delete,
             commands::storage_export,
+            commands::startup_status,
+            commands::startup_configure,
             commands::overlay_config,
             commands::overlay_set,
             commands::phone_start,

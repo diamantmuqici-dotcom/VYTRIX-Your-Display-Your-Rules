@@ -17,6 +17,8 @@ pub const HKEY_CURRENT_USER: isize = 0x8000_0001u32 as i32 as isize;
 pub const HKEY_LOCAL_MACHINE: isize = 0x8000_0002u32 as i32 as isize;
 pub const KEY_READ: u32 = 0x0002_0019;
 pub const KEY_SET_VALUE: u32 = 0x0000_0002;
+pub const REG_OPTION_NON_VOLATILE: u32 = 0;
+pub const ERROR_FILE_NOT_FOUND: i32 = 2;
 pub const REG_SZ: u32 = 1;
 pub const REG_DWORD: u32 = 4;
 pub const DISP_CHANGE_SUCCESSFUL: i32 = 0;
@@ -305,6 +307,10 @@ extern "system" {
 #[link(name = "advapi32")]
 extern "system" {
     pub fn RegOpenKeyExW(key: isize, sub_key: *const u16, options: u32, access: u32, result: *mut isize) -> i32;
+    pub fn RegCreateKeyExW(key: isize, sub_key: *const u16, reserved: u32, class: *const u16,
+        options: u32, access: u32, security: *mut c_void, result: *mut isize,
+        disposition: *mut u32) -> i32;
+    pub fn RegDeleteValueW(key: isize, value: *const u16) -> i32;
     pub fn RegCloseKey(key: isize) -> i32;
     pub fn RegQueryValueExW(key: isize, value: *const u16, reserved: *mut u32, kind: *mut u32,
         data: *mut u8, size: *mut u32) -> i32;

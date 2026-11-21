@@ -6,7 +6,7 @@ import type {
   CrosshairStudioSettings, GameEntry, GameProfile, HotkeyBinding, OptimizationTask,
   PhonePermissions, RecentCrosshair, SwitchProfile, SwitchRecord, SwitchStatus, ZoomMode,
 } from "@vytrix/shared-types";
-import type { SectionId } from "@vytrix/config";
+import { SECTIONS, type SectionId } from "@vytrix/config";
 import { DEFAULT_COLOR_SETTINGS, clampColorSettings } from "@vytrix/validation";
 import { BUILTIN_PRESETS } from "@/data/presets";
 import { GAME_CATALOG } from "@/data/games";
@@ -150,6 +150,12 @@ function validZoomMode(value: unknown): ZoomMode {
   return value === "toggle" ? "toggle" : "hold";
 }
 
+function validSection(value: unknown): SectionId {
+  // v0.1.2: the standalone snaptap section moved under misc.
+  if (value === "snaptap") return "misc";
+  return SECTIONS.find((section) => section === value) ?? "overview";
+}
+
 function validZoomLevel(value: unknown): number {
   if (typeof value !== "number" || !Number.isFinite(value)) return 2;
   return Math.min(8, Math.max(1, Math.round(value * 4) / 4));
@@ -166,6 +172,7 @@ function load(): AppState {
     return {
       ...base,
       ...parsed,
+      section: validSection(parsed.section),
       color: clampColorSettings(parsed.color ?? base.color),
       baseline: clampColorSettings(parsed.baseline ?? base.baseline),
       settings: {
