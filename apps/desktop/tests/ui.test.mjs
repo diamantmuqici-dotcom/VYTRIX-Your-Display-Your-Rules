@@ -107,6 +107,33 @@ test("color changes reach the native gamma-ramp backend", () => {
   assert.match(lib, /commands::color_reset/);
 });
 
+test("color temperature is real: correct Kelvin direction and visible preview", () => {
+  const native = readFileSync(new URL("../src-tauri/src/color.rs", root), "utf8");
+  const presets = readFileSync(new URL("data/presets.ts", root), "utf8");
+  const studio = readFileSync(new URL("pages/ColorStudio/index.tsx", root), "utf8");
+  const store = readFileSync(new URL("stores/app.tsx", root), "utf8");
+
+  // Native ramp must derive red/blue from absolute Kelvin, not an inverted warmth term.
+  assert.match(native, /fn temperature_gains\(kelvin: f64\)/);
+  assert.match(native, /Lower Kelvin favors red \(warm\), higher Kelvin favors blue \(cool\)/);
+  assert.match(native, /gains\[0\] \*= temp_gains\[0\]/);
+  assert.match(native, /gains\[2\] \*= temp_gains\[2\]/);
+  assert.doesNotMatch(native, /0\.12 \* warmth/);
+  assert.match(native, /temperature_warms_low_kelvin_and_cools_high_kelvin/);
+
+  // The preview must render a temperature tint in both before and after panes.
+  assert.match(presets, /export function temperatureTint\(kelvin/);
+  assert.match(presets, /rgb\(255,150,60\)/);
+  assert.match(presets, /rgb\(120,160,255\)/);
+  assert.match(studio, /baselineTint = temperatureTint\(state\.baseline\.temperatureK\)/);
+  assert.match(studio, /currentTint = temperatureTint\(state\.color\.temperatureK\)/);
+  assert.match(studio, /style=\{baselineTint\}/);
+  assert.match(studio, /style=\{currentTint\}/);
+
+  // Temperature changes must still reach the native ramp on every slider move.
+  assert.match(store, /setColorField[\s\S]*pushColor\(color\)/);
+});
+
 test("Rob Run resolves through read-only Steam manifests", () => {
   const steam = readFileSync(new URL("../src-tauri/src/steam.rs", root), "utf8");
   const gameProfiles = readFileSync(new URL("pages/GameProfiles/index.tsx", root), "utf8");

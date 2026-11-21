@@ -45,3 +45,16 @@ export function presetCss(preset: ColorPreset): import("react").CSSProperties {
     filter: `saturate(${s.saturation}%) brightness(${s.brightness}%) contrast(${s.contrast}%) hue-rotate(${s.hue}deg)`,
   };
 }
+
+/** Approximate warmth/cool tint for the local preview. The native gamma ramp is authoritative. */
+export function temperatureTint(kelvin: number | null): import("react").CSSProperties {
+  const k = typeof kelvin === "number" && Number.isFinite(kelvin) ? kelvin : 6500;
+  if (k >= 6300 && k <= 6700) return { opacity: 0 };
+  const warm = k < 6500;
+  const strength = Math.min(0.6, (Math.abs(k - 6500) / 5500) * 0.6);
+  return {
+    background: warm ? "rgb(255,150,60)" : "rgb(120,160,255)",
+    mixBlendMode: "multiply",
+    opacity: strength,
+  };
+}

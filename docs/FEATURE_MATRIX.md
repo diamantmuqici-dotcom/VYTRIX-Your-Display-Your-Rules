@@ -25,6 +25,7 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | Custom resolution / Hz | Working | bounded width 640-16384, height 360-8640, refresh 24-360 in `Display` |
 | Rollback | Working | `display_rollback`, confirmation timer cleared on confirm/rollback |
 | Saturation / vibrance / RGB / gamma / brightness | Working | `color_apply` writes bounded 3x256 ramps via documented `SetDeviceGammaRamp`; `color_reset` restores baseline |
+| Color temperature (Kelvin) | Working | `temperature_gains` Planckian approximation drives the ramp: lower K warms (red up, blue down), higher K cools; 6500K neutral; preview tints live in both Color Studio panes |
 | RGB curves | Missing | no control or model |
 | Black/white point, shadows, highlights | Missing | no control or model |
 | Per-monitor profiles | Partial | monitor setting exists; full per-monitor profile map missing |

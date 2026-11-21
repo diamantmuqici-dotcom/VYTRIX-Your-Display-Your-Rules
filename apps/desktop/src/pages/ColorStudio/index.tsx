@@ -7,7 +7,7 @@ import { isTauriRuntime, invokeNative } from "@/services/tauri";
 import { Panel, PageHead } from "@/components/ui/Panel";
 import { ParamSlider } from "@/components/sliders/ParamSlider";
 import { createPreset, serializePreset, parseShareCode, shareCode } from "@vytrix/preset-format";
-import { presetCss } from "@/data/presets";
+import { presetCss, temperatureTint } from "@/data/presets";
 import { downloadText } from "@/utils/download";
 import { clampColorSettings } from "@vytrix/validation";
 import { applyColorNow } from "@/services/color";
@@ -36,6 +36,8 @@ export default function ColorStudio() {
   }, []);
 
   const activeBackend = monitors[0]?.backend ?? (isTauriRuntime() ? "detecting" : "local preview");
+  const baselineTint = temperatureTint(state.baseline.temperatureK);
+  const currentTint = temperatureTint(state.color.temperatureK);
 
   const savePreset = () => {
     if (!presetName.trim()) { notify(t("color.nameFirst"), "error"); return; }
@@ -74,10 +76,12 @@ export default function ColorStudio() {
       <div className="preview-pair" style={{ marginBottom: 14 }}>
         <div className="preview-pane" style={{ background: "linear-gradient(135deg,#0b2a4a,#5a2a7a 55%,#d97706)" }}>
           <div className="preview-overlay" style={{ ...presetCss({ ...state.presets[0]!, settings: state.baseline }), background: "linear-gradient(135deg,#0b2a4a,#5a2a7a 55%,#d97706)" }} />
+          <div className="preview-overlay" style={baselineTint} />
           <span className="label">{t("color.before")}</span>
         </div>
         <div className="preview-pane" style={{ background: "linear-gradient(135deg,#0b2a4a,#5a2a7a 55%,#d97706)" }}>
           <div className="preview-overlay" style={{ ...presetCss({ ...state.presets[0]!, settings: state.color }), background: "linear-gradient(135deg,#0b2a4a,#5a2a7a 55%,#d97706)" }} />
+          <div className="preview-overlay" style={currentTint} />
           <span className="label">{t("color.after")}</span>
         </div>
       </div>
@@ -93,7 +97,7 @@ export default function ColorStudio() {
               const [min, max, suffix] = RANGES[field];
               const raw = state.color[field];
               return <ParamSlider key={field} label={field} value={raw === null ? min : raw} min={min} max={max} suffix={suffix}
-                onChange={(v) => setColorField(field, field === "temperatureK" ? v : v)}
+                onChange={(v) => setColorField(field, v)}
                 onReset={() => setColorField(field, field === "temperatureK" ? 6500 : field === "hue" ? 0 : 100)} />;
             })}
           </div>

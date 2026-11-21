@@ -45,6 +45,36 @@ fn bounded(value: f64, min: f64, max: f64, fallback: f64) -> f64 {
     if !value.is_finite() { fallback } else { value.clamp(min, max) }
 }
 
+/// Relative sRGB channel gains for a correlated color temperature in Kelvin.
+/// Tanner Helland's Planckian approximation, normalized so 6500K is neutral.
+/// Lower Kelvin favors red (warm), higher Kelvin favors blue (cool).
+fn temperature_gains(kelvin: f64) -> [f64; 3] {
+    fn raw(k: f64) -> [f64; 3] {
+        let t = k / 100.0;
+        let red = if t <= 66.0 { 255.0 } else { 329.698727446 * (t - 60.0).powf(-0.1332047592) };
+        let green = if t <= 66.0 {
+            99.4708025861 * t.ln() - 161.1195681661
+        } else {
+            288.1221695283 * (t - 60.0).powf(-0.0755148492)
+        };
+        let blue = if t >= 66.0 { 255.0 }
+            else if t <= 19.0 { 0.0 }
+            else { 138.5177312231 * (t - 10.0).ln() - 305.0447927307 };
+        [red.clamp(0.0, 255.0), green.clamp(0.0, 255.0), blue.clamp(0.0, 255.0)]
+    }
+
+    let current = raw(bounded(kelvin, 1000.0, 12000.0, 6500.0));
+    let neutral = raw(6500.0);
+    let mut gains = [0.0; 3];
+    for channel in 0..3 {
+        let ratio = if neutral[channel] > 0.0 { current[channel] / neutral[channel] } else { 1.0 };
+        // Blend toward neutral: a gamma ramp is a gain, not full color management.
+        gains[channel] = if ratio.is_finite() { 1.0 + (ratio - 1.0) * 0.7 } else { 1.0 };
+        gains[channel] = gains[channel].clamp(0.25, 2.5);
+    }
+    gains
+}
+
 /// Hue rotation coefficients around the neutral axis, clamped to finite input.
 fn hue_matrix(degrees: f64) -> [[f64; 3]; 3] {
     let angle = bounded(degrees, 0.0, 360.0, 0.0).to_radians();
@@ -68,15 +98,17 @@ pub fn build_ramp(color: &ColorPayload) -> Ramp {
     let temperature = bounded(color.temperature_k.unwrap_or(6500.0), 1000.0, 12000.0, 6500.0);
 
     let chroma = 1.0 + (saturation - 100.0) / 200.0 + (vibrance - 100.0) / 300.0;
-    let warmth = (temperature - 6500.0) / 5500.0;
+    let temp_gains = temperature_gains(temperature);
 
     let mut gains = [
         bounded(color.red, 0.0, 200.0, 100.0) / 100.0,
         bounded(color.green, 0.0, 200.0, 100.0) / 100.0,
         bounded(color.blue, 0.0, 200.0, 100.0) / 100.0,
     ];
-    gains[0] *= 1.0 + 0.12 * warmth;
-    gains[2] *= 1.0 - 0.12 * warmth;
+    // Kelvin drives the ramp directly: lower K warms (red up, blue down).
+    gains[0] *= temp_gains[0];
+    gains[1] *= temp_gains[1];
+    gains[2] *= temp_gains[2];
 
     let luma = (gains[0] + gains[1] + gains[2]) / 3.0;
     for gain in &mut gains {
@@ -221,6 +253,29 @@ mod tests {
         let neutral = build_ramp(&ColorPayload::default());
         let raised = build_ramp(&ColorPayload { gamma: 150.0, ..ColorPayload::default() });
         assert!(raised[1][128] > neutral[1][128]);
+    }
+
+    #[test]
+    fn temperature_warms_low_kelvin_and_cools_high_kelvin() {
+        let neutral = build_ramp(&ColorPayload::default());
+        let warm = build_ramp(&ColorPayload { temperature_k: Some(3000.0), ..ColorPayload::default() });
+        let cool = build_ramp(&ColorPayload { temperature_k: Some(10000.0), ..ColorPayload::default() });
+        let mid = 128;
+        assert!(warm[0][mid] > warm[2][mid], "warm light must favor red over blue");
+        assert!(cool[2][mid] > cool[0][mid], "cool light must favor blue over red");
+        assert!(warm[2][mid] < neutral[2][mid], "warm must cut blue vs neutral");
+        assert!(cool[0][mid] < neutral[0][mid], "cool must cut red vs neutral");
+    }
+
+    #[test]
+    fn temperature_gains_are_neutral_at_6500k_and_finite_at_extremes() {
+        let neutral = super::temperature_gains(6500.0);
+        for gain in neutral { assert!((gain - 1.0).abs() < 0.001, "neutral gain {gain}"); }
+        for kelvin in [1000.0, 12000.0, f64::NAN, f64::INFINITY] {
+            for gain in super::temperature_gains(kelvin) {
+                assert!(gain.is_finite() && (0.25..=2.5).contains(&gain), "gain {gain} at {kelvin}");
+            }
+        }
     }
 
     #[test]
