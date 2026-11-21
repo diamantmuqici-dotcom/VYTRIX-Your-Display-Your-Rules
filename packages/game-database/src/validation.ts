@@ -121,6 +121,9 @@ export function validateGameConfiguration(input: unknown, basePath = "game"): Ga
   if (!SAFE_ID.test(id)) fail("game.id", "expected lowercase kebab-case id");
 
   const name = string(raw["name"], "game.name", 120);
+  const detail = raw["detail"] === undefined
+    ? undefined
+    : string(raw["detail"], "game.detail", 240);
   const category = string(raw["category"], "game.category", 40);
   if (!(GAME_CATEGORIES as readonly string[]).includes(category)) fail("game.category", "invalid category");
 
@@ -245,6 +248,7 @@ export function validateGameConfiguration(input: unknown, basePath = "game"): Ga
   return {
     id,
     name,
+    ...(detail === undefined ? {} : { detail }),
     category,
     launchers,
     executableNames,

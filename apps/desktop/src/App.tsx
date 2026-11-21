@@ -19,9 +19,11 @@ import Hotkeys from "@/pages/Hotkeys";
 import PhoneControl from "@/pages/PhoneControl";
 import Themes from "@/pages/Themes";
 import Settings from "@/pages/Settings";
+import SnapTap from "@/pages/SnapTap";
 import { ToastProvider } from "@/hooks/useToast";
 import { PhoneBridge } from "@/hooks/usePhoneBridge";
 import { HotkeyBridge } from "@/hooks/useHotkeyBridge";
+import { ZoomBridge } from "@/hooks/useZoomBridge";
 import { SmartSwitchBridge } from "@/hooks/useSmartSwitchBridge";
 
 const PAGES: Record<string, () => React.JSX.Element> = {
@@ -38,6 +40,7 @@ const PAGES: Record<string, () => React.JSX.Element> = {
   "phone-control": PhoneControl,
   "themes": Themes,
   "settings": Settings,
+  "snaptap": SnapTap,
 };
 
 function Shell() {
@@ -124,6 +127,7 @@ export default function App() {
     <ToastProvider>
       <PhoneBridge />
       <HotkeyBridge />
+      <ZoomBridge />
       <SmartSwitchBridge />
       <Shell />
     </ToastProvider>

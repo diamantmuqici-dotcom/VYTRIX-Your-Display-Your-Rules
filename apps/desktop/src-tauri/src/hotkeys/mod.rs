@@ -107,7 +107,7 @@ fn translate(keys: &[String]) -> Result<(u32, u32), String> {
 }
 
 #[cfg(windows)]
-fn virtual_key(key: &str) -> Option<u32> {
+pub(crate) fn virtual_key(key: &str) -> Option<u32> {
     if key.len() == 1 {
         let ch = key.as_bytes()[0];
         if ch.is_ascii_alphanumeric() { return Some(ch as u32); }

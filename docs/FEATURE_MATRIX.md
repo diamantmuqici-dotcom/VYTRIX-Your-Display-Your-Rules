@@ -7,10 +7,10 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | Feature | Status | Evidence / gap |
 | --- | --- | --- |
 | Tauri 2 shell | Working | `apps/desktop/src-tauri/src/lib.rs`, builds pass |
-| Sidebar and pages | Partial | 13 pages implemented; 24-entry navigation spec not fully covered |
+| Sidebar and pages | Partial | 14 pages implemented, including SnapTap; 24-entry navigation spec not fully covered |
 | Settings persistence | Working | SQLite storage commands + app store |
-| Native IPC | Working | 26 registered commands, fail-closed frontend bridge |
-| Localization (EN/FR/DE/RU) | Working | 192 keys in each dictionary; language selection rewrites shell and key pages |
+| Native IPC | Working | 30 registered commands, fail-closed frontend bridge |
+| Localization (EN/FR/DE/RU) | Working | 276 keys in each dictionary; language selection rewrites shell and key pages |
 | Command palette / Ctrl+K | Missing | not implemented |
 | Global search | Missing | not implemented |
 | Favorites / reorder sidebar | Partial | preset favorites exist; sidebar ordering does not |
@@ -39,8 +39,11 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | --- | --- | --- |
 | Process/window detection | Working | `detect_game`, native foreground detection |
 | Steam library detection | Working | read-only `SteamPath`, `libraryfolders.vdf`, `appmanifest_*.acf` parsing via `steam_installations` |
-| Verified game hints | Working | 29 verified, 66 partial, 65 manual; 140 native executable hints |
-| 160 individual configurations | Working | 160 schema-valid records in `packages/game-database/data`; validation reports no duplicates |
+| Verified game hints | Working | 29 verified, 67 partial, 66 manual; 141 native executable hints |
+| 162 individual configurations | Working | 162 schema-valid records across 9 categories in `packages/game-database/data`; validation reports no duplicates |
+| Misc category and short details | Working | `misc` holds SnapTap and Zoom; each record carries a bounded one-line how-to rendered in the library and detail pane |
+| SnapTap tool | Working | vendored source, config, five profiles, icons, MIT license, upstream README and prebuilt binary under `tools/snaptap`; detection-only catalog entry and dedicated sidebar page |
+| Utility zoom | Working | `zoom_status`, `zoom_configure`, `zoom_toggle`, `zoom_release`; documented Magnification API, 1.0-8.0 bound, toggle and native hold polling, overlay status sync |
 | Game search/filter | Working | query plus category, launcher, and detection filters in `GameProfiles` |
 | Custom games | Working | add-game flow with launcher and executable hint |
 | Profile duplicate/export/import | Partial | game-profile duplicate and export exist; import and version migration missing |
@@ -116,6 +119,6 @@ Legend: `Working` = implemented and tested. `Partial` = working core with named 
 | SHA-256 script | Working | `scripts/build-release.mjs` |
 | Updater validation | Working | Rust tests pass; rejects placeholder key |
 | Installer executable | External | artifact not built |
-| Portable executable | External | artifact not built |
-| Deployment URL | External | `vytrix.gg` does not resolve; no claim of ownership |
+| Portable executable | Working | `VYTRIX-x64-portable.exe` published on GitHub Releases with SHA-256 sidecar |
+| Deployment URL | Working | GitHub Pages site live at `diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules/` |
 | Authenticode | External | thumbprint not provisioned |

@@ -8,7 +8,7 @@ Status: implemented and validated. Schema version `1`; profile schema version `1
 
 Every record declares:
 
-- `id`, `name`, `category`, `launchers`, `releaseStatus`
+- `id`, `name`, optional short `detail`, `category`, `launchers`, `releaseStatus`
 - `executableNames`, `processNames`, and `installationDetection`
 - `detection.methods`, `detection.confidence`, `detection.requiresManualPath`, and bounded `detection.rules`
 - neutral defaults for color, display, resolution, refresh, restoration, crosshair, overlay, and monitoring
@@ -22,17 +22,19 @@ Profiles declare capabilities and neutral defaults. They do not claim tuned sett
 
 | Metric | Value |
 | --- | --- |
-| Individual configurations | 160 |
-| Categories | 8 |
+| Individual configurations | 162 |
+| Categories | 9 |
 | Launchers | 9 |
 | Verified detection | 29 |
-| Partial detection | 65 |
+| Partial detection | 67 |
 | Manual detection | 66 |
-| Native executable hints | 140 |
+| Native executable hints | 141 |
 
-Categories: `shooters`, `survival`, `sandbox`, `racing`, `rpg`, `strategy`, `horror`, `additional`.
+Categories: `shooters`, `survival`, `sandbox`, `racing`, `rpg`, `strategy`, `horror`, `additional`, `misc`.
 
 Launchers: `steam`, `epic`, `riot`, `xbox`, `microsoft-store`, `battle-net`, `ubisoft-connect`, `ea-app`, `manual`.
+
+`misc` contains `snaptap` and `zoom`. Both carry a short `detail` string that the desktop library renders under the entry name and in the detail pane. SnapTap declares only `detection`; Zoom is built into VYTRIX and declares no external detection or game-modification features. The Zoom record points at `vytrix-native-magnification-v1`; the SnapTap record points at `vytrix-vendored-snaptap-v1`.
 
 Hard unsupported feature tokens on every record: `game-file-modification`, `anti-cheat-bypass`, `guaranteed-fps-gain`. Crosshair and overlay stay off by default unless a title is explicitly marked supported; the current database marks neither as universally supported.
 

@@ -16,6 +16,7 @@ pub mod steam;
 pub mod storage;
 pub mod system;
 pub mod win;
+pub mod zoom;
 
 use std::sync::{Arc, OnceLock};
 use tauri::Manager;
@@ -30,6 +31,7 @@ pub struct AppState {
     pub phone: Arc<phone::PhoneAgent>,
     pub overlay: Arc<overlay::OverlayState>,
     pub smart_switch: Arc<smart_switch::SmartSwitch>,
+    pub zoom: Arc<zoom::ZoomController>,
 }
 
 pub static APP_STATE: OnceLock<AppState> = OnceLock::new();
@@ -52,6 +54,7 @@ pub fn run() {
                 phone: Arc::new(phone::PhoneAgent::new(handle.clone())),
                 overlay: Arc::new(overlay::OverlayState::new(handle.clone())),
                 smart_switch: Arc::new(smart_switch::SmartSwitch::new(handle.clone())),
+                zoom: Arc::new(zoom::ZoomController::default()),
             };
             let _ = APP_STATE.set(state.clone());
             // Clear any ramp a previous crashed session left on the displays.
@@ -60,6 +63,7 @@ pub fn run() {
             app.manage(state.clone());
             #[cfg(windows)]
             hotkeys::attach_app(handle);
+            zoom::attach_app(handle);
             smart_switch::SmartSwitch::spawn_polling(state.smart_switch.clone());
             Ok(())
         })
@@ -95,6 +99,10 @@ pub fn run() {
             commands::smart_switch_history,
             commands::smart_switch_set_enabled,
             commands::smart_switch_sync_profiles,
+            commands::zoom_status,
+            commands::zoom_configure,
+            commands::zoom_toggle,
+            commands::zoom_release,
         ])
         .build(tauri::generate_context!())
         .expect("VYTRIX failed to build");
@@ -102,6 +110,7 @@ pub fn run() {
     app.run(|_handle, event| {
         if matches!(event, tauri::RunEvent::Exit) {
             if let Some(state) = APP_STATE.get() {
+                state.zoom.release();
                 state.color.restore_all();
             }
         }

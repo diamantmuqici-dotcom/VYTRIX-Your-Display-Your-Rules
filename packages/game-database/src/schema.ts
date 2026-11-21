@@ -57,6 +57,7 @@ export interface GameVerification {
 export interface GameConfiguration {
   id: string;
   name: string;
+  detail?: string;
   category: string;
   launchers: string[];
   executableNames: string[];

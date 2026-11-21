@@ -4,7 +4,7 @@ import type {
   AppSettings, ColorField, ColorPreset, ColorSettings, CrosshairCollection,
   CrosshairDesign, CrosshairGameProfile,
   CrosshairStudioSettings, GameEntry, GameProfile, HotkeyBinding, OptimizationTask,
-  PhonePermissions, RecentCrosshair, SwitchProfile, SwitchRecord, SwitchStatus,
+  PhonePermissions, RecentCrosshair, SwitchProfile, SwitchRecord, SwitchStatus, ZoomMode,
 } from "@vytrix/shared-types";
 import type { SectionId } from "@vytrix/config";
 import { DEFAULT_COLOR_SETTINGS, clampColorSettings } from "@vytrix/validation";
@@ -100,6 +100,7 @@ function defaultState(): AppState {
       animationIntensity: 100, reducedMotion: false, startWithWindows: false,
       minimizeToTray: true, notifications: true, language: "en",
       autoGameSwitch: true, telemetryOptIn: false, monitorId: null,
+      zoomMode: "hold", zoomLevel: 2,
     },
     color: { ...DEFAULT_COLOR_SETTINGS },
     baseline: { ...DEFAULT_COLOR_SETTINGS },
@@ -123,6 +124,7 @@ function defaultState(): AppState {
       { action: "next-crosshair", keys: ["Ctrl", "Alt", "Right"], mouseButton: null, enabled: true },
       { action: "previous-crosshair", keys: ["Ctrl", "Alt", "Left"], mouseButton: null, enabled: true },
       { action: "toggle-overlay", keys: ["Ctrl", "Alt", "O"], mouseButton: null, enabled: true },
+      { action: "toggle-zoom", keys: ["Alt", "Z"], mouseButton: null, enabled: true },
       { action: "open-crosshair-studio", keys: ["Ctrl", "Alt", "X"], mouseButton: null, enabled: true },
       { action: "save-crosshair", keys: ["Ctrl", "Alt", "S"], mouseButton: null, enabled: true },
     ],
@@ -144,6 +146,15 @@ function validLanguage(value: unknown): "en" | "fr" | "de" | "ru" {
   return value === "fr" || value === "de" || value === "ru" ? value : "en";
 }
 
+function validZoomMode(value: unknown): ZoomMode {
+  return value === "toggle" ? "toggle" : "hold";
+}
+
+function validZoomLevel(value: unknown): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) return 2;
+  return Math.min(8, Math.max(1, Math.round(value * 4) / 4));
+}
+
 function load(): AppState {
   if (typeof window === "undefined") return defaultState();
   try {
@@ -157,7 +168,13 @@ function load(): AppState {
       ...parsed,
       color: clampColorSettings(parsed.color ?? base.color),
       baseline: clampColorSettings(parsed.baseline ?? base.baseline),
-      settings: { ...base.settings, ...parsed.settings, language: validLanguage(parsed.settings?.language) },
+      settings: {
+        ...base.settings,
+        ...parsed.settings,
+        language: validLanguage(parsed.settings?.language),
+        zoomMode: validZoomMode(parsed.settings?.zoomMode),
+        zoomLevel: validZoomLevel(parsed.settings?.zoomLevel),
+      },
       crosshairs: savedCrosshairs.slice(0, 100).map((design) => normalizeDesign(design)),
       crosshairPresets: Array.isArray(parsed.crosshairPresets)
         ? parsed.crosshairPresets.slice(0, 200).map((preset) => {

@@ -7,6 +7,7 @@ export const GAME_CATEGORIES = [
   "strategy",
   "horror",
   "additional",
+  "misc",
 ] as const;
 
 export type GameCategory = (typeof GAME_CATEGORIES)[number];
@@ -20,6 +21,7 @@ export const CATEGORY_LABELS: Record<GameCategory, string> = {
   strategy: "MOBA, strategy and multiplayer",
   horror: "Horror, adventure and action",
   additional: "Additional popular games",
+  misc: "Utilities and input tools",
 };
 
 export const CATEGORY_DIRS: Record<GameCategory, string> = {
@@ -31,6 +33,7 @@ export const CATEGORY_DIRS: Record<GameCategory, string> = {
   strategy: "strategy",
   horror: "horror",
   additional: "additional",
+  misc: "misc",
 };
 
 export function isGameCategory(value: string): value is GameCategory {

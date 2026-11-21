@@ -28,6 +28,15 @@ export function toggleOverlayZoom(): Promise<CommandResult<OverlayView>> {
   }));
 }
 
+/** Native zoom owns the transform; this only keeps the overlay chip honest. */
+export function setOverlayZoom(enabled: boolean, level: number): Promise<CommandResult<OverlayView>> {
+  const bounded = Number.isFinite(level) ? Math.min(8, Math.max(1, level)) : 1;
+  return update((view) => ({
+    ...view,
+    zoom: { ...view.zoom, enabled, level: bounded },
+  }));
+}
+
 const LAYOUTS: readonly OverlayLayout[] = [
   "center", "top-left", "top-right", "bottom-left", "bottom-right",
 ];

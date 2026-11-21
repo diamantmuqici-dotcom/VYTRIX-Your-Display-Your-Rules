@@ -40,13 +40,13 @@ Status: complete.
 
 Artifacts: `packages/game-database/`, `docs/GAME_DATABASE.md`, generated desktop catalog metadata, and generated Rust executable hints.
 
-Present: 160 individual schema-valid JSON records across 8 categories and 9 launchers; typed schema, validation, registry, search, compatibility summary, and version gates; deterministic generation and duplicate checks; desktop library filters and capability metadata; native detection with preserved legacy hints and generated database hints.
+Present: 162 individual schema-valid JSON records across 9 categories and 9 launchers; typed schema with optional short details, validation, registry, search, compatibility summary, and version gates; deterministic generation and duplicate checks; desktop library filters and capability metadata; native detection with preserved legacy hints and generated database hints.
 
-Validation: 6 package tests pass; `npm run validate:games` reports 160 configurations with 29 verified, 66 partial, and 65 manual entries; `npm run check:games` reports no duplicate ids or names; desktop build/typecheck/tests pass; Rust check passes and 19 native tests pass.
+Validation: 6 package tests pass; `npm run validate:games` reports 162 configurations with 29 verified, 67 partial, and 66 manual entries; `npm run check:games` reports no duplicate ids or names; desktop build/typecheck/tests pass; Rust check passes and 37 native tests pass.
 
 Operator ticket (custom resolution, German/Russian, language switching, Rob Run color control): complete. Bounded custom width/height/Hz in `Display`; 192-key EN/FR/DE/RU dictionaries wired into the shell and key pages; `color_apply`/`color_reset` write real gamma ramps through documented Win32 APIs; read-only Steam manifest resolution makes Rob Run detectable. Desktop 11 UI tests and 19 Rust tests pass.
 
-Acceptance met: `npm run validate:games` exits 0 and reports 160 valid unique configurations.
+Acceptance met: `npm run validate:games` exits 0 and reports 162 valid unique configurations.
 
 ## Phase 5 — SmartSwitch
 

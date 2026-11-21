@@ -41,7 +41,7 @@ No destructive Git command was run. No database, user file, or existing source f
 ## Missing or incomplete against master specification
 
 1. **Audit documents** — `PROJECT_AUDIT.md`, `IMPLEMENTATION_PLAN.md`, `FILE_MANIFEST.md`, and `FEATURE_MATRIX.md` were absent. This commit adds them.
-2. **Game database package** — was absent at audit time. Phase 4 added `packages/game-database/` with 160 individual schema-valid records, validation, registry, search, generation scripts, desktop filters, and native executable hints. See `docs/GAME_DATABASE.md`.
+2. **Game database package** — was absent at audit time. Phase 4 added `packages/game-database/` with 162 individual schema-valid records across 9 categories, validation, registry, search, generation scripts, desktop filters, and native executable hints. See `docs/GAME_DATABASE.md`.
 3. **Desktop page coverage** — implemented pages are 13. The specification requires additional surfaces including Vision Lab, Diagnostics, SmartSwitch, Device Manager, Gaming Intelligence, About, Admin, and several dedicated game/library/detail routes.
 4. **Feature modules** — `src/features/` tree is absent. Logic currently sits in pages, hooks, services, and stores.
 5. **Native module granularity** — Rust modules are consolidated (`commands/mod.rs`, `gpu/mod.rs`, etc.) rather than split into the requested per-concern files.

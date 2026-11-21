@@ -41,6 +41,9 @@ export const metadata: Metadata = {
     "game profiles",
     "crosshair overlay",
     "performance monitor",
+    "utility zoom",
+    "snaptap",
+    "misc game utilities",
   ],
   openGraph: {
     type: "website",
