@@ -3,9 +3,11 @@ import {
   Activity,
   Crosshair,
   Gamepad2,
+  Keyboard,
   Monitor,
   RotateCcw,
   Smartphone,
+  ZoomIn,
 } from "lucide-react";
 
 export interface Feature {
@@ -101,6 +103,34 @@ export const features: Feature[] = [
     ],
     limit:
       "Requires the desktop app to be running and both devices on the same network. Cellular data and remote relay are not supported.",
+  },
+  {
+    slug: "utility-zoom",
+    icon: ZoomIn,
+    title: "Utility zoom",
+    summary:
+      "A real full-screen magnifier through the documented Windows Magnification API. Pick a level, then use Toggle or Hold on a bind you choose.",
+    details: [
+      "Toggle activates on a single bind press and stays until you press again or release it.",
+      "Hold magnifies only while the bind is held, then restores the display on release.",
+      "Level is selectable from 1.0x to 8.0x, with live status reported back into the app.",
+    ],
+    limit:
+      "Uses the Windows full-screen transform. Exclusive-fullscreen or protected-content windows can block magnification; the status row reports API rejection.",
+  },
+  {
+    slug: "snaptap",
+    icon: Keyboard,
+    title: "SnapTap",
+    summary:
+      "A bundled keyboard snap-tap utility in the misc category. Source, prebuilt binary, config and profiles ship with VYTRIX.",
+    details: [
+      "Launch the included binary and pick a profile from the tray, then hold opposing movement keys.",
+      "The full source, config keys, five profiles and MIT license are included for inspection and rebuild.",
+      "Catalogued for detection only, with a dedicated page listing every bundled file and build command.",
+    ],
+    limit:
+      "VYTRIX only detects the process. It does not read keyboard input, inject code, read game memory or modify game files.",
   },
 ];
 

@@ -10,7 +10,7 @@ import { features } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Features",
   description:
-    "Per-monitor color, game profiles, a crosshair overlay, a reversible optimizer, performance monitoring and phone control — without game injection.",
+    "Per-monitor color, game profiles, a crosshair overlay, utility zoom, SnapTap, a reversible optimizer, performance monitoring and phone control — without game injection.",
 };
 
 export default function FeaturesPage() {

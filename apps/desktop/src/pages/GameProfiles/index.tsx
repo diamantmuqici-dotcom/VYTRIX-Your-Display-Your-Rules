@@ -149,7 +149,7 @@ export default function GameProfiles() {
             {games.slice(0, 400).map((game) => (
               <button key={game.id} className={`nav-item ${selectedId === game.id ? "active" : ""}`} onClick={() => setSelectedId(game.id)}>
                 {game.verifiedDetection ? <ShieldCheck size={14} color="var(--vy-success)" /> : <ShieldAlert size={14} color="var(--vy-text-muted)" />}
-                <span className="nav-text">{game.name}<small className="tiny" style={{ display: "block" }}>{game.category ?? t("game.manualEntry")} · {game.launcher} · {game.detectionConfidence ?? "manual"}</small></span>
+                <span className="nav-text">{game.name}<small className="tiny" style={{ display: "block" }}>{game.category ?? t("game.manualEntry")} · {game.launcher} · {game.detectionConfidence ?? "manual"}</small>{game.detail ? <small className="tiny" style={{ display: "block", opacity: 0.78 }}>{game.detail}</small> : null}</span>
               </button>
             ))}
           </div>
@@ -159,6 +159,7 @@ export default function GameProfiles() {
           {!selected ? <EmptyState icon={Gamepad2} title={t("game.noGameSelected")} detail={t("game.pickGame")} /> : (
             <>
               <div className="row"><span className="muted">{t("game.category")}</span><b>{selected.category ?? t("game.manualEntry")}</b></div>
+              {selected.detail ? <div className="row"><span className="muted">{t("game.howTo")}</span><span className="tiny">{selected.detail}</span></div> : null}
               <div className="row"><span className="muted">{t("game.launcher")}</span><b className="mono">{(selected.launchers ?? [selected.launcher]).join(", ")}</b></div>
               <div className="row"><span className="muted">{t("game.library")}</span><span className={`badge ${steamMatch ? "success" : "warning"}`}>{steamMatch ? t("game.steamInstalled") : t("game.steamMissing")}</span></div>
               <div className="row"><span className="muted">{t("game.detection")}</span><span className={`badge ${selected.verifiedDetection ? "success" : "warning"}`}>{selected.detectionConfidence ?? (selected.verifiedDetection ? "verified" : "manual")}</span></div>

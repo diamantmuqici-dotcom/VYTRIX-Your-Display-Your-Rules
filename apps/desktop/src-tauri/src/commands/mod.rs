@@ -271,3 +271,33 @@ pub fn smart_switch_sync_profiles(
 ) -> Result<crate::smart_switch::SwitchStatus, String> {
     state.smart_switch.sync_profiles(profiles)
 }
+
+#[tauri::command]
+pub fn zoom_status(state: State<'_, AppState>) -> crate::zoom::ZoomStatus {
+    state.zoom.status()
+}
+
+#[tauri::command]
+pub fn zoom_configure(
+    mode: String,
+    keys: Vec<String>,
+    level: f32,
+    state: State<'_, AppState>,
+) -> Result<crate::zoom::ZoomStatus, String> {
+    let mode = match mode.as_str() {
+        "toggle" => crate::zoom::ZoomMode::Toggle,
+        "hold" => crate::zoom::ZoomMode::Hold,
+        _ => return Err("zoom mode must be toggle or hold".to_owned()),
+    };
+    state.zoom.configure(mode, &keys, level)
+}
+
+#[tauri::command]
+pub fn zoom_toggle(state: State<'_, AppState>) -> Result<crate::zoom::ZoomStatus, String> {
+    state.zoom.toggle()
+}
+
+#[tauri::command]
+pub fn zoom_release(state: State<'_, AppState>) -> crate::zoom::ZoomStatus {
+    state.zoom.release()
+}

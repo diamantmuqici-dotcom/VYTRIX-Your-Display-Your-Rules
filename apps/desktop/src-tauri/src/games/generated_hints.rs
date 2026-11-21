@@ -112,6 +112,7 @@ pub static GAME_HINTS: &[(&str, &str)] = &[
     ("seathieves.exe", "Sea of Thieves"),
     ("sekiro.exe", "Sekiro"),
     ("skyrimse.exe", "Skyrim Special Edition"),
+    ("snapkey_v1.7.0.exe", "SnapTap"),
     ("snowrunner.exe", "SnowRunner"),
     ("sonsoftheforest.exe", "Sons of the Forest"),
     ("spiderman.exe", "Marvel's Spider-Man Remastered"),

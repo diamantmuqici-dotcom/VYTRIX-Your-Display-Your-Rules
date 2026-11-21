@@ -267,6 +267,16 @@ extern "system" {
     pub fn GetSystemMetrics(index: i32) -> i32;
     pub fn GetDC(hwnd: *mut c_void) -> *mut c_void;
     pub fn ReleaseDC(hwnd: *mut c_void, dc: *mut c_void) -> i32;
+    pub fn GetAsyncKeyState(virtual_key: i32) -> i16;
+    pub fn SetProcessDPIAware() -> i32;
+}
+
+// Full-screen magnification: documented Magnification API, no injection.
+#[link(name = "magnification")]
+extern "system" {
+    pub fn MagInitialize() -> i32;
+    pub fn MagUninitialize() -> i32;
+    pub fn MagSetFullscreenTransform(mag_level: f32, x_offset: i32, y_offset: i32) -> i32;
 }
 
 // Gamma ramps and display DCs live in gdi32, not user32; a separate link block

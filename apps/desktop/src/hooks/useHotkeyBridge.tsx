@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import type { HotkeyAction } from "@vytrix/shared-types";
 import { invokeNative, isTauriRuntime } from "@/services/tauri";
-import { setOverlayCrosshair, setOverlayEnabled, toggleOverlayZoom } from "@/services/overlay";
+import { setOverlayCrosshair, setOverlayEnabled } from "@/services/overlay";
+import { toggleZoom } from "@/services/zoom";
 import { useApp } from "@/stores/app";
 
 const ACTIONS: readonly HotkeyAction[] = [
@@ -79,8 +80,14 @@ export function HotkeyBridge() {
         api.log("Crosshair toggled by hotkey");
         break;
       case "toggle-zoom":
-        void toggleOverlayZoom();
-        api.log("Zoom indicator toggled by hotkey");
+        if (state.settings.zoomMode === "toggle") {
+          void toggleZoom().then((result) => {
+            if (!result.ok) api.log(`Zoom toggle failed: ${result.error.message}`);
+          });
+          api.log("Zoom toggled by hotkey");
+        } else {
+          api.log("Zoom hold bind is driven natively while held");
+        }
         break;
       case "switch-profile": {
         if (state.profiles.length === 0) { api.setSection("game-profiles"); break; }

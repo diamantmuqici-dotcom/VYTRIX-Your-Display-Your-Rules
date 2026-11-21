@@ -10656,6 +10656,95 @@ export const gameConfigurations: readonly GameConfiguration[] =
     "profileSchemaVersion": 1
   },
   {
+    "id": "snaptap",
+    "name": "SnapTap",
+    "detail": "Launch tools/snaptap/bin/SnapKey_v1.7.0.exe, pick a profile in the tray, then hold opposing movement keys. VYTRIX only detects the process.",
+    "category": "misc",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [
+      "snapkey_v1.7.0.exe"
+    ],
+    "processNames": [
+      "snapkey_v1.7.0.exe"
+    ],
+    "detection": {
+      "methods": [
+        "executable",
+        "process",
+        "manual-path"
+      ],
+      "requiresManualPath": false,
+      "confidence": "partial",
+      "rules": [
+        {
+          "type": "executable",
+          "value": "snapkey_v1.7.0.exe"
+        },
+        {
+          "type": "process",
+          "value": "snapkey_v1.7.0.exe"
+        },
+        {
+          "type": "manual-path",
+          "value": "manual"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": false
+    },
+    "capabilities": {
+      "automaticDetection": true,
+      "colorProfiles": false,
+      "displayProfiles": false,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": false,
+      "restoration": false
+    },
+    "compatibilityNotes": [
+      "SnapTap is a standalone keyboard group input tool vendored under tools/snaptap; it is not a game and VYTRIX does not own its process state.",
+      "Detection matches the documented SnapKey executable name only; no process memory is read and no code is injected.",
+      "VYTRIX applies no display, color, crosshair, overlay, or monitoring profile to this tool.",
+      "The low-level keyboard hook belongs to SnapTap and is installed only while that process runs.",
+      "Anti-cheat tiers and ban-risk readouts in the tool are informational; they are not an undetected claim."
+    ],
+    "supportedFeatures": [
+      "detection"
+    ],
+    "unsupportedFeatures": [
+      "color-profiles",
+      "display-profiles",
+      "crosshair",
+      "overlay",
+      "monitoring",
+      "restoration",
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain"
+    ],
+    "configurationSource": "vytrix-vendored-snaptap-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "community",
+      "source": "Vendored SnapKey v1.8.0 source and documented binary name; upstream base cafali/SnapKey (MIT)",
+      "lastVerifiedAt": "2026-11-21"
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
     "id": "snowrunner",
     "name": "SnowRunner",
     "category": "racing",
@@ -13428,6 +13517,79 @@ export const gameConfigurations: readonly GameConfiguration[] =
       "status": "unverified",
       "source": "User-provided catalog; metadata not independently verified",
       "lastVerifiedAt": null
+    },
+    "schemaVersion": 1,
+    "profileSchemaVersion": 1
+  },
+  {
+    "id": "zoom",
+    "name": "Zoom",
+    "detail": "Open Display Effects, pick Toggle or Hold and set the level. Toggle presses the bind once; Hold magnifies only while the bind is held. Default bind: Alt + Z.",
+    "category": "misc",
+    "launchers": [
+      "manual"
+    ],
+    "executableNames": [],
+    "processNames": [],
+    "detection": {
+      "methods": [
+        "manual-path"
+      ],
+      "requiresManualPath": true,
+      "confidence": "manual",
+      "rules": [
+        {
+          "type": "manual-path",
+          "value": "zoom"
+        }
+      ]
+    },
+    "installationDetection": "manual-path",
+    "icon": "assets/branding/vytrix-icon.svg",
+    "defaults": {
+      "colorProfileId": "vytrix-neutral-v1",
+      "displayProfileId": "hardware-detect-v1",
+      "resolutionProfileId": "detect-monitor-v1",
+      "refreshRateProfileId": "detect-supported-maximum-v1",
+      "restorationMode": "automatic-restore-v1",
+      "crosshairEnabled": false,
+      "overlayEnabled": false,
+      "monitoringEnabled": false
+    },
+    "capabilities": {
+      "automaticDetection": false,
+      "colorProfiles": false,
+      "displayProfiles": false,
+      "crosshair": "unknown",
+      "overlay": "unknown",
+      "performanceMonitoring": false,
+      "restoration": false
+    },
+    "compatibilityNotes": [
+      "Zoom is built into VYTRIX and needs no external executable, launcher or game process.",
+      "It uses the documented Windows Magnification API full-screen transform, bounded to 1.0-8.0 in the UI.",
+      "Toggle mode flips the transform on a bind press; hold mode polls the bind natively and restores the transform on release.",
+      "Exclusive fullscreen and protected content can block the Windows full-screen magnifier; the status row reports API rejection."
+    ],
+    "supportedFeatures": [],
+    "unsupportedFeatures": [
+      "detection",
+      "color-profiles",
+      "display-profiles",
+      "crosshair",
+      "overlay",
+      "monitoring",
+      "restoration",
+      "game-file-modification",
+      "anti-cheat-bypass",
+      "guaranteed-fps-gain"
+    ],
+    "configurationSource": "vytrix-native-magnification-v1",
+    "releaseStatus": "released",
+    "verification": {
+      "status": "verified",
+      "source": "Microsoft Magnification API documentation and VYTRIX native zoom module",
+      "lastVerifiedAt": "2026-11-21"
     },
     "schemaVersion": 1,
     "profileSchemaVersion": 1

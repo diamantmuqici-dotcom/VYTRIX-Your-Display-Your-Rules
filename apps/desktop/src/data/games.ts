@@ -306,6 +306,7 @@ function fromConfiguration(config: (typeof GAME_CONFIGURATIONS)[number]): GameEn
   return {
     id: config.id,
     name: config.name,
+    detail: config.detail,
     launcher: config.launchers[0] as Launcher,
     executableHints: [...config.executableNames, ...config.processNames],
     verifiedDetection: config.detection.confidence === "verified",

@@ -103,6 +103,7 @@ export interface GameEntry {
   configurationStatus?: "ready" | "manual";
   releaseStatus?: "released" | "unreleased" | "discontinued" | "unknown";
   configurationSource?: string;
+  detail?: string;
 }
 
 export interface GameProfile {
@@ -263,6 +264,17 @@ export type HotkeyAction =
   | "open-crosshair-studio"
   | "save-crosshair";
 
+export type ZoomMode = "toggle" | "hold";
+
+export interface ZoomStatus {
+  enabled: boolean;
+  mode: ZoomMode;
+  level: number;
+  keys: string[];
+  available: boolean;
+  detail: string;
+}
+
 export type RiskLevel = "low" | "medium" | "high";
 
 export interface OptimizationTask {
@@ -373,6 +385,8 @@ export interface AppSettings {
   autoGameSwitch: boolean;
   telemetryOptIn: boolean;
   monitorId: string | null;
+  zoomMode: ZoomMode;
+  zoomLevel: number;
 }
 
 export interface PresetFile {

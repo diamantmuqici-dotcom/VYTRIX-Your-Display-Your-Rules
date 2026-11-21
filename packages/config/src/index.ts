@@ -2,7 +2,7 @@ export const PRODUCT = {
   name: "VYTRIX",
   tagline: "YOUR DISPLAY. YOUR RULES.",
   version: "0.1.0",
-  website: "https://vytrix.gg",
+  website: "https://diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules/",
 } as const;
 
 export const LIMITS = {
@@ -25,7 +25,7 @@ let apiBaseUrl = "http://127.0.0.1:3001";
 
 export const ENDPOINTS = {
   get api() { return apiBaseUrl; },
-  releaseManifest: "https://vytrix.gg/api/releases/latest.json",
+  releaseManifest: "https://diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules/api/releases/latest.json",
 } as const;
 
 export function setApiBaseUrl(url: string): void {
@@ -34,7 +34,7 @@ export function setApiBaseUrl(url: string): void {
 
 export const SECTIONS = [
   "overview", "game-profiles", "color-studio", "display", "preset-library", "crosshair",
-  "effects", "optimizer", "performance", "hotkeys", "phone-control", "themes", "settings",
+  "effects", "optimizer", "performance", "hotkeys", "phone-control", "themes", "settings", "snaptap",
 ] as const;
 
 export type SectionId = (typeof SECTIONS)[number];

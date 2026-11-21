@@ -1,6 +1,6 @@
-# VYTRIX
-
 **Website:** [diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules](https://diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules/)
+
+# VYTRIX
 
 **YOUR DISPLAY. YOUR RULES.**
 
@@ -49,10 +49,16 @@ for the selected monitor. No value in the color studio is cosmetic.
 
 - Foreground process/window detection, polled every 1.5 s.
 - Read-only Steam library discovery via `SteamPath`, `libraryfolders.vdf`, and `appmanifest_*.acf` — no game files are modified.
-- **160 individual game configurations**, each schema-valid with detection rules, neutral defaults, capability flags, compatibility notes, verification status, an icon, and a source. No shared stub records.
+- **162 individual configurations**, each schema-valid with detection rules, neutral defaults, capability flags, compatibility notes, verification status, an icon, and a source. No shared stub records.
+- The `misc` category holds input/display utilities beside the game records. Each entry carries a short `detail` line in the library so its use is visible before selection.
 - Search and filter by query, category, launcher, and detection status. Add custom games.
 - Automatic profile switching by priority with deterministic tie-breaking. Desktop color and display state are replayed on game exit — no synthetic "reset".
 - Bounded 100-entry switch history.
+
+### Utility tools in misc
+
+- **SnapTap** — full vendored SnapKey v1.8.0 source, `config.cfg`, five profiles, tray icons, MIT license, upstream README, and the prebuilt `SnapKey_v1.7.0.exe`. It is catalogued for detection only; VYTRIX does not read its keyboard input, inject code, read game memory, or modify game files. A dedicated SnapTap sidebar page lists the bundled files, build commands, config keys, and boundary.
+- **Zoom** — real full-screen magnification through the documented Windows `MagInitialize` / `MagSetFullscreenTransform` / `MagUninitialize` API, bounded to 1.0–8.0. Toggle mode flips on a bind press. Hold mode polls the bound keys with `GetAsyncKeyState` and restores the display on release. Default bind: `Alt + Z`; mode, level, status, and manual controls live in Display Effects.
 
 ### Crosshair Studio
 
@@ -78,7 +84,7 @@ for the selected monitor. No value in the color studio is cosmetic.
 
 ### Localization and themes
 
-- Full EN / FR / DE / RU dictionaries, 192 keys each, enforced equal by tests.
+- Full EN / FR / DE / RU dictionaries, 276 keys each, enforced equal by tests.
 - Theme settings, UI, and bounded JSON import/export.
 
 ### Website, account, and updates
@@ -119,7 +125,7 @@ npm ci
 npm run build          # all workspace packages + desktop frontend
 npm test               # preset, game-database, and UI tests
 npm run typecheck      # every TypeScript workspace
-npm run validate:games # schema-validate all 160 game configs
+npm run validate:games # schema-validate all 162 configs, including misc
 npm run check:games    # duplicate id/name check
 ```
 
@@ -164,7 +170,7 @@ Full details live in [`docs/BUILDING.md`](./docs/BUILDING.md) and
 | `packages/preset-format` | Versioned, inert preset file format |
 | `packages/validation` | Input validation helpers |
 | `packages/config` | Config defaults and runtime constants |
-| `packages/game-database` | 160 individual game configs + generated index/hints |
+| `packages/game-database` | 162 individual configs across 9 categories + generated index/hints |
 | `database` | Prisma schema and migrations |
 | `assets/branding` | Original VYTRIX vector identity |
 | `scripts` | Release staging, manifest signing, gamma reset |
