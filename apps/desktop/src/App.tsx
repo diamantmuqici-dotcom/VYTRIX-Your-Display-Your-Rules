@@ -65,7 +65,7 @@ function Shell() {
         </div>
 
         <div className="nav-scroll">
-          <div className="nav-label">{collapsed ? "•••" : t("shell.controlCenter")}</div>
+          <div className="nav-label">{collapsed ? "â€¢â€¢â€¢" : t("shell.controlCenter")}</div>
           {SECTION_DEFS.map((section) => {
             const Icon = section.icon;
             return (
@@ -100,7 +100,7 @@ function Shell() {
           <div className="crumb"><small>{current.index} /</small> {t(`section.${current.id}` as Parameters<typeof t>[0])}</div>
           <div className="topbar-right">
             <span className="chip"><span className={`dot ${native ? "" : "warn"}`} /> {native ? t("shell.native") : t("shell.browser")}</span>
-            <span className="chip"><Radio size={11} /> v0.1.0</span>
+            <span className="chip"><Radio size={11} /> v0.1.1</span>
           </div>
         </header>
 

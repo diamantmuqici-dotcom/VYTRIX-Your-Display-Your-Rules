@@ -1,8 +1,8 @@
 {
   "name": "vytrix",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "YOUR DISPLAY. YOUR RULES. — Windows gaming visual and performance suite.",
+  "description": "YOUR DISPLAY. YOUR RULES. â€” Windows gaming visual and performance suite.",
   "workspaces": ["apps/*", "packages/*", "services/*"],
   "scripts": {
     "dev": "npm run dev -w @vytrix/desktop",

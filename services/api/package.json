@@ -1,10 +1,10 @@
 {
   "name": "@vytrix/api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "main": "dist/server.js",
-  "description": "VYTRIX cloud backend — auth, licensing, billing, presets, releases and telemetry.",
+  "description": "VYTRIX cloud backend â€” auth, licensing, billing, presets, releases and telemetry.",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "npm run db:generate && tsc -p tsconfig.json",
