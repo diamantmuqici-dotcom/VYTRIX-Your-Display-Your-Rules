@@ -4,10 +4,7 @@ import { Button } from "@/components/button";
 import { GlassCard } from "@/components/glass-card";
 import { PageHero } from "@/components/page-hero";
 import { Section } from "@/components/section";
-import { RELEASE_URL } from "@/lib/site";
-
-const DIRECT_EXE =
-  "https://github.com/diamantmuqici-dotcom/VYTRIX-Your-Display-Your-Rules/releases/latest/download/VYTRIX-x64-portable.exe";
+import { DIRECT_EXE_URL, GITHUB_URL, RELEASE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Download",
@@ -25,7 +22,7 @@ export default function DownloadPage() {
             Portable build, <span className="text-gradient">no gate.</span>
           </>
         }
-        description="VYTRIX is fully open source. Grab the signed-off Windows x64 portable executable directly from the public GitHub release — no account, no installer service, no hidden payload."
+        description="VYTRIX is fully free and open source. Grab the published Windows x64 portable executable directly from the public GitHub release — no account, no gate, no hidden payload."
       />
 
       <Section>
@@ -41,19 +38,23 @@ export default function DownloadPage() {
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted">
               A single self-contained executable. Unzip nothing, install nothing,
-              leave no service behind. Extract the archive, run the executable,
-              tune your displays. Every color change stays in your graphics
-              driver until you close the app or hit reset.
+              leave no service behind. Run the executable and tune your displays.
+              Every color change stays in your graphics driver until you close the
+              app or hit reset.
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
-              <Button href={DIRECT_EXE} external size="lg">
+              <Button href={DIRECT_EXE_URL} external size="lg">
                 <Download size={16} aria-hidden="true" />
                 Download portable exe
               </Button>
               <Button href={RELEASE_URL} external variant="secondary" size="lg">
                 <Github size={16} aria-hidden="true" />
-                All release files
+                Latest release page
+              </Button>
+              <Button href={GITHUB_URL} external variant="ghost" size="lg">
+                <Github size={16} aria-hidden="true" />
+                GitHub repository
               </Button>
             </div>
 
@@ -101,7 +102,7 @@ export default function DownloadPage() {
                 release is assembled by the same workflow.
               </p>
               <Button
-                href="https://github.com/diamantmuqici-dotcom/VYTRIX-Your-Display-Your-Rules"
+                href={GITHUB_URL}
                 external
                 variant="ghost"
                 size="sm"

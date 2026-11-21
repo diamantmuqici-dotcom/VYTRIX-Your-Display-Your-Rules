@@ -2,6 +2,8 @@ import Link from "next/link";
 import {
   ArrowRight,
   Command,
+  Download,
+  Github,
   Monitor,
   RotateCcw,
   ShieldCheck,
@@ -13,10 +15,10 @@ import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 import { FAQAccordion } from "@/components/faq-accordion";
 import { GlassCard } from "@/components/glass-card";
-import { PriceCard } from "@/components/price-card";
 import { Reveal } from "@/components/reveal";
 import { Section, SectionHeading } from "@/components/section";
-import { accessFaqs, features, productFaqs, tiers } from "@/lib/content";
+import { accessFaqs, features, productFaqs } from "@/lib/content";
+import { DIRECT_EXE_URL, GITHUB_URL } from "@/lib/site";
 import { GameArtwork } from "@/components/game-artwork";
 import { gameCatalog, gameCatalogStats } from "@/lib/game-catalog.generated";
 
@@ -142,17 +144,18 @@ export default function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/pricing" size="lg">
-                Get VYTRIX <ArrowRight size={16} aria-hidden="true" />
+              <Button href="/download" size="lg">
+                <Download size={16} aria-hidden="true" />
+                Download VYTRIX
               </Button>
               <Button href="/features" size="lg" variant="secondary">
-                See the features
+                See the features <ArrowRight size={16} aria-hidden="true" />
               </Button>
             </div>
 
             <p className="mt-6 font-mono text-[11px] leading-relaxed text-subtle">
-              Runs alongside your games. No DLL injection, no anti-cheat bypass,
-              no kernel driver.
+              Free and open source. Runs alongside your games — no DLL injection,
+              no anti-cheat bypass, no kernel driver.
             </p>
           </div>
 
@@ -408,28 +411,34 @@ export default function HomePage() {
         </p>
       </Section>
 
-      <Section id="pricing">
+      <Section id="free" className="border-t border-[color:var(--line)] bg-secondary/25">
         <SectionHeading
-          eyebrow="Pricing"
-          title="Start free. Pay when it earns its place."
-          description="Every tier keeps the same no-injection core. Paid tiers add the optimizer, the overlays and phone control."
+          eyebrow="Free, start to finish"
+          title={
+            <>
+              Every feature. <span className="text-gradient">Every update. Free.</span>
+            </>
+          }
+          description="Nothing to buy, no trial clock, no account wall. VYTRIX is open source under MIT, and the whole suite is in every release."
           align="center"
         />
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {tiers.map((tier, index) => (
-            <Reveal key={tier.id} delay={index * 0.06}>
-              <PriceCard tier={tier} />
-            </Reveal>
-          ))}
+        <div className="mx-auto mt-10 flex max-w-3xl flex-wrap justify-center gap-3">
+          <Button href="/download" size="lg">
+            <Download size={16} aria-hidden="true" />
+            Download for free
+          </Button>
+          <Button href={DIRECT_EXE_URL} external size="lg" variant="secondary">
+            <Download size={16} aria-hidden="true" />
+            Latest portable exe
+          </Button>
+          <Button href={GITHUB_URL} external size="lg" variant="ghost">
+            <Github size={16} aria-hidden="true" />
+            View on GitHub
+          </Button>
         </div>
-        <div className="mt-8 text-center">
-          <Link
-            href="/pricing"
-            className="inline-flex items-center gap-1.5 text-sm text-brand-cyan hover:opacity-75"
-          >
-            Full pricing breakdown <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-        </div>
+        <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-subtle">
+          Windows 10/11 · portable x64 · no account required
+        </p>
       </Section>
 
       <Section id="faq" className="bg-secondary/25">
@@ -467,11 +476,13 @@ export default function HomePage() {
               Windows 10/11. No game injection. No anti-cheat bypass. No driver.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
-              <Button href="/pricing" size="lg">
-                See pricing <ArrowRight size={16} aria-hidden="true" />
+              <Button href="/download" size="lg">
+                <Download size={16} aria-hidden="true" />
+                Download VYTRIX — free
               </Button>
-              <Button href="/download" size="lg" variant="secondary">
-                Download page
+              <Button href={GITHUB_URL} external size="lg" variant="secondary">
+                <Github size={16} aria-hidden="true" />
+                View on GitHub
               </Button>
             </div>
           </div>

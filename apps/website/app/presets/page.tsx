@@ -31,7 +31,7 @@ export default function PresetsPage() {
             A starting point, <span className="text-gradient">not a verdict.</span>
           </>
         }
-        description="Every code below is illustrative. The desktop app handles real import and validation after sign-in; this gallery copies text and does nothing else."
+        description="Every code below is illustrative. The desktop app handles real import and validation; this gallery copies text and does nothing else."
       />
 
       <Section>
@@ -89,8 +89,8 @@ export default function PresetsPage() {
               Want to build your own?
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-muted">
-              The Free tier includes three saved profiles and the full set of
-              per-display controls.
+              VYTRIX includes saved profiles and the full set of per-display
+              controls in every release.
             </p>
           </div>
           <Button href="/features">

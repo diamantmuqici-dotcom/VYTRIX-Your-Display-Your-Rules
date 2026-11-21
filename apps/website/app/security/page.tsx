@@ -37,16 +37,16 @@ const claims = [
     verification: "No new driver appears in Device Manager and no new service is registered.",
   },
   {
-    title: "Signed SHA-256 updates",
+    title: "SHA-256 verified updates",
     statement:
-      "Update manifests and binaries are delivered over HTTPS with a published SHA-256 digest. The installer is verified before it is applied.",
+      "Release binaries are delivered over HTTPS with a published SHA-256 digest. Compare the digest before running an executable.",
     verification: "Compare the local file hash with the digest listed beside the release.",
   },
   {
     title: "HTTPS only",
     statement:
-      "Account, licensing and update endpoints use HTTPS. No plaintext HTTP endpoint is used for account or binary delivery.",
-    verification: "Inspect the app's network connections; no account traffic uses port 80.",
+      "Release pages and binaries are delivered over HTTPS. No plaintext HTTP endpoint is used for binary delivery.",
+    verification: "Inspect the download URL; release files are served over HTTPS.",
   },
 ] as const;
 
@@ -97,7 +97,7 @@ export default function SecurityPage() {
         <SectionHeading
           eyebrow="Data handling"
           title="What stays on the machine."
-          description="Color profiles, optimizer snapshots and session logs are written locally. Share codes are text you copy yourself. Account data is limited to what sign-in and licensing require."
+          description="Color profiles, optimizer snapshots and session logs are written locally. Share codes are text you copy yourself. There is no account or license record to upload."
         />
         <div className="mt-8 grid gap-5 sm:grid-cols-3">
           {[

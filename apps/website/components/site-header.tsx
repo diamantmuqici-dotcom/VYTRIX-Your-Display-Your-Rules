@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Download, Github, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { asset, mainNav, utilityNav } from "@/lib/site";
+import { asset, GITHUB_URL, mainNav, utilityNav } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { Container } from "./container";
@@ -76,11 +76,13 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <ThemeToggle />
-          <Button href="/login" variant="ghost" size="sm">
-            Log in
+          <Button href={GITHUB_URL} external variant="ghost" size="sm">
+            <Github size={14} aria-hidden="true" />
+            GitHub
           </Button>
-          <Button href="/pricing" size="sm">
-            Get VYTRIX
+          <Button href="/download" size="sm">
+            <Download size={14} aria-hidden="true" />
+            Download
           </Button>
         </div>
 
@@ -129,10 +131,14 @@ export function SiteHeader() {
                 </Link>
               ))}
               <div className="mt-3 grid grid-cols-2 gap-2">
-                <Button href="/login" variant="secondary">
-                  Log in
+                <Button href={GITHUB_URL} external variant="secondary">
+                  <Github size={15} aria-hidden="true" />
+                  GitHub
                 </Button>
-                <Button href="/pricing">Get VYTRIX</Button>
+                <Button href="/download">
+                  <Download size={15} aria-hidden="true" />
+                  Download
+                </Button>
               </div>
             </Container>
           </motion.div>

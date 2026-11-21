@@ -11,7 +11,6 @@ const routes: { path: string; changeFrequency: Frequency; priority: number }[] =
   { path: "/features", changeFrequency: "weekly", priority: 0.9 },
   { path: "/games", changeFrequency: "weekly", priority: 0.9 },
   { path: "/presets", changeFrequency: "monthly", priority: 0.7 },
-  { path: "/pricing", changeFrequency: "monthly", priority: 0.9 },
   { path: "/security", changeFrequency: "monthly", priority: 0.8 },
   { path: "/download", changeFrequency: "weekly", priority: 0.8 },
   { path: "/changelog", changeFrequency: "weekly", priority: 0.8 },
@@ -20,7 +19,6 @@ const routes: { path: string; changeFrequency: Frequency; priority: number }[] =
   { path: "/discord", changeFrequency: "yearly", priority: 0.3 },
   { path: "/legal/terms", changeFrequency: "yearly", priority: 0.3 },
   { path: "/legal/privacy", changeFrequency: "yearly", priority: 0.3 },
-  { path: "/legal/refunds", changeFrequency: "yearly", priority: 0.3 },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

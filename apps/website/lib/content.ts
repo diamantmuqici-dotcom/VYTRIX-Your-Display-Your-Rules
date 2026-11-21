@@ -174,29 +174,29 @@ export const productFaqs: FaqItem[] = [
 
 export const accessFaqs: FaqItem[] = [
   {
-    question: "Is there a free tier?",
+    question: "Is VYTRIX really free?",
     answer:
-      "Yes. Free covers per-monitor color basics, three saved profiles and the community preset gallery. Paid tiers add the optimizer, the full overlay set and phone control.",
+      "Yes. The entire suite is free from the first download onward — every feature in every release, with nothing to buy and no key to enter.",
   },
   {
-    question: "What happens when I cancel a monthly license?",
+    question: "Do I need an account to use it?",
     answer:
-      "Access continues until the end of the paid period. Cancel from the account page once billing is connected; no renewal is charged after that.",
-  },
-  {
-    question: "Is the lifetime license really one payment?",
-    answer:
-      "It is a one-time payment for the current major version. Major version upgrades are a separate purchase; minor and patch updates are included.",
-  },
-  {
-    question: "Do you accept cryptocurrency?",
-    answer:
-      "Not at launch. Card checkout is the planned path through Stripe after sign-in. No wallet is requested anywhere on this site.",
+      "No. Download the portable executable, run it and tune your displays. VYTRIX has no account surface of any kind.",
   },
   {
     question: "Where do I download the app?",
     answer:
-      "The portable Windows x64 executable is on the public GitHub releases page. VYTRIX is open source under MIT; no account, sign-in or license is needed to download it.",
+      "The portable Windows x64 executable is on the public GitHub releases page under the latest release. The download buttons on this site take you straight to the repository and that file.",
+  },
+  {
+    question: "How do updates work?",
+    answer:
+      "New builds are published on the same GitHub releases page. Each release lists what changed and carries a SHA-256 digest so you can verify the executable before running it.",
+  },
+  {
+    question: "Can I build it myself?",
+    answer:
+      "Yes. The full source and build instructions are in the public repository. CI rebuilds the workspace on every push, and each release is assembled from that same source.",
   },
 ];
 
@@ -224,67 +224,6 @@ export const securityFaqs: FaqItem[] = [
 ];
 
 export const allFaqs: FaqItem[] = [...productFaqs, ...accessFaqs, ...securityFaqs];
-
-export interface Tier {
-  id: "free" | "monthly" | "lifetime";
-  name: string;
-  price: string;
-  cadence: string;
-  description: string;
-  features: string[];
-  cta: string;
-  highlighted?: boolean;
-}
-
-export const tiers: Tier[] = [
-  {
-    id: "free",
-    name: "Free",
-    price: "$0",
-    cadence: "no card required",
-    description: "The display basics, with no time limit and no account needed to try the app.",
-    features: [
-      "Per-monitor brightness, contrast and temperature",
-      "Three saved profiles",
-      "Community preset gallery",
-      "Manual hotkey bindings",
-      "Reversible color reset",
-    ],
-    cta: "Sign in to continue",
-  },
-  {
-    id: "monthly",
-    name: "Monthly",
-    price: "$6",
-    cadence: "per month, cancel anytime",
-    description: "The whole suite for one month at a time. Best if you are still deciding.",
-    features: [
-      "Everything in Free",
-      "Unlimited profiles and game matching",
-      "Reversible performance optimizer",
-      "Crosshair and performance overlays",
-      "Phone control over the local network",
-      "Signed updates for the full suite",
-    ],
-    cta: "Sign in to continue",
-    highlighted: true,
-  },
-  {
-    id: "lifetime",
-    name: "Lifetime",
-    price: "$79",
-    cadence: "one payment, current major version",
-    description: "Pay once and keep the current major version, including minor and patch updates.",
-    features: [
-      "Everything in Monthly",
-      "Permanent license for the current major version",
-      "Minor and patch updates included",
-      "Two additional devices",
-      "Priority build channel",
-    ],
-    cta: "Sign in to continue",
-  },
-];
 
 export interface Preset {
   name: string;

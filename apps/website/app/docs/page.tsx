@@ -36,7 +36,7 @@ const quickStart = [
   {
     step: "1",
     title: "Install on Windows 10 or 11",
-    copy: "The installer is gated behind sign-in and an active license. Verify the published SHA-256 digest before running it.",
+    copy: "Download the portable executable from the public GitHub release. Verify the published SHA-256 digest before running it.",
   },
   {
     step: "2",

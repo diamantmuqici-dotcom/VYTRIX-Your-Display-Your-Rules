@@ -9,7 +9,7 @@ import { accessFaqs, productFaqs, securityFaqs } from "@/lib/content";
 export const metadata: Metadata = {
   title: "FAQ",
   description:
-    "Answers about VYTRIX, game injection, anti-cheat, Windows support, licensing, downloads and data handling.",
+    "Answers about VYTRIX, game injection, anti-cheat, Windows support, free access, downloads and data handling.",
 };
 
 const groups = [
@@ -23,8 +23,8 @@ const groups = [
   {
     id: "access",
     eyebrow: "Access",
-    title: "Tiers and licensing",
-    description: "Free, Monthly, Lifetime, cancellation and downloads.",
+    title: "Free access and downloads",
+    description: "Cost, accounts, the download location and updates.",
     items: accessFaqs,
   },
   {
