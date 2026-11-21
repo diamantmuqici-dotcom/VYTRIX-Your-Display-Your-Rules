@@ -33,6 +33,7 @@ export function Providers({ children }: { children: ReactNode }) {
     const next: Theme = saved === "light" ? "light" : "dark";
     setThemeState(next);
     document.documentElement.dataset.theme = next;
+    document.documentElement.classList.add("js-motion");
   }, []);
 
   const setTheme = useCallback((next: Theme) => {

@@ -17,6 +17,8 @@ import { PriceCard } from "@/components/price-card";
 import { Reveal } from "@/components/reveal";
 import { Section, SectionHeading } from "@/components/section";
 import { accessFaqs, features, productFaqs, tiers } from "@/lib/content";
+import { GameArtwork } from "@/components/game-artwork";
+import { gameCatalog, gameCatalogStats } from "@/lib/game-catalog.generated";
 
 const comparisonRows = [
   {
@@ -226,7 +228,60 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section id="comparison" className="bg-secondary/25">
+      <Section id="games" className="border-t border-[color:var(--line)] bg-secondary/25">
+        <SectionHeading
+          eyebrow="Game catalog"
+          title={
+            <>
+              Recognised by name.{" "}
+              <span className="text-gradient">
+                {gameCatalogStats.total} configurations.
+              </span>
+            </>
+          }
+          description="VYTRIX ships a generated catalog across nine categories. Each profile declares how a title is detected and which display capabilities apply — with the original state restored on exit. Here is a slice of it."
+        />
+
+        <div className="mt-11 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            "counter-strike-2",
+            "elden-ring",
+            "minecraft-java-edition",
+            "doom-eternal",
+          ].map((id) => {
+            const game = gameCatalog.find((entry) => entry.id === id);
+            if (!game) return null;
+            return (
+              <Reveal key={game.id}>
+                <div className="overflow-hidden rounded-xl border border-[color:var(--line)] bg-card/60 transition-transform duration-500 ease-bench hover:-translate-y-1">
+                  <div className="aspect-[2/1]">
+                    <GameArtwork id={game.id} category={game.category} />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-display text-sm font-semibold text-ink">
+                      {game.name}
+                    </h3>
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-subtle">
+                      {game.categoryLabel} · {game.verificationStatus}
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button href="/games">
+            Search the catalog <ArrowRight size={16} aria-hidden="true" />
+          </Button>
+          <Button href="/features" variant="secondary">
+            How detection works
+          </Button>
+        </div>
+      </Section>
+
+      <Section id="comparison">
         <SectionHeading
           eyebrow="Honest comparison"
           title="Different tools, different jobs."

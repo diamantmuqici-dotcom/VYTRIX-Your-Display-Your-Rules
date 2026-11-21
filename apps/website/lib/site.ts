@@ -1,3 +1,13 @@
+// GitHub Pages project sites serve from /<repo>. Static <img> and metadata
+// asset URLs are not rewritten by Next, so every public asset goes through here.
+export const BASE_PATH =
+  process.env.NEXT_PUBLIC_BASE_PATH ?? "/VYTRIX-Your-Display-Your-Rules";
+
+export function asset(path: string): string {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  return `${BASE_PATH}${normalized}`;
+}
+
 export const SITE_NAME = "VYTRIX";
 export const SITE_TAGLINE = "YOUR DISPLAY. YOUR RULES.";
 export const SITE_DESCRIPTION =
@@ -12,6 +22,7 @@ export const DISCORD_URL = "https://discord.gg/AUABm6g68c";
 
 export const mainNav = [
   { label: "Features", href: "/features" },
+  { label: "Games", href: "/games" },
   { label: "Presets", href: "/presets" },
   { label: "Pricing", href: "/pricing" },
   { label: "Security", href: "/security" },
@@ -29,6 +40,7 @@ export const footerGroups = [
     title: "Product",
     links: [
       { label: "Features", href: "/features" },
+      { label: "Games", href: "/games" },
       { label: "Presets", href: "/presets" },
       { label: "Pricing", href: "/pricing" },
       { label: "Download", href: "/download" },

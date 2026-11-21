@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { mainNav, utilityNav } from "@/lib/site";
+import { asset, mainNav, utilityNav } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { Container } from "./container";
@@ -39,14 +39,14 @@ export function SiteHeader() {
           aria-label="VYTRIX home"
         >
           <img
-            src="/branding/vytrix-icon.svg"
+            src={asset("/branding/vytrix-icon.svg")}
             alt=""
             width={28}
             height={28}
             className="h-7 w-7"
           />
           <img
-            src="/branding/vytrix-wordmark.svg"
+            src={asset("/branding/vytrix-wordmark.svg")}
             alt="VYTRIX"
             width={118}
             height={24}

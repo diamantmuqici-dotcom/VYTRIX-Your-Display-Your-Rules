@@ -167,6 +167,47 @@
   .animate-float {
     animation: vyFloat 9s ease-in-out infinite alternate;
   }
+
+  .game-artwork {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--color-secondary);
+  }
+
+  .game-artwork svg {
+    display: block;
+    transition: transform 700ms var(--ease);
+  }
+
+  .group:hover .game-artwork svg {
+    transform: scale(1.06);
+  }
+
+  /* Static-export safe: content is visible by default. The animation only
+     enhances motion-capable browsers after paint and never gates visibility. */
+  .reveal {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .js-motion .reveal {
+      animation: vyReveal 0.7s var(--ease) both;
+      animation-delay: var(--reveal-delay, 0s);
+    }
+  }
+}
+
+@keyframes vyReveal {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 22px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 
 @keyframes vyDrift {

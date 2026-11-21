@@ -4,7 +4,7 @@ import "./globals.css";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Providers } from "@/components/providers";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, asset } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -51,16 +51,18 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title,
     description: SITE_DESCRIPTION,
-    images: [{ url: "/branding/og.png", alt: "VYTRIX — YOUR DISPLAY. YOUR RULES." }],
+    images: [
+      { url: asset("/branding/og.png"), alt: "VYTRIX — YOUR DISPLAY. YOUR RULES." },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description: SITE_DESCRIPTION,
-    images: ["/branding/og.png"],
+    images: [asset("/branding/og.png")],
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: asset("/favicon.ico"),
   },
   robots: {
     index: true,

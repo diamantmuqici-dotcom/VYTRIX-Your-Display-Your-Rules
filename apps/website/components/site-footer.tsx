@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { DISCORD_URL, SITE_TAGLINE, footerGroups } from "@/lib/site";
+import { DISCORD_URL, SITE_TAGLINE, asset, footerGroups } from "@/lib/site";
 import { Container } from "./container";
 
 export function SiteFooter() {
@@ -11,14 +11,14 @@ export function SiteFooter() {
           <div className="max-w-sm">
             <div className="flex items-center gap-2.5">
               <img
-                src="/branding/vytrix-icon.svg"
+                src={asset("/branding/vytrix-icon.svg")}
                 alt=""
                 width={30}
                 height={30}
                 className="h-8 w-8"
               />
               <img
-                src="/branding/vytrix-wordmark.svg"
+                src={asset("/branding/vytrix-wordmark.svg")}
                 alt="VYTRIX"
                 width={126}
                 height={26}

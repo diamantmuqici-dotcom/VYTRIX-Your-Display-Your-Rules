@@ -1,10 +1,14 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
-const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-
+/**
+ * Static-export safe reveal. Content is rendered fully visible in the HTML so
+ * GitHub Pages shows every section with JavaScript disabled. The CSS class
+ * only adds a progressive one-shot entrance animation after hydration; it
+ * never hides content unless the browser opts into motion and supports it.
+ */
 export function Reveal({
   children,
   className,
@@ -16,21 +20,14 @@ export function Reveal({
   delay?: number;
   y?: number;
 }) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
+  const style = {
+    "--reveal-delay": `${delay}s`,
+    "--reveal-y": `${y}px`,
+  } as CSSProperties;
 
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, delay, ease: EASE }}
-    >
+    <div className={cn("reveal", className)} style={style}>
       {children}
-    </motion.div>
+    </div>
   );
 }
