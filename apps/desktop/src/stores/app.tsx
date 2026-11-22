@@ -109,7 +109,7 @@ function defaultState(): AppState {
       animationIntensity: 100, reducedMotion: false, startWithWindows: false,
       minimizeToTray: true, notifications: true, language: "en",
       autoGameSwitch: true, telemetryOptIn: false, monitorId: null,
-      zoomMode: "hold", zoomLevel: 2,
+      zoomMode: "hold", zoomLevel: 2, fovDegrees: 90,
     },
     color: { ...DEFAULT_COLOR_SETTINGS },
     baseline: { ...DEFAULT_COLOR_SETTINGS },
@@ -170,6 +170,11 @@ function validZoomLevel(value: unknown): number {
   return Math.min(8, Math.max(1, Math.round(value * 4) / 4));
 }
 
+function validFovDegrees(value: unknown): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) return 90;
+  return Math.min(90, Math.max(30, Math.round(value)));
+}
+
 /** Older saved states have no per-binding mode; zoom inherits the legacy setting. */
 function validHotkeys(value: unknown, fallback: HotkeyBinding[], legacyZoomMode: unknown): HotkeyBinding[] {
   if (!Array.isArray(value)) return fallback;
@@ -197,7 +202,11 @@ function validHotkeys(value: unknown, fallback: HotkeyBinding[], legacyZoomMode:
       mode,
     });
   }
-  return out.length > 0 ? out : fallback;
+  // Saved states from older builds can omit a binding. Merge by action over
+  // the defaults so toggle-zoom always exists after load.
+  const byAction = new Map(fallback.map((binding) => [binding.action, binding]));
+  for (const binding of out) byAction.set(binding.action, binding);
+  return [...byAction.values()];
 }
 
 function load(): AppState {
@@ -223,6 +232,7 @@ function load(): AppState {
         language: validLanguage(parsed.settings?.language),
         zoomMode,
         zoomLevel: validZoomLevel(parsed.settings?.zoomLevel),
+        fovDegrees: validFovDegrees(parsed.settings?.fovDegrees),
       },
       hotkeys,
       crosshairs: savedCrosshairs.slice(0, 100).map((design) => normalizeDesign(design)),

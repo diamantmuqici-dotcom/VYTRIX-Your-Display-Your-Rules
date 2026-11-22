@@ -303,7 +303,7 @@ export interface Release {
 
 export const releases: Release[] = [
   {
-    version: "0.3.0",
+    version: "0.3.1",
     date: "2026-11-22",
     title: "Optimizer profile, crosshair zoom and native release",
     added: [

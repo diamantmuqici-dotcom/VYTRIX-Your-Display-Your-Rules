@@ -316,3 +316,40 @@ test("crosshair studio ships eight sections and a bounded advanced model", () =>
   assert.match(store, /crosshairStudio:/);
   assert.match(store, /crosshairTab:/);
 });
+
+test("misc apparent-FOV slider drives the native lens immediately", () => {
+  const misc = readFileSync(new URL("pages/Misc/index.tsx", root), "utf8");
+  const panel = readFileSync(new URL("pages/Misc/FovPanel.tsx", root), "utf8");
+  const bridge = readFileSync(new URL("hooks/useFovBridge.tsx", root), "utf8");
+  const service = readFileSync(new URL("services/zoom.ts", root), "utf8");
+  const shared = readFileSync(new URL("../../../packages/shared-types/src/index.ts", root), "utf8");
+  const native = readFileSync(new URL("../src-tauri/src/zoom/mod.rs", root), "utf8");
+  const commands = readFileSync(new URL("../src-tauri/src/commands/mod.rs", root), "utf8");
+  const lib = readFileSync(new URL("../src-tauri/src/lib.rs", root), "utf8");
+
+  assert.match(misc, /FovPanel/);
+  assert.match(panel, /setSetting\("fovDegrees"/);
+  assert.match(panel, /type="range"/);
+  assert.match(bridge, /setFov\(degrees\)/);
+  assert.match(service, /fov_set/);
+  assert.match(service, /fov_release/);
+  assert.match(shared, /interface FovStatus/);
+  assert.match(native, /fn fov_to_scale/);
+  assert.match(native, /MagSetFullscreenTransform/);
+  assert.doesNotMatch(native, /WriteProcessMemory/);
+  assert.match(commands, /pub fn fov_set/);
+  assert.match(lib, /commands::fov_set/);
+});
+
+test("toggle zoom applies in the native hotkey window before any React dispatch", () => {
+  const hotkeys = readFileSync(new URL("../src-tauri/src/hotkeys/mod.rs", root), "utf8");
+  const bridge = readFileSync(new URL("hooks/useHotkeyBridge.tsx", root), "utf8");
+  const store = readFileSync(new URL("stores/app.tsx", root), "utf8");
+  const zoomBridge = readFileSync(new URL("hooks/useZoomBridge.tsx", root), "utf8");
+
+  assert.match(hotkeys, /action == "toggle-zoom"/);
+  assert.match(hotkeys, /state\.zoom\.toggle\(\)/);
+  assert.doesNotMatch(bridge, /toggleZoom\(\)/);
+  assert.match(store, /byAction\.set\(binding\.action, binding\)/);
+  assert.match(zoomBridge, /signatureRef\.current = ""/);
+});

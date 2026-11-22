@@ -28,6 +28,7 @@ import { BindMenuProvider } from "@/components/ui/BindMenu";
 import { PhoneBridge } from "@/hooks/usePhoneBridge";
 import { HotkeyBridge } from "@/hooks/useHotkeyBridge";
 import { ZoomBridge } from "@/hooks/useZoomBridge";
+import { FovBridge } from "@/hooks/useFovBridge";
 import { SmartSwitchBridge } from "@/hooks/useSmartSwitchBridge";
 
 const PAGES: Record<string, () => React.JSX.Element> = {
@@ -135,6 +136,7 @@ export default function App() {
       <PhoneBridge />
       <HotkeyBridge />
       <ZoomBridge />
+      <FovBridge />
       <SmartSwitchBridge />
       <BindMenuProvider />
       <Shell />

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.1 — 2026-11-22
+
+- Added an apparent-FOV slider under Misc with a 30°–90° range. It drives a real screen-space lens through the Windows Magnification API, follows the crosshair focus, restores automatically when zoom releases, and never touches game files, memory, settings or camera state.
+- Made toggle zoom act inside the native hotkey window, so the first key press works before React listeners or IPC round trips exist.
+- Made zoom mode, bind and level changes keep an active toggle lens on and retry failed native configuration instead of silently disabling zoom.
+- Fixed hotkey rebinds destroying the previous OS binding when the new combination was rejected; the new combination is now registered before the old one is removed.
+- Fixed older saved states that omitted the zoom binding by merging saved bindings over the defaults by action.
+- Corrected release manifests to use GitHub download URLs and added native FOV commands to the Tauri IPC surface.
+
 ## 0.3.0 — 2026-11-22
 
 - Replaced the hardcoded `Balanced` Overview label with the exact applied color preset name, persisted in native storage and updated whenever a preset or custom color is applied.

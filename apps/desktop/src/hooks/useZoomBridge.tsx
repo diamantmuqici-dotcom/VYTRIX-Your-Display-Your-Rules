@@ -11,9 +11,10 @@ export function ZoomBridge() {
   const signatureRef = useRef("");
   const lastEventRef = useRef("");
 
-  const zoomMode = state.settings.zoomMode;
-  const zoomLevel = state.settings.zoomLevel;
+  // The binding owns the mode. settings.zoomMode mirrors it for older saves.
   const zoomBind = state.hotkeys.find((item) => item.action === "toggle-zoom");
+  const zoomMode = zoomBind?.mode ?? state.settings.zoomMode;
+  const zoomLevel = state.settings.zoomLevel;
   const zoomKeysText = zoomBind?.keys.join(">") ?? "";
   const zoomBindEnabled = zoomBind?.enabled !== false;
   const signature = `${zoomMode}|${zoomLevel}|${zoomBindEnabled ? zoomKeysText : ""}`;
@@ -47,25 +48,25 @@ export function ZoomBridge() {
 
   useEffect(() => {
     if (!isTauriRuntime() || signatureRef.current === signature) return;
-    signatureRef.current = signature;
+    let active = true;
     const keys = zoomBindEnabled && zoomKeysText ? zoomKeysText.split(">") : [];
-    if (keys.length === 0) {
-      if (zoomMode === "toggle") {
-        // Toggle mode has a manual control and an in-app button. No bind is
-        // required, so configure native state instead of dropping the mode.
-        void configureZoom(zoomMode, keys, zoomLevel).then((result) => {
-          if (!result.ok) log(`Zoom setup failed: ${result.error.message}`);
-        });
-      } else {
-        void releaseZoom().then((result) => {
-          if (!result.ok) log(`Zoom setup failed: ${result.error.message}`);
-        });
+    const task = keys.length > 0 || zoomMode === "toggle"
+      ? configureZoom(zoomMode, keys, zoomLevel)
+      : releaseZoom();
+    void task.then((result) => {
+      if (!active) return;
+      if (!result.ok) {
+        // Keep the old signature so the next state change retries immediately.
+        signatureRef.current = "";
+        log(`Zoom setup failed: ${result.error.message}`);
+        return;
       }
-      return;
-    }
-    void configureZoom(zoomMode, keys, zoomLevel).then((result) => {
-      if (!result.ok) log(`Zoom setup failed: ${result.error.message}`);
+      signatureRef.current = signature;
+      const status = result.data;
+      void setOverlayZoom(status.enabled, status.level);
+      lastEventRef.current = `${status.enabled}|${status.level}|${status.detail}`;
     });
+    return () => { active = false; };
   }, [signature, zoomMode, zoomLevel, zoomBindEnabled, zoomKeysText, log]);
 
   return null;

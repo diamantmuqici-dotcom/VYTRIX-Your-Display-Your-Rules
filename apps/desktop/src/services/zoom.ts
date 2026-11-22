@@ -1,8 +1,11 @@
-import type { CommandResult, ZoomMode, ZoomStatus } from "@vytrix/shared-types";
+import type { CommandResult, FovStatus, ZoomMode, ZoomStatus } from "@vytrix/shared-types";
 import { invokeNative } from "./tauri";
 
 export const ZOOM_LEVEL_MIN = 1;
 export const ZOOM_LEVEL_MAX = 8;
+export const FOV_MIN = 30;
+export const FOV_MAX = 90;
+export const FOV_REFERENCE = 90;
 
 export function normalizeZoomMode(value: string): ZoomMode {
   return value === "toggle" ? "toggle" : "hold";
@@ -11,6 +14,11 @@ export function normalizeZoomMode(value: string): ZoomMode {
 export function normalizeZoomLevel(value: number): number {
   if (!Number.isFinite(value)) return 2;
   return Math.min(ZOOM_LEVEL_MAX, Math.max(ZOOM_LEVEL_MIN, Math.round(value * 4) / 4));
+}
+
+export function normalizeFovDegrees(value: number): number {
+  if (!Number.isFinite(value)) return FOV_REFERENCE;
+  return Math.min(FOV_MAX, Math.max(FOV_MIN, Math.round(value)));
 }
 
 function cleanKeys(keys: readonly string[]): string[] {
@@ -47,4 +55,16 @@ export function toggleZoom(): Promise<CommandResult<ZoomStatus>> {
 
 export function releaseZoom(): Promise<CommandResult<ZoomStatus>> {
   return invokeNative<ZoomStatus>("zoom_release");
+}
+
+export function getFovStatus(): Promise<CommandResult<FovStatus>> {
+  return invokeNative<FovStatus>("fov_status");
+}
+
+export function setFov(degrees: number): Promise<CommandResult<FovStatus>> {
+  return invokeNative<FovStatus>("fov_set", { degrees: normalizeFovDegrees(degrees) });
+}
+
+export function releaseFov(): Promise<CommandResult<FovStatus>> {
+  return invokeNative<FovStatus>("fov_release");
 }

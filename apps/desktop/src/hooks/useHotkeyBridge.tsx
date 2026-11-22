@@ -3,7 +3,6 @@ import type { ColorSettings, HotkeyAction } from "@vytrix/shared-types";
 import { defaultBindingMode, HOTKEY_ACTIONS } from "@/app/bindings";
 import { invokeNative, isTauriRuntime } from "@/services/tauri";
 import { setOverlayCrosshair, setOverlayEnabled } from "@/services/overlay";
-import { toggleZoom } from "@/services/zoom";
 import { useApp } from "@/stores/app";
 
 const ACTIONS: readonly HotkeyAction[] = HOTKEY_ACTIONS;
@@ -67,6 +66,7 @@ export function HotkeyBridge() {
             keys: binding.keys,
           });
           if (result.ok) desiredHold.add(binding.action);
+          else appRef.current.log(`${binding.action} hold bind failed: ${result.error.message}`);
         } else {
           await invokeNative("unregister_hold_binding", { action: binding.action });
           if (binding.keys.length === 0) {
@@ -77,6 +77,7 @@ export function HotkeyBridge() {
               keys: binding.keys,
             });
             if (result.ok) desiredToggle.add(binding.action);
+            else appRef.current.log(`${binding.action} hotkey failed: ${result.error.message}`);
           }
         }
       }
@@ -151,9 +152,7 @@ export function HotkeyBridge() {
         const mode = binding?.mode ?? defaultBindingMode("toggle-zoom");
         if (binding?.enabled === false) break;
         if (mode === "toggle") {
-          void toggleZoom().then((result) => {
-            if (!result.ok) api.log(`Zoom toggle failed: ${result.error.message}`);
-          });
+          // Native wnd_proc already applied the magnifier on this key press.
           api.log("Zoom toggled by hotkey");
         } else {
           api.log("Zoom hold bind is driven natively while held");

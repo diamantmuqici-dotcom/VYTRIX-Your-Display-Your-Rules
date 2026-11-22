@@ -1,6 +1,6 @@
 [package]
 name = "vytrix"
-version = "0.3.0"
+version = "0.3.1"
 description = "YOUR DISPLAY. YOUR RULES. Windows gaming display and performance suite"
 authors = ["VYTRIX"]
 edition = "2021"

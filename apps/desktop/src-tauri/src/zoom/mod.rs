@@ -11,12 +11,21 @@ use std::time::Duration;
 
 pub const MIN_LEVEL: f32 = 1.0;
 pub const MAX_LEVEL: f32 = 8.0;
+pub const REFERENCE_FOV: f32 = 90.0;
+pub const MIN_FOV: f32 = 30.0;
+pub const MAX_FOV: f32 = 90.0;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub enum ZoomMode {
     Toggle,
     Hold,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum LensEffect {
+    Zoom,
+    Fov,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -32,6 +41,16 @@ pub struct ZoomStatus {
     pub focus_y: f32,
 }
 
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FovStatus {
+    pub enabled: bool,
+    pub degrees: f32,
+    pub scale: f32,
+    pub available: bool,
+    pub detail: String,
+}
+
 #[derive(Clone)]
 struct Inner {
     enabled: bool,
@@ -43,6 +62,9 @@ struct Inner {
     focus_x: f32,
     focus_y: f32,
     vks: Vec<i32>,
+    effect: LensEffect,
+    fov_degrees: f32,
+    fov_scale: f32,
 }
 
 impl Default for Inner {
@@ -57,6 +79,9 @@ impl Default for Inner {
             focus_x: 50.0,
             focus_y: 50.0,
             vks: Vec::new(),
+            effect: LensEffect::Zoom,
+            fov_degrees: REFERENCE_FOV,
+            fov_scale: MIN_LEVEL,
         }
     }
 }
@@ -96,6 +121,21 @@ impl ZoomController {
         }
     }
 
+    pub fn fov_status(&self) -> FovStatus {
+        let inner = self.inner.lock();
+        FovStatus {
+            enabled: inner.enabled && inner.effect == LensEffect::Fov,
+            degrees: inner.fov_degrees,
+            scale: inner.fov_scale,
+            available: cfg!(windows),
+            detail: inner.detail.clone(),
+        }
+    }
+
+    fn active_level(inner: &Inner) -> f32 {
+        if inner.effect == LensEffect::Fov { inner.fov_scale } else { inner.level }
+    }
+
     /// Replace the binding and level. Stops any previous pollers by bumping
     /// their generation, then clears the transform before storing new values.
     /// The crosshair focus is preserved across rebinds.
@@ -131,15 +171,18 @@ impl ZoomController {
         let vks = if clean.is_empty() { Vec::new() } else { resolve_vks(&clean)? };
 
         let generation = self.generation.fetch_add(1, Ordering::SeqCst) + 1;
-        {
+        let was_enabled = {
             let mut inner = self.inner.lock();
+            let was_enabled = inner.enabled && inner.effect == LensEffect::Zoom;
             self.clear_locked(&mut inner);
+            inner.effect = LensEffect::Zoom;
             inner.mode = mode;
             inner.keys = clean;
             inner.vks = vks.clone();
             inner.level = (level * 4.0).round() / 4.0;
             inner.detail = "idle".to_owned();
-        }
+            was_enabled
+        };
 
         if mode == ZoomMode::Hold {
             let controller = Arc::clone(self);
@@ -148,8 +191,55 @@ impl ZoomController {
         let controller = Arc::clone(self);
         thread::spawn(move || Self::poll_follow(controller, generation));
 
+        // A level or bind change while toggle zoom is live must keep the lens
+        // on; clearing it without reapplying made the slider feel like a kill switch.
+        if was_enabled && mode == ZoomMode::Toggle {
+            self.apply()?;
+        }
         self.emit();
         Ok(self.status())
+    }
+
+    /// Apply a screen-space apparent-FOV lens without game files or injection.
+    /// The Windows Magnification API can only magnify, so this narrows the
+    /// apparent field of view from the 90 degree reference.
+    pub fn set_fov(self: &Arc<Self>, degrees: f32) -> Result<FovStatus, String> {
+        if !cfg!(windows) {
+            return Err("magnification is available on Windows only".to_owned());
+        }
+        if !degrees.is_finite() || degrees < MIN_FOV || degrees > MAX_FOV {
+            return Err("apparent FOV must be 30 to 90 degrees".to_owned());
+        }
+        let scale = fov_to_scale(degrees);
+        let generation = self.generation.fetch_add(1, Ordering::SeqCst) + 1;
+        {
+            let mut inner = self.inner.lock();
+            self.clear_locked(&mut inner);
+            inner.effect = LensEffect::Fov;
+            inner.fov_degrees = degrees;
+            inner.fov_scale = scale;
+            inner.enabled = false;
+            inner.detail = "idle".to_owned();
+        }
+        let controller = Arc::clone(self);
+        thread::spawn(move || Self::poll_follow(controller, generation));
+        self.apply()?;
+        self.emit();
+        Ok(self.fov_status())
+    }
+
+    pub fn release_fov(&self) -> FovStatus {
+        {
+            let mut inner = self.inner.lock();
+            self.clear_locked(&mut inner);
+            inner.effect = LensEffect::Zoom;
+            inner.fov_degrees = REFERENCE_FOV;
+            inner.fov_scale = MIN_LEVEL;
+            inner.detail = "released".to_owned();
+        }
+        self.generation.fetch_add(1, Ordering::SeqCst);
+        self.emit();
+        self.fov_status()
     }
 
     /// Move the magnified focal point. 50/50 is the screen centre where a
@@ -163,10 +253,11 @@ impl ZoomController {
             inner.focus_x = x.clamp(0.0, 100.0);
             inner.focus_y = y.clamp(0.0, 100.0);
             if inner.enabled {
-                let (ox, oy) = transform_offsets(inner.level, inner.focus_x, inner.focus_y);
+                let level = Self::active_level(&inner);
+                let (ox, oy) = transform_offsets(level, inner.focus_x, inner.focus_y);
                 #[cfg(windows)]
                 // SAFETY: initialized while enabled, level bounded by configure.
-                unsafe { crate::win::MagSetFullscreenTransform(inner.level, ox, oy) };
+                unsafe { crate::win::MagSetFullscreenTransform(level, ox, oy) };
             }
         }
         self.emit();
@@ -178,7 +269,15 @@ impl ZoomController {
             return Err("magnification is available on Windows only".to_owned());
         }
         {
-            let inner = self.inner.lock();
+            let mut inner = self.inner.lock();
+            // The FOV lens and zoom share one transform. A zoom hotkey press
+            // takes over cleanly instead of fighting the FOV follow thread.
+            if inner.effect == LensEffect::Fov {
+                self.clear_locked(&mut inner);
+                inner.effect = LensEffect::Zoom;
+                // Keep the saved FOV so the lens can come back when zoom releases.
+                self.generation.fetch_add(1, Ordering::SeqCst);
+            }
             if inner.mode == ZoomMode::Hold {
                 return Err("hold mode is controlled by the bound keys".to_owned());
             }
@@ -208,6 +307,9 @@ impl ZoomController {
             }
             inner.enabled = false;
             inner.vks.clear();
+            inner.effect = LensEffect::Zoom;
+            inner.fov_degrees = REFERENCE_FOV;
+            inner.fov_scale = MIN_LEVEL;
             inner.detail = "released".to_owned();
         }
         self.generation.fetch_add(1, Ordering::SeqCst);
@@ -230,15 +332,20 @@ impl ZoomController {
                 }
                 inner.initialized = true;
             }
-            let (ox, oy) = transform_offsets(inner.level, inner.focus_x, inner.focus_y);
+            let level = Self::active_level(&inner);
+            let (ox, oy) = transform_offsets(level, inner.focus_x, inner.focus_y);
             // SAFETY: initialized above, level bounded by configure.
-            if unsafe { crate::win::MagSetFullscreenTransform(inner.level, ox, oy) } == 0 {
+            if unsafe { crate::win::MagSetFullscreenTransform(level, ox, oy) } == 0 {
                 inner.detail = "Full-screen transform rejected".to_owned();
                 return Err(inner.detail.clone());
             }
         }
         inner.enabled = true;
-        inner.detail = format!("{}x centered on crosshair", inner.level);
+        inner.detail = if inner.effect == LensEffect::Fov {
+            format!("{:.0}° apparent FOV", inner.fov_degrees)
+        } else {
+            format!("{}x centered on crosshair", inner.level)
+        };
         Ok(())
     }
 
@@ -280,7 +387,7 @@ impl ZoomController {
                 }
                 controller.emit();
             }
-            thread::sleep(Duration::from_millis(35));
+            thread::sleep(Duration::from_millis(10));
         }
         if held {
             controller.clear();
@@ -298,10 +405,11 @@ impl ZoomController {
             {
                 let inner = controller.inner.lock();
                 if inner.enabled && inner.initialized {
-                    let (ox, oy) = transform_offsets(inner.level, inner.focus_x, inner.focus_y);
+                    let level = Self::active_level(&inner);
+                    let (ox, oy) = transform_offsets(level, inner.focus_x, inner.focus_y);
                     #[cfg(windows)]
                     // SAFETY: initialized while enabled; bounded level and offsets.
-                    unsafe { crate::win::MagSetFullscreenTransform(inner.level, ox, oy) };
+                    unsafe { crate::win::MagSetFullscreenTransform(level, ox, oy) };
                 }
             }
             thread::sleep(Duration::from_millis(120));
@@ -355,6 +463,14 @@ fn resolve_vks(keys: &[String]) -> Result<Vec<i32>, String> {
         return Err("zoom bind needs at least one key".to_owned());
     }
     Ok(out)
+}
+
+/// Tangent ratio between a 90 degree reference frustum and the requested FOV.
+/// This is a screen-space lens, not a game camera projection change.
+fn fov_to_scale(degrees: f32) -> f32 {
+    let reference = (REFERENCE_FOV * 0.5).to_radians().tan();
+    let target = (degrees * 0.5).to_radians().tan();
+    (reference / target.max(f32::EPSILON)).clamp(MIN_LEVEL, MAX_LEVEL)
 }
 
 /// Offsets place the focal point at the centre of the magnified source rect.
@@ -444,5 +560,19 @@ mod tests {
         let controller = Arc::new(ZoomController::default());
         let error = controller.configure(ZoomMode::Hold, &[], 2.0).unwrap_err();
         assert!(error.contains("hold bind"));
+    }
+
+    #[test]
+    fn fov_scale_tracks_tangent_ratio() {
+        assert!((fov_to_scale(REFERENCE_FOV) - 1.0).abs() < 0.001);
+        assert!((fov_to_scale(60.0) - 3.0_f32.sqrt()).abs() < 0.001);
+        assert!(fov_to_scale(30.0) > fov_to_scale(60.0));
+    }
+
+    #[test]
+    fn fov_bounds_reject_invalid_angles() {
+        for bad in [f32::NAN, 0.0, 29.9, 90.1, f32::INFINITY] {
+            assert!(bad < MIN_FOV || bad > MAX_FOV || !bad.is_finite());
+        }
     }
 }

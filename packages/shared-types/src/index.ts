@@ -282,6 +282,14 @@ export interface ZoomStatus {
   focusY: number;
 }
 
+export interface FovStatus {
+  enabled: boolean;
+  degrees: number;
+  scale: number;
+  available: boolean;
+  detail: string;
+}
+
 export type RiskLevel = "low" | "medium" | "high";
 
 export type TaskMechanism = "registry" | "powerPlan" | "systemCommand" | "localReview";
@@ -444,6 +452,7 @@ export interface AppSettings {
   monitorId: string | null;
   zoomMode: ZoomMode;
   zoomLevel: number;
+  fovDegrees: number;
 }
 
 export interface PresetFile {

@@ -55,12 +55,13 @@ impl HotkeyRegistry {
             let hwnd = hotkey_window();
             if hwnd.is_null() { return Err("hotkey window unavailable".to_owned()); }
             // SAFETY: valid hwnd, id, modifiers, and virtual key resolved above.
+            // Register first: a rejected rebind must not destroy the old hotkey.
+            let ok = unsafe { win::RegisterHotKey(hwnd, id, modifiers, vk) };
+            if ok == 0 { return Err("OS rejected hotkey (conflict or reserved)".to_owned()); }
             if let Some(previous) = self.ids_by_action.lock().remove(&safe_action) {
                 unsafe { win::UnregisterHotKey(hwnd, previous) };
                 self.actions_by_id.lock().remove(&previous);
             }
-            let ok = unsafe { win::RegisterHotKey(hwnd, id, modifiers, vk) };
-            if ok == 0 { return Err("OS rejected hotkey (conflict or reserved)".to_owned()); }
             self.actions_by_id.lock().insert(id, safe_action.clone());
             self.ids_by_action.lock().insert(safe_action.clone(), id);
             self.taken.lock().insert(signature);
@@ -288,6 +289,13 @@ fn hotkey_window() -> *mut core::ffi::c_void {
                     if action == "toggle-crosshair" {
                         if let Some(state) = crate::APP_STATE.get() {
                             state.overlay.toggle_crosshair();
+                        }
+                    }
+                    // Toggle zoom is applied in the hotkey window itself so the
+                    // first press needs no React listener or IPC round trip.
+                    if action == "toggle-zoom" {
+                        if let Some(state) = crate::APP_STATE.get() {
+                            let _ = state.zoom.toggle();
                         }
                     }
                     if let Some(handle) = APP_HANDLE.get() {

@@ -385,6 +385,24 @@ pub fn zoom_release(state: State<'_, AppState>) -> crate::zoom::ZoomStatus {
     state.zoom.release()
 }
 
+#[tauri::command]
+pub fn fov_status(state: State<'_, AppState>) -> crate::zoom::FovStatus {
+    state.zoom.fov_status()
+}
+
+#[tauri::command]
+pub fn fov_set(
+    degrees: f32,
+    state: State<'_, AppState>,
+) -> Result<crate::zoom::FovStatus, String> {
+    state.zoom.set_fov(degrees)
+}
+
+#[tauri::command]
+pub fn fov_release(state: State<'_, AppState>) -> crate::zoom::FovStatus {
+    state.zoom.release_fov()
+}
+
 // ---------------------------------------------------------------------------
 // Potato Mode 2.0 — graphics optimization center
 // ---------------------------------------------------------------------------
