@@ -2,11 +2,13 @@
 //! Every value here comes from the OS or an on-disk manifest. Unknown stays unknown.
 
 use super::*;
+use serde_json::{Map, Value};
 use std::fs;
 use std::path::Path;
 
 const MAX_INI_LINES: usize = 20000;
 const MAX_INI_LINE: usize = 2048;
+const MAX_JSON_KEYS: usize = 512;
 
 // ---------------------------------------------------------------------------
 // Hardware
@@ -153,6 +155,10 @@ impl IniDocument {
         let meta = fs::metadata(path).map_err(|_| "configuration file is not accessible".to_owned())?;
         if meta.len() > MAX_CONFIG_BYTES { return Err("configuration file exceeds 2 MB limit".to_owned()); }
         let text = fs::read_to_string(path).map_err(|_| "configuration file is not valid UTF-8".to_owned())?;
+        Self::parse(&text)
+    }
+
+    pub fn parse(text: &str) -> Result<Self, String> {
         let mut lines: Vec<String> = text.lines().take(MAX_INI_LINES)
             .map(|line| line.chars().take(MAX_INI_LINE).collect()).collect();
         if lines.len() >= MAX_INI_LINES { return Err("configuration file has too many lines".to_owned()); }
@@ -224,6 +230,123 @@ impl IniDocument {
 }
 
 // ---------------------------------------------------------------------------
+// Bounded flat-JSON editor — Unity settings stored in .dat files
+// ---------------------------------------------------------------------------
+
+#[derive(Debug, Clone)]
+pub struct JsonDocument {
+    values: Map<String, Value>,
+    trailing_newline: bool,
+}
+
+impl JsonDocument {
+    pub fn load(path: &Path) -> Result<Self, String> {
+        let meta = fs::metadata(path).map_err(|_| "configuration file is not accessible".to_owned())?;
+        if meta.len() > MAX_CONFIG_BYTES { return Err("configuration file exceeds 2 MB limit".to_owned()); }
+        let text = fs::read_to_string(path).map_err(|_| "configuration file is not valid UTF-8".to_owned())?;
+        Self::parse(&text)
+    }
+
+    pub fn parse(text: &str) -> Result<Self, String> {
+        let value: Value = serde_json::from_str(text)
+            .map_err(|e| format!("configuration file is not valid JSON: {e}"))?;
+        let Value::Object(map) = value else {
+            return Err("configuration JSON must be a flat object".to_owned());
+        };
+        if map.len() > MAX_JSON_KEYS { return Err("configuration has too many keys".to_owned()); }
+        Ok(Self { values: map, trailing_newline: text.ends_with('\n') })
+    }
+
+    /// Only scalar values are eligible. Objects and arrays stay opaque.
+    pub fn get(&self, _section: &str, key: &str) -> Option<String> {
+        match self.values.get(key)? {
+            Value::String(s) => Some(s.clone()),
+            Value::Bool(b) => Some(b.to_string()),
+            Value::Number(n) => Some(n.to_string()),
+            _ => None,
+        }
+    }
+
+    /// Type-preserving: a bool stays bool, a number is reparsed as int/float.
+    /// A key that is not already in the file is never created.
+    pub fn set(&mut self, _section: &str, key: &str, value: &str) {
+        let Some(existing) = self.values.get(key).cloned() else { return; };
+        let next = match existing {
+            Value::String(_) => Value::String(value.to_owned()),
+            Value::Bool(_) => Value::Bool(value.eq_ignore_ascii_case("true")),
+            Value::Number(_) => match serde_json::from_str::<Value>(value) {
+                Ok(Value::Number(n)) => Value::Number(n),
+                _ => return,
+            },
+            other => other,
+        };
+        self.values.insert(key.to_owned(), next);
+    }
+
+    pub fn remove(&mut self, _section: &str, key: &str) {
+        self.values.remove(key);
+    }
+
+    pub fn save(&self, path: &Path) -> Result<(), String> {
+        let mut text = serde_json::to_string(&self.values).map_err(|e| e.to_string())?;
+        if self.trailing_newline { text.push('\n'); }
+        if text.len() as u64 > MAX_CONFIG_BYTES { return Err("resulting configuration exceeds 2 MB limit".to_owned()); }
+        fs::write(path, text).map_err(|e| format!("configuration write failed: {e}"))
+    }
+}
+
+/// One read/write surface for both real config formats. Format is detected
+/// from content, so a `.dat` holding JSON and an `.ini` both work.
+#[derive(Debug, Clone)]
+pub enum ConfigDocument {
+    Ini(IniDocument),
+    Json(JsonDocument),
+}
+
+impl ConfigDocument {
+    pub fn load(path: &Path) -> Result<Self, String> {
+        let meta = fs::metadata(path).map_err(|_| "configuration file is not accessible".to_owned())?;
+        if meta.len() > MAX_CONFIG_BYTES { return Err("configuration file exceeds 2 MB limit".to_owned()); }
+        let text = fs::read_to_string(path).map_err(|_| "configuration file is not valid UTF-8".to_owned())?;
+        if text.trim_start().starts_with('{') {
+            Ok(Self::Json(JsonDocument::parse(&text)?))
+        } else {
+            Ok(Self::Ini(IniDocument::parse(&text)?))
+        }
+    }
+
+    pub fn is_json(&self) -> bool { matches!(self, Self::Json(_)) }
+
+    pub fn get(&self, section: &str, key: &str) -> Option<String> {
+        match self {
+            Self::Ini(doc) => doc.get(section, key),
+            Self::Json(doc) => doc.get(section, key),
+        }
+    }
+
+    pub fn set(&mut self, section: &str, key: &str, value: &str) {
+        match self {
+            Self::Ini(doc) => doc.set(section, key, value),
+            Self::Json(doc) => doc.set(section, key, value),
+        }
+    }
+
+    pub fn remove(&mut self, section: &str, key: &str) {
+        match self {
+            Self::Ini(doc) => doc.remove(section, key),
+            Self::Json(doc) => doc.remove(section, key),
+        }
+    }
+
+    pub fn save(&self, path: &Path) -> Result<(), String> {
+        match self {
+            Self::Ini(doc) => doc.save(path),
+            Self::Json(doc) => doc.save(path),
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Game profiles and detection
 // ---------------------------------------------------------------------------
 
@@ -240,30 +363,56 @@ const PROFILES: &[GameProfile] = &[
 
 fn local_appdata() -> Option<PathBuf> { std::env::var("LOCALAPPDATA").ok().map(PathBuf::from) }
 
+fn local_low() -> Option<PathBuf> {
+    std::env::var("USERPROFILE").ok().map(PathBuf::from)
+        .map(|p| p.join("AppData").join("LocalLow"))
+}
+
+/// Unity settings live under `LocalLow\Kefir\ROB RUN\settings\settings_*.dat`.
+/// Only filenames that match the shipped prefix are considered.
+fn rob_run_unity_settings() -> Vec<PathBuf> {
+    let Some(base) = local_low() else { return Vec::new(); };
+    let folder = base.join("Kefir").join("ROB RUN").join("settings");
+    let Ok(entries) = fs::read_dir(&folder) else { return Vec::new(); };
+    let mut files: Vec<PathBuf> = entries.flatten().take(128).map(|e| e.path())
+        .filter(|p| p.is_file())
+        .filter(|p| {
+            let name = p.file_name().and_then(|n| n.to_str()).unwrap_or("").to_ascii_lowercase();
+            name.starts_with("settings")
+                && (name.ends_with(".dat") || name.ends_with(".json"))
+        })
+        .collect();
+    files.sort();
+    files
+}
+
 fn find_config(profile: &GameProfile, install_dir: &str) -> String {
     let mut candidates: Vec<PathBuf> = Vec::new();
-    // Known Unreal Engine configuration location. Only used when the file exists.
-    if let Some(base) = local_appdata() {
-        let mut folders: Vec<String> = vec![
-            profile.hint.to_owned(), profile.name.to_owned(),
-            "ROB RUN".to_owned(), "RobRun".to_owned(),
-            "robrun".to_owned(), "ROBRUN".to_owned(),
-        ];
-        // ROB RUN builds have shipped under publisher-prefixed AppData folders.
-        // Bounded child scan: names only, 256 entries, never descends blindly.
-        if let Ok(entries) = fs::read_dir(&base) {
-            for entry in entries.flatten().take(256) {
-                if !entry.path().is_dir() { continue; }
-                let name = entry.file_name().to_string_lossy().to_string();
-                if name.to_ascii_lowercase().contains("rob")
-                    && !folders.iter().any(|f| f.eq_ignore_ascii_case(&name)) {
-                    folders.push(name);
+    if profile.id == "rob-run" {
+        // Real ROB RUN config: Unity JSON in a .dat under LocalLow.
+        candidates.extend(rob_run_unity_settings());
+    } else {
+        // Unreal Engine config location for the generic manual profile.
+        if let Some(base) = local_appdata() {
+            let mut folders: Vec<String> = vec![
+                profile.hint.to_owned(), profile.name.to_owned(),
+                "ROB RUN".to_owned(), "RobRun".to_owned(),
+                "robrun".to_owned(), "ROBRUN".to_owned(),
+            ];
+            if let Ok(entries) = fs::read_dir(&base) {
+                for entry in entries.flatten().take(256) {
+                    if !entry.path().is_dir() { continue; }
+                    let name = entry.file_name().to_string_lossy().to_string();
+                    if name.to_ascii_lowercase().contains("rob")
+                        && !folders.iter().any(|f| f.eq_ignore_ascii_case(&name)) {
+                        folders.push(name);
+                    }
                 }
             }
-        }
-        for folder in folders {
-            for config in ["WindowsNoEditor", "Windows", "Win64"] {
-                candidates.push(base.join(&folder).join("Saved").join("Config").join(config).join("GameUserSettings.ini"));
+            for folder in folders {
+                for config in ["WindowsNoEditor", "Windows", "Win64"] {
+                    candidates.push(base.join(&folder).join("Saved").join("Config").join(config).join("GameUserSettings.ini"));
+                }
             }
         }
     }
@@ -341,7 +490,7 @@ pub fn games(state: &PotatoState) -> Vec<GameInfo> {
 // ---------------------------------------------------------------------------
 
 struct Def {
-    id: &'static str,
+    game: &'static str,
     category: SettingCategory,
     name: &'static str,
     section: &'static str,
@@ -353,53 +502,146 @@ struct Def {
     restart: bool,
 }
 
+const ROB_JSON_EXPLANATION: &str = "Observed key in ROB RUN's Unity settings JSON. Written only when present, with its original JSON type preserved.";
+
 const GAME_DEFS: &[Def] = &[
-    Def { id: "ScalabilityGroups::sg.TextureQuality", category: SettingCategory::Texture,
+    // ROB RUN — flat Unity JSON in LocalLow\Kefir\ROB RUN\settings\settings_*.dat.
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "Anti-aliasing", section: "", key: "anti_aliasing_mode_id_setting",
+        values: ["", "disabled", "disabled", "disabled"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Post-process resolve work.", visual: "Already disabled in the observed profile; jagged edges stay visible.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Environment,
+        name: "Shadows", section: "", key: "cast_shadow_setting",
+        values: ["", "disabled", "disabled", "disabled"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Shadow map and depth passes.", visual: "Already disabled in the observed profile.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Environment,
+        name: "Additional lights", section: "", key: "additional_lights_setting",
+        values: ["", "true", "false", "false"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Per-object light evaluation.", visual: "Secondary lights are removed at medium and full.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "Post-processing", section: "", key: "post_processing_setting",
+        values: ["", "true", "false", "false"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Fullscreen post-processing passes.", visual: "Bloom and screen effects are removed at medium and full.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "Depth of field", section: "", key: "depth_of_field",
+        values: ["", "true", "false", "false"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Depth-of-field blur pass.", visual: "Background blur is removed at medium and full.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Environment,
+        name: "Screen-space reflections", section: "", key: "screen_space_reflections_setting",
+        values: ["", "true", "false", "false"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Reflection ray passes.", visual: "Flatter reflective surfaces at medium and full.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "Auto exposure", section: "", key: "auto_exposure_setting",
+        values: ["", "true", "false", "false"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Exposure adaptation pass.", visual: "Fixed exposure at medium and full.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Texture,
+        name: "LOD cross-fade", section: "", key: "lod_cross_fade_setting",
+        values: ["", "true", "false", "false"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Per-object LOD blending.", visual: "More visible LOD transitions at medium and full.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Texture,
+        name: "Render scale", section: "", key: "render_scale_setting",
+        values: ["", "0.9", "0.8", "0.7"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Internal render resolution and fill rate.", visual: "Softer image as the scale drops.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Environment,
+        name: "Grass quality", section: "", key: "settings_grass",
+        values: ["", "low", "low", "low"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Vegetation geometry and overdraw.", visual: "Already low in the observed profile.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Distance,
+        name: "Grass view distance", section: "", key: "grass_vibile_distance_factor_setting",
+        values: ["", "low", "low", "low"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Distant vegetation submission.", visual: "Already low in the observed profile.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Environment,
+        name: "Water quality", section: "", key: "settings_water",
+        values: ["", "low", "low", "low"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Water shading and reflection work.", visual: "Already low in the observed profile.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Distance,
+        name: "Renderer culling preset", section: "", key: "renderers_culling_preset_id_setting",
+        values: ["", "low", "low", "low"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Scene culling work.", visual: "Already low in the observed profile.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Texture,
+        name: "Anisotropic filtering", section: "", key: "anisotropic_filtering",
+        values: ["", "2", "2", "0"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Texture sample cost at oblique angles.", visual: "Oblique surfaces get softer at full.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Texture,
+        name: "Streaming mipmap memory budget", section: "", key: "streaming_mipmaps_memory_budget",
+        values: ["", "1280", "1024", "512"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Texture streaming and VRAM pressure.", visual: "Lower budgets keep fewer high-detail mips resident.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Texture,
+        name: "Global texture mipmap limit", section: "", key: "global_texture_mipmap_limit",
+        values: ["", "2", "2", "1"], explanation: ROB_JSON_EXPLANATION,
+        perf: "Texture memory and sampling cost.", visual: "Lower mip limits reduce surface detail at full.", restart: true },
+    // Present in the observed file, but no verified enum mapping — listed, never written.
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "Quality preset", section: "", key: "setting_quality",
+        values: ["", "", "", ""], explanation: "Preset string observed as 'custom'. Valid alternative enum values are not verified, so this key is never written.",
+        perf: "Preset-dependent.", visual: "Preset-dependent.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "HDR", section: "", key: "hdr_setting",
+        values: ["", "", "", ""], explanation: "Display output setting preserved as-is. Potato Mode does not change HDR behavior.",
+        perf: "Display-dependent.", visual: "Changing HDR would alter the whole image.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "Frame rate cap", section: "", key: "frame_rate_setting",
+        values: ["", "", "", ""], explanation: "Integer enum observed as 4. The enum mapping is not verified, so this key is never written.",
+        perf: "Frame pacing-dependent.", visual: "None.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Texture,
+        name: "LOD bias", section: "", key: "lod_bias_setting",
+        values: ["", "", "", ""], explanation: "Float value observed, but the game's bias-to-quality mapping is not verified. Never written.",
+        perf: "Texture bandwidth-dependent.", visual: "Unknown at unverified values.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "Fullscreen", section: "", key: "fullscreen_setting",
+        values: ["", "", "", ""], explanation: "Display mode setting preserved as-is. Potato Mode does not change window state.",
+        perf: "Display-dependent.", visual: "Changing fullscreen would change the whole window.", restart: true },
+    Def { game: "rob-run", category: SettingCategory::Effects,
+        name: "Resolution", section: "", key: "resolution_setting",
+        values: ["", "", "", ""], explanation: "Display mode setting preserved as-is. Potato Mode does not change resolution.",
+        perf: "Display-dependent.", visual: "Changing resolution would change the whole image.", restart: true },
+    // Generic Unreal profile — retained for manual Unreal configs.
+    Def { game: "unreal-generic", category: SettingCategory::Texture,
         name: "Texture quality", section: "ScalabilityGroups", key: "sg.TextureQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key. Reduced only when present in the game configuration.",
         perf: "GPU texture bandwidth and cache pressure.", visual: "Softer surface detail at low levels.", restart: true },
-    Def { id: "ScalabilityGroups::sg.ShadowQuality", category: SettingCategory::Environment,
+    Def { game: "unreal-generic", category: SettingCategory::Environment,
         name: "Shadow quality", section: "ScalabilityGroups", key: "sg.ShadowQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key for shadow map quality.",
         perf: "Shadow rendering and depth passes.", visual: "Softer, shorter shadow detail.", restart: true },
-    Def { id: "ScalabilityGroups::sg.ViewDistanceQuality", category: SettingCategory::Distance,
+    Def { game: "unreal-generic", category: SettingCategory::Distance,
         name: "View distance", section: "ScalabilityGroups", key: "sg.ViewDistanceQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key for object draw distance.",
         perf: "Scene submission and geometry work.", visual: "Objects appear at shorter range.", restart: true },
-    Def { id: "ScalabilityGroups::sg.FoliageQuality", category: SettingCategory::Environment,
+    Def { game: "unreal-generic", category: SettingCategory::Environment,
         name: "Foliage quality", section: "ScalabilityGroups", key: "sg.FoliageQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key for grass and foliage density.",
         perf: "Alpha-tested geometry and overdraw.", visual: "Thinner vegetation coverage.", restart: true },
-    Def { id: "ScalabilityGroups::sg.EffectsQuality", category: SettingCategory::Effects,
+    Def { game: "unreal-generic", category: SettingCategory::Effects,
         name: "Effects quality", section: "ScalabilityGroups", key: "sg.EffectsQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key for particle and effect complexity.",
         perf: "Particle simulation and overdraw.", visual: "Simpler particle effects.", restart: true },
-    Def { id: "ScalabilityGroups::sg.PostProcessQuality", category: SettingCategory::Effects,
+    Def { game: "unreal-generic", category: SettingCategory::Effects,
         name: "Post-processing quality", section: "ScalabilityGroups", key: "sg.PostProcessQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key for post-processing chains.",
         perf: "Fullscreen post-processing passes.", visual: "Reduced bloom and screen effects.", restart: true },
-    Def { id: "ScalabilityGroups::sg.ReflectionQuality", category: SettingCategory::Environment,
+    Def { game: "unreal-generic", category: SettingCategory::Environment,
         name: "Reflection quality", section: "ScalabilityGroups", key: "sg.ReflectionQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key for reflection quality.",
         perf: "Reflection capture and screen-space rays.", visual: "Flatter reflective surfaces.", restart: true },
-    Def { id: "ScalabilityGroups::sg.GlobalIlluminationQuality", category: SettingCategory::Environment,
+    Def { game: "unreal-generic", category: SettingCategory::Environment,
         name: "Global illumination", section: "ScalabilityGroups", key: "sg.GlobalIlluminationQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key for indirect lighting.",
         perf: "Indirect lighting updates.", visual: "Flatter ambient lighting.", restart: true },
-    Def { id: "ScalabilityGroups::sg.AntiAliasingQuality", category: SettingCategory::Effects,
+    Def { game: "unreal-generic", category: SettingCategory::Effects,
         name: "Anti-aliasing quality", section: "ScalabilityGroups", key: "sg.AntiAliasingQuality",
         values: ["", "2", "1", "0"],
         explanation: "Documented Unreal Engine scalability key for anti-aliasing quality.",
         perf: "Temporal or multisample resolve cost.", visual: "More visible jagged edges.", restart: true },
-    Def { id: "/Script/Engine.GameUserSettings::bUseVSync", category: SettingCategory::Effects,
+    Def { game: "unreal-generic", category: SettingCategory::Effects,
         name: "V-Sync", section: "/Script/Engine.GameUserSettings", key: "bUseVSync",
         values: ["", "True", "False", "False"],
         explanation: "Documented GameUserSettings key. Written only when already present in the file.",
@@ -431,21 +673,28 @@ const DRIVER_DEFS: &[DriverDef] = &[
         vendor: "intel", why: "Requires IGCL. No verified driver API is linked in this build; value is not written." },
 ];
 
-pub fn settings_catalog(_vendor: &str, doc: Option<&IniDocument>, level: PotatoLevel) -> Vec<GraphicsSetting> {
+pub fn settings_catalog(_vendor: &str, game_id: &str, doc: Option<&ConfigDocument>, level: PotatoLevel) -> Vec<GraphicsSetting> {
     let mut out = Vec::new();
     let index = level.index() as usize;
-    for def in GAME_DEFS {
+    for def in GAME_DEFS.iter().filter(|d| d.game == game_id) {
         let current = doc.and_then(|d| d.get(def.section, def.key));
         let in_file = current.is_some();
+        let has_target = def.values.iter().skip(1).any(|v| !v.is_empty());
+        let supported = in_file && has_target;
         let target = if level == PotatoLevel::Off || def.values[index].is_empty() { None }
             else { Some(def.values[index].to_owned()) };
+        let id = if def.section.is_empty() { def.key.to_owned() }
+            else { format!("{}::{}", def.section, def.key) };
+        let mechanism = if def.section.is_empty() { SettingMechanism::GameConfigJson }
+            else { SettingMechanism::GameConfigIni };
         out.push(GraphicsSetting {
-            id: def.id.to_owned(), category: def.category, name: def.name.to_owned(),
-            mechanism: SettingMechanism::GameConfigIni, supported: in_file,
-            support_reason: if in_file {
-                "key present in the detected game configuration".to_owned()
-            } else {
+            id, category: def.category, name: def.name.to_owned(), mechanism, supported,
+            support_reason: if !in_file {
                 "key not present in this game's configuration — no value is invented".to_owned()
+            } else if !has_target {
+                "key is present but no verified level target exists — left untouched".to_owned()
+            } else {
+                "key present in the detected game configuration".to_owned()
             },
             current_value: current, recommended_value: target.clone(), selected_value: target,
             explanation: def.explanation.to_owned(), performance_relevance: def.perf.to_owned(),
@@ -473,12 +722,16 @@ pub fn settings_catalog(_vendor: &str, doc: Option<&IniDocument>, level: PotatoL
 mod tests {
     use super::*;
 
-    fn write_ini(text: &str) -> (PathBuf, IniDocument) {
+    fn write_ini(text: &str) -> (PathBuf, ConfigDocument) {
         let path = std::env::temp_dir().join(format!("vytrix-potato-test-{}-{:?}.ini",
             std::process::id(), std::thread::current().id()));
         fs::write(&path, text).unwrap();
-        let doc = IniDocument::load(&path).unwrap();
+        let doc = ConfigDocument::load(&path).unwrap();
         (path, doc)
+    }
+
+    fn sample_json() -> &'static str {
+        r#"{"locale_settings":"en-US","render_scale_setting":1,"post_processing_setting":true,"streaming_mipmaps_memory_budget":1280,"lod_bias_setting":0.899999976,"settings_grass":"low","controls":"{\"binds\":[]}","setting_quality":"custom"}"#
     }
 
     #[test]
@@ -508,23 +761,115 @@ mod tests {
     }
 
     #[test]
+    fn json_set_preserves_types_and_unrelated_keys() {
+        let mut doc = JsonDocument::parse(sample_json()).unwrap();
+        doc.set("", "render_scale_setting", "0.8");
+        doc.set("", "post_processing_setting", "false");
+        doc.set("", "streaming_mipmaps_memory_budget", "1024");
+        doc.set("", "settings_grass", "high");
+        assert_eq!(doc.get("", "render_scale_setting").as_deref(), Some("0.8"));
+        assert_eq!(doc.get("", "post_processing_setting").as_deref(), Some("false"));
+        assert_eq!(doc.get("", "streaming_mipmaps_memory_budget").as_deref(), Some("1024"));
+        assert_eq!(doc.get("", "settings_grass").as_deref(), Some("high"));
+        assert_eq!(doc.get("", "controls").as_deref(), Some("{\"binds\":[]}"));
+        assert_eq!(doc.get("", "setting_quality").as_deref(), Some("custom"));
+        let text = serde_json::to_string(&doc.values).unwrap();
+        assert!(text.contains("\"render_scale_setting\":0.8"));
+        assert!(text.contains("\"post_processing_setting\":false"));
+        assert!(text.contains("\"settings_grass\":\"high\""));
+        assert!(text.contains("\"controls\":\"{\\\"binds\\\":[]}\""));
+    }
+
+    #[test]
+    fn json_never_creates_keys_and_rejects_bad_number_targets() {
+        let mut doc = JsonDocument::parse(sample_json()).unwrap();
+        doc.set("", "not_in_file", "1");
+        assert!(doc.get("", "not_in_file").is_none());
+        doc.set("", "render_scale_setting", "not-a-number");
+        assert_eq!(doc.get("", "render_scale_setting").as_deref(), Some("1"));
+    }
+
+    #[test]
     fn catalog_supports_only_keys_present_in_config() {
         let (path, doc) = write_ini("[ScalabilityGroups]\nsg.TextureQuality=3\n");
         let _ = fs::remove_file(&path);
-        let settings = settings_catalog("nvidia", Some(&doc), PotatoLevel::Full);
-        let tex = settings.iter().find(|s| s.name == "Texture quality").unwrap();
-        assert_eq!(tex.supported, true);
+        let settings = settings_catalog("nvidia", "unreal-generic", Some(&doc), PotatoLevel::Full);
+        let tex = settings.iter().find(|s| s.id == "ScalabilityGroups::sg.TextureQuality").unwrap();
+        assert!(tex.supported);
         assert_eq!(tex.recommended_value.as_deref(), Some("0"));
-        assert!(tex.id.contains("::"));
-        let shadow = settings.iter().find(|s| s.name == "Shadow quality").unwrap();
-        assert_eq!(shadow.supported, false);
+        let shadow = settings.iter().find(|s| s.id == "ScalabilityGroups::sg.ShadowQuality").unwrap();
+        assert!(!shadow.supported);
+    }
+
+    #[test]
+    fn rob_run_catalog_uses_json_mechanism_and_verified_targets() {
+        let doc = ConfigDocument::Json(JsonDocument::parse(sample_json()).unwrap());
+        let settings = settings_catalog("nvidia", "rob-run", Some(&doc), PotatoLevel::Full);
+        assert!(settings.iter().all(|s| !s.id.contains("sg.")));
+        let scale = settings.iter().find(|s| s.id == "render_scale_setting").unwrap();
+        assert!(scale.supported);
+        assert_eq!(scale.mechanism, SettingMechanism::GameConfigJson);
+        assert_eq!(scale.recommended_value.as_deref(), Some("0.7"));
+        let preset = settings.iter().find(|s| s.id == "setting_quality").unwrap();
+        assert!(!preset.supported);
+        assert!(preset.recommended_value.is_none());
+        let missing = settings.iter().find(|s| s.id == "depth_of_field").unwrap();
+        assert!(!missing.supported);
+    }
+
+    #[test]
+    fn real_rob_run_dat_parses_and_exposes_writable_keys() {
+        let raw = include_str!("../../tests/fixtures/rob_run_settings.dat");
+        let doc = ConfigDocument::Json(JsonDocument::parse(raw).unwrap());
+        assert_eq!(doc.get("", "setting_quality").as_deref(), Some("custom"));
+        assert_eq!(doc.get("", "render_scale_setting").as_deref(), Some("1"));
+        assert_eq!(doc.get("", "post_processing_setting").as_deref(), Some("true"));
+        assert_eq!(doc.get("", "streaming_mipmaps_memory_budget").as_deref(), Some("1280"));
+        let controls_before = doc.get("", "controls").unwrap();
+
+        let settings = settings_catalog("nvidia", "rob-run", Some(&doc), PotatoLevel::Full);
+        let writable: Vec<_> = settings.iter().filter(|s| s.supported).collect();
+        assert!(writable.len() >= 12, "expected verified writable keys, got {}", writable.len());
+        assert!(writable.iter().all(|s| s.mechanism == SettingMechanism::GameConfigJson));
+
+        let mut mutable = doc.clone();
+        for setting in &writable {
+            if let Some(target) = &setting.recommended_value {
+                mutable.set("", &setting.id, target);
+            }
+        }
+        let ConfigDocument::Json(updated) = &mutable else { unreachable!() };
+        let out = serde_json::to_string(&updated.values).unwrap();
+        assert!(out.contains("\"render_scale_setting\":0.7"));
+        assert!(out.contains("\"post_processing_setting\":false"));
+        assert!(out.contains("\"streaming_mipmaps_memory_budget\":512"));
+        assert!(out.contains("\"setting_quality\":\"custom\""));
+        assert!(out.contains("\"fullscreen_setting\":true"));
+        assert_eq!(mutable.get("", "controls").as_deref(), Some(controls_before.as_str()));
     }
 
     #[test]
     fn driver_settings_are_never_supported() {
-        let settings = settings_catalog("nvidia", None, PotatoLevel::Full);
+        let settings = settings_catalog("nvidia", "rob-run", None, PotatoLevel::Full);
         assert!(settings.iter().filter(|s| s.mechanism == SettingMechanism::DriverProfile)
             .all(|s| !s.supported && s.recommended_value.is_none()));
+    }
+
+    #[test]
+    fn rob_run_detection_uses_local_low_dat_file() {
+        let base = std::env::temp_dir().join(format!("vytrix-locallow-{}", std::process::id()));
+        let settings = base.join("AppData").join("LocalLow").join("Kefir").join("ROB RUN").join("settings");
+        fs::create_dir_all(&settings).unwrap();
+        let file = settings.join("settings_steam_1.dat");
+        fs::write(&file, "{}").unwrap();
+        let previous = std::env::var("USERPROFILE").ok();
+        std::env::set_var("USERPROFILE", &base);
+        let profile = PROFILES.iter().find(|p| p.id == "rob-run").unwrap();
+        let found = find_config(profile, "");
+        if let Some(old) = previous { std::env::set_var("USERPROFILE", old); }
+        else { std::env::remove_var("USERPROFILE"); }
+        fs::remove_dir_all(&base).ok();
+        assert_eq!(found, file.to_string_lossy().to_string());
     }
 
     #[test]

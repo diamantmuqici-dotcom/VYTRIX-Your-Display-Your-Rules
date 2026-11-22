@@ -5,8 +5,8 @@ Graphics optimization center in VYTRIX. It reads real hardware and game configur
 ## What it does
 
 - Detects CPU, GPU, VRAM, driver, RAM, display, and storage from cached Windows APIs. Refresh is explicit only.
-- Detects ROB RUN and other configured game profiles from Steam/library paths, installed executables, running processes, existing config, and manual paths.
-- Builds a four-level plan from settings that already exist in a game config file.
+- Detects ROB RUN from Steam/library metadata, running processes and its real Unity settings file at `%USERPROFILE%\AppData\LocalLow\Kefir\ROB RUN\settings\settings_*.dat`.
+- Builds a four-level plan from settings that already exist in a game config file (flat Unity JSON in `.dat` for ROB RUN, INI for the generic Unreal profile).
 - Preserves a single baseline backup with SHA-256 integrity and restores the original values on OFF or Restore.
 - Records an apply/restore history with per-setting outcomes.
 - Measures FPS/frame-time when a telemetry source is present and reports missing values as missing.
@@ -39,12 +39,17 @@ Each level exposes sections for overview, textures, environment, effects, driver
 
 A setting is supported only when its key is already present in the detected game configuration. The code never adds an unknown key and never writes a driver profile.
 
-Game-config keys (writable when present in the file):
+ROB RUN keys (flat JSON in `settings_*.dat`, writable when present in the file):
 
-- Textures: `sg.TextureQuality`.
-- Environment: `sg.ShadowQuality`, `sg.FoliageQuality`, `sg.ReflectionQuality`, `sg.GlobalIlluminationQuality`.
-- Effects: `sg.EffectsQuality`, `sg.PostProcessQuality`, `sg.AntiAliasingQuality`, `bUseVSync`.
-- Distance/detail: `sg.ViewDistanceQuality`.
+- Textures: `render_scale_setting`, `anisotropic_filtering`, `streaming_mipmaps_memory_budget`, `global_texture_mipmap_limit`, `lod_cross_fade_setting`.
+- Environment: `cast_shadow_setting`, `additional_lights_setting`, `screen_space_reflections_setting`, `settings_grass`, `settings_water`.
+- Effects: `anti_aliasing_mode_id_setting`, `post_processing_setting`, `depth_of_field`, `auto_exposure_setting`.
+- Distance/detail: `grass_vibile_distance_factor_setting`, `renderers_culling_preset_id_setting`.
+- Present but never written (no verified mapping): `setting_quality`, `hdr_setting`, `frame_rate_setting`, `lod_bias_setting`, `fullscreen_setting`, `resolution_setting`. The opaque `controls` string is preserved byte-for-byte.
+
+Generic Unreal profile keys (INI, writable when present in the file): `sg.TextureQuality`, `sg.ShadowQuality`, `sg.ViewDistanceQuality`, `sg.FoliageQuality`, `sg.EffectsQuality`, `sg.PostProcessQuality`, `sg.ReflectionQuality`, `sg.GlobalIlluminationQuality`, `sg.AntiAliasingQuality`, `bUseVSync`.
+
+JSON writes preserve the original value type: booleans stay booleans, integers stay integers, floats stay floats, and strings stay strings. Keys absent from the file are never created.
 
 Driver controls (listed but always unsupported in this build):
 
@@ -54,15 +59,15 @@ Driver controls (listed but always unsupported in this build):
 
 All driver controls are marked unsupported because NVAPI, ADL, and IGCL write paths are not linked. Only the game-config keys above can be written.
 
-The settings catalog and per-level values live in `src-tauri/src/potato/detect.rs`. The apply path in `src-tauri/src/potato/mod.rs` parses IDs with `::`, validates the game and level, checks that the game is not running, creates or reuses the baseline backup, writes documented keys, and verifies reads before success.
+The settings catalog and per-level values live in `src-tauri/src/potato/detect.rs`. The apply path in `src-tauri/src/potato/mod.rs` uses top-level JSON keys for ROB RUN and `section::key` IDs for INI, validates the game and level, checks that the game is not running, creates or reuses the baseline backup, writes only documented keys, and verifies reads before success. A copy of the real ROB RUN `.dat` is used as a test fixture in `src-tauri/tests/fixtures/`.
 
 ## GPU and game support
 
 - NVIDIA, AMD, and Intel GPUs are detected and displayed in the compatibility table.
 - NVIDIA-only profile values are not written to any vendor in this build.
-- ROB RUN is the first game profile. Additional profiles use the same reusable game-profile architecture.
-- Detection sources: Steam/library metadata, install directory, executable, running process, existing config, and manual path.
-- Manual paths are validated before registration. Only an existing file path is accepted.
+- ROB RUN is the first game profile. Its config is Unity JSON in a `.dat` under `LocalLow`, not an Unreal `.ini`. Additional profiles use the same reusable game-profile architecture.
+- Detection sources: Steam/library metadata, install directory, executable, running process, `LocalLow\Kefir\ROB RUN\settings\settings_*.dat`, and manual path.
+- Manual paths accept `.dat`, `.json`, `.ini`, `.cfg` and `.txt`. A folder pointing at the ROB RUN settings directory resolves to its `settings_*.dat` file. Paths are parsed on registration, so an unsupported format fails before any write.
 - Config writes require a located config. Without one, the page reports "Manual path needed" and remains read-only.
 
 ## Restarts and running games
@@ -76,7 +81,7 @@ The settings catalog and per-level values live in `src-tauri/src/potato/detect.r
 - The first write creates a baseline backup record containing original values and SHA-256 integrity.
 - Switching between LIGHT, MEDIUM, and FULL reuses the same baseline. It does not overwrite the original with the last optimization.
 - OFF and Restore write baseline values back with integrity checking.
-- Unrelated lines in the config are preserved. The engine only modifies known keys.
+- Unrelated keys, nested/opaque values and original JSON types are preserved. The engine only modifies known keys already present in the file.
 - If the backup is missing or modified, integrity is reported and restoration is marked not recoverable.
 - Manual recovery is available from the Backup and restoration panel. The backup file and its recorded hash are both shown.
 
@@ -106,7 +111,7 @@ Automatic mode runs only when the button is pressed. It selects the suggested le
 | Symptom | Cause | Action |
 |---|---|---|
 | "No game profile loaded" | No profile selected or detection failed. | Select a detected game or register a manual path. |
-| "Manual path needed" | Config file was not located. | Register the verified config path with the Register path button. |
+| "Manual path needed" | Config file was not located. | Register `%USERPROFILE%\AppData\LocalLow\Kefir\ROB RUN\settings\settings_*.dat` with the Register path button. |
 | "The game is running" | Detected process still active. | Close the game, then apply again. No process is terminated automatically. |
 | "Integrity: modified" | Backup hash does not match the record. | Use manual recovery from the Backup and restoration panel. |
 | "No benchmark run recorded yet" | Benchmark was not run or no telemetry source exists. | Start a benchmark while measured telemetry is available. |
@@ -118,7 +123,8 @@ Automatic mode runs only when the button is pressed. It selects the suggested le
 Verified in this build:
 
 - Hardware detection and refresh-only reporting.
-- Game detection, manual path registration, and supported-key discovery.
+- Game detection, manual path registration, and supported-key discovery for ROB RUN Unity JSON and generic Unreal INI.
+- Type-preserving JSON writes verified against a copy of the real ROB RUN settings file.
 - Four-level plan/apply/restore with baseline backup and SHA-256 integrity.
 - Per-setting verification and per-failure reporting.
 - Benchmark, bottleneck sampling, network probe, history, diagnostics, export/import, and clipboard copy.

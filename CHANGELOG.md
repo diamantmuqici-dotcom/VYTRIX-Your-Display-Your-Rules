@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.2 — 2026-11-22
+
+- Corrected ROB RUN configuration support: the real settings file is a flat Unity JSON document in `%USERPROFILE%\AppData\LocalLow\Kefir\ROB RUN\settings\settings_*.dat`, not an Unreal `GameUserSettings.ini`.
+- Added automatic detection of the ROB RUN `LocalLow` settings directory and `.dat`/`.json` manual-path support.
+- Added a type-preserving flat-JSON editor. Booleans, integers, floats and strings keep their original type, absent keys are never created, and opaque values such as `controls` are preserved.
+- Replaced the Unreal-only settings catalog for ROB RUN with verified keys observed in the real file. Present keys with no verified target are listed as unsupported and never written.
+- Added tests using a copy of the real ROB RUN `.dat`, covering parsing, supported-key discovery, type-preserving writes, folder resolution and detection.
+- Updated the manual path picker and placeholder to show the real `.dat` location, and corrected `docs/POTATO_MODE.md`.
+
 ## 0.2.1 — 2026-11-22
 
 - Fixed Potato Mode manual configuration path registration rejecting valid Windows paths. Paths copied with Explorer's "Copy as path" now have surrounding quotes removed, `%ENV%` variables and `~` prefixes are expanded, and folders are resolved to a contained `GameUserSettings.ini`.

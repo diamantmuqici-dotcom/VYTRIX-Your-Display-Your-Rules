@@ -42,7 +42,7 @@ const EXPLANATION_FIELDS: {
 
 const CATEGORIES: pm.SettingCategory[] = ["texture", "environment", "effects", "distance", "driver"];
 
-const MANUAL_PATH_PLACEHOLDER = "C:\\\\Users\\\\you\\\\AppData\\\\Local\\\\Game\\\\Saved\\\\Config\\\\Windows\\\\GameUserSettings.ini";
+const MANUAL_PATH_PLACEHOLDER = "C:\\\\Users\\\\you\\\\AppData\\\\LocalLow\\\\Kefir\\\\ROB RUN\\\\settings\\\\settings_steam_....dat";
 
 function download(filename: string, text: string): void {
   const blob = new Blob([text], { type: "application/json" });
@@ -269,7 +269,7 @@ export default function PotatoMode() {
       const picked = await open({
         multiple: false,
         title: tr("Select a game configuration file"),
-        filters: [{ name: tr("Game configuration"), extensions: ["ini", "cfg", "txt"] }],
+        filters: [{ name: tr("Game configuration"), extensions: ["dat", "json", "ini", "cfg", "txt"] }],
       });
       if (typeof picked !== "string" || !picked) return;
       setManualPath(picked);

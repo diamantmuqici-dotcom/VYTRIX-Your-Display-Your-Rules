@@ -76,12 +76,25 @@ fn normalize_path_input(raw: &str) -> Result<PathBuf, String> {
     Ok(PathBuf::from(text))
 }
 
-/// Accept the exact file or a folder holding a standard Unreal config layout.
+/// Accept an exact config file or a folder holding a supported config layout:
+/// Unity `settings_*.dat` / `settings_*.json`, or Unreal `GameUserSettings.ini`.
 fn resolve_config_input(raw: &str) -> Result<PathBuf, String> {
     let path = normalize_path_input(raw)?;
     if path.is_file() { return Ok(path); }
     if path.is_dir() {
-        let mut candidates = Vec::with_capacity(8);
+        let mut candidates: Vec<PathBuf> = Vec::with_capacity(10);
+        if let Ok(entries) = fs::read_dir(&path) {
+            let mut files: Vec<PathBuf> = entries.flatten().take(128).map(|e| e.path())
+                .filter(|p| p.is_file())
+                .filter(|p| {
+                    let name = p.file_name().and_then(|n| n.to_str()).unwrap_or("").to_ascii_lowercase();
+                    name.starts_with("settings")
+                        && (name.ends_with(".dat") || name.ends_with(".json"))
+                })
+                .collect();
+            files.sort();
+            candidates.extend(files);
+        }
         for variant in ["", "Windows", "WindowsNoEditor", "Win64"] {
             candidates.push(path.join(variant).join("GameUserSettings.ini"));
         }
@@ -91,10 +104,13 @@ fn resolve_config_input(raw: &str) -> Result<PathBuf, String> {
         for candidate in candidates {
             if candidate.is_file() { return Ok(candidate); }
         }
-        return Err(format!("folder contains no GameUserSettings.ini: {}", path.display()));
+        return Err(format!(
+            "folder contains no supported config (settings_*.dat, settings_*.json or GameUserSettings.ini): {}",
+            path.display()
+        ));
     }
     Err(format!(
-        "no configuration file at '{}' — launch the game once so it writes GameUserSettings.ini, then register the path",
+        "no configuration file at '{}' — launch the game once so it writes its settings file, then register the path",
         path.display()
     ))
 }
@@ -165,6 +181,17 @@ mod tests {
         fs::create_dir_all(&folder).unwrap();
         let file = folder.join("GameUserSettings.ini");
         fs::write(&file, "[ScalabilityGroups]\n").unwrap();
+        let resolved = resolve_config_input(base.to_string_lossy().as_ref()).unwrap();
+        assert_eq!(resolved, file);
+        fs::remove_dir_all(&base).ok();
+    }
+
+    #[test]
+    fn config_input_resolves_rob_run_dat_folder() {
+        let base = std::env::temp_dir().join(format!("vytrix-dat-cfg-test-{}", std::process::id()));
+        fs::create_dir_all(&base).unwrap();
+        let file = base.join("settings_steam_4262460.dat");
+        fs::write(&file, "{\"render_scale_setting\":1}").unwrap();
         let resolved = resolve_config_input(base.to_string_lossy().as_ref()).unwrap();
         assert_eq!(resolved, file);
         fs::remove_dir_all(&base).ok();
@@ -305,6 +332,7 @@ pub enum SettingCategory { Texture, Environment, Effects, Distance, Driver }
 #[serde(rename_all = "camelCase")]
 pub enum SettingMechanism {
     GameConfigIni,
+    GameConfigJson,
     DriverProfile,
     Unsupported,
 }
@@ -646,9 +674,11 @@ impl PotatoState {
             return Err("configuration file exceeds the 2 MB size limit".to_owned());
         }
         let ext = resolved.extension().and_then(|e| e.to_str()).unwrap_or("").to_ascii_lowercase();
-        if ext != "ini" && ext != "cfg" && ext != "txt" {
-            return Err("configuration file must be .ini, .cfg or .txt".to_owned());
+        if !["ini", "cfg", "txt", "dat", "json"].contains(&ext.as_str()) {
+            return Err("configuration file must be .dat, .json, .ini, .cfg or .txt".to_owned());
         }
+        // Fail here rather than at apply time if the file is not a supported format.
+        detect::ConfigDocument::load(&resolved)?;
         let stored = resolved.to_string_lossy().to_string();
         if let Ok(mut guard) = self.manual_paths.lock() {
             guard.insert(game_id.to_owned(), stored);
@@ -744,7 +774,7 @@ pub fn restore(state: &PotatoState, game_id: &str) -> Result<ApplyResult, String
     let mut changes = Vec::new();
     steps.push(ApplyStep { index: 1, label: "Backup integrity verified".into(), status: "ok".into(), detail: record.sha256.clone() });
     steps.push(ApplyStep { index: 2, label: "Configuration file located".into(), status: "ok".into(), detail: record.config_path.clone() });
-    let mut doc = detect::IniDocument::load(config)?;
+    let mut doc = detect::ConfigDocument::load(config)?;
     let mut verified = 0usize;
     for value in &record.values {
         // Preserve unrelated edits: only revert when the current value still
@@ -756,7 +786,7 @@ pub fn restore(state: &PotatoState, game_id: &str) -> Result<ApplyResult, String
                     failures.push(format!("{} was edited outside Potato Mode; left at '{current}'", value.key));
                     changes.push(SettingChange {
                         id: value.key.clone(), name: value.key.clone(), from: Some(current.clone()),
-                        to: value.original.clone(), mechanism: SettingMechanism::GameConfigIni,
+                        to: value.original.clone(), mechanism: if value.section.is_empty() { SettingMechanism::GameConfigJson } else { SettingMechanism::GameConfigIni },
                         status: "skipped".into(), detail: "unrelated external edit preserved".into(),
                     });
                     continue;
@@ -772,7 +802,7 @@ pub fn restore(state: &PotatoState, game_id: &str) -> Result<ApplyResult, String
         if ok { verified += 1; } else { failures.push(format!("{} verification failed after restore", value.key)); }
         changes.push(SettingChange {
             id: value.key.clone(), name: value.key.clone(), from: current.clone(),
-            to: value.original.clone(), mechanism: SettingMechanism::GameConfigIni,
+            to: value.original.clone(), mechanism: if value.section.is_empty() { SettingMechanism::GameConfigJson } else { SettingMechanism::GameConfigIni },
             status: if ok { "ok" } else { "failed" }.to_owned(),
             detail: if ok { "restored and verified" } else { "readback mismatch" }.into(),
         });
@@ -806,9 +836,9 @@ pub fn restore(state: &PotatoState, game_id: &str) -> Result<ApplyResult, String
 pub fn settings_for(state: &PotatoState, game: &GameInfo) -> Vec<GraphicsSetting> {
     let vendor = state.hardware().gpu_vendor;
     let doc = game.config_path.parse::<PathBuf>().ok()
-        .and_then(|p| detect::IniDocument::load(&p).ok());
+        .and_then(|p| detect::ConfigDocument::load(&p).ok());
     let level = PotatoLevel::from_i32(game.level);
-    detect::settings_catalog(&vendor, doc.as_ref(), level)
+    detect::settings_catalog(&vendor, &game.id, doc.as_ref(), level)
 }
 
 pub fn recommend(hardware: &HardwareInfo) -> (i32, String) {
@@ -886,7 +916,7 @@ pub fn apply(state: &PotatoState, game_id: &str, requested: i32) -> Result<Apply
     let mut steps = Vec::new();
     steps.push(ApplyStep { index: 1, label: "Hardware and game compatibility analyzed".into(), status: "ok".into(),
         detail: format!("{} / {}", state.hardware().gpu_vendor, game.name) });
-    let mut doc = detect::IniDocument::load(Path::new(&game.config_path))?;
+    let mut doc = detect::ConfigDocument::load(Path::new(&game.config_path))?;
     steps.push(ApplyStep { index: 2, label: "Current configuration read".into(), status: "ok".into(),
         detail: format!("{} bytes", fs::metadata(&game.config_path).map(|m| m.len()).unwrap_or(0)) });
 
@@ -894,7 +924,7 @@ pub fn apply(state: &PotatoState, game_id: &str, requested: i32) -> Result<Apply
     let supported: Vec<GraphicsSetting> = settings.into_iter().filter(|s| s.supported).collect();
     steps.push(ApplyStep { index: 3, label: "Supported settings identified".into(), status: "ok".into(),
         detail: format!("{} supported, {} unsupported", supported.len(),
-            detect::settings_catalog(&state.hardware().gpu_vendor, Some(&doc),
+            detect::settings_catalog(&state.hardware().gpu_vendor, &game.id, Some(&doc),
                 PotatoLevel::from_i32(requested)).len().saturating_sub(supported.len())) });
 
     let mut stored = Vec::new();
@@ -903,10 +933,14 @@ pub fn apply(state: &PotatoState, game_id: &str, requested: i32) -> Result<Apply
     let mut verified = 0usize;
     for setting in &supported {
         let Some(target) = setting.recommended_value.clone() else { continue; };
-        // INI section/key are encoded in the setting id as "section::key".
-        let (section, key) = match setting.id.split_once("::") {
-            Some(pair) => pair,
-            None => { failures.push(format!("{}: malformed internal identifier", setting.name)); continue; }
+        // JSON keys are top-level names; INI keys carry "section::key".
+        let (section, key) = if setting.mechanism == SettingMechanism::GameConfigJson {
+            ("", setting.id.as_str())
+        } else {
+            match setting.id.split_once("::") {
+                Some(pair) => pair,
+                None => { failures.push(format!("{}: malformed internal identifier", setting.name)); continue; }
+            }
         };
         let original = doc.get(section, key);
         doc.set(section, key, &target);
@@ -935,7 +969,7 @@ pub fn apply(state: &PotatoState, game_id: &str, requested: i32) -> Result<Apply
     }
     steps.push(ApplyStep { index: 7, label: "Supported settings written".into(), status: if failures.is_empty() { "ok" } else { "partial" }.into(), detail: format!("{verified} verified" ) });
 
-    let verify_doc = detect::IniDocument::load(Path::new(&game.config_path))?;
+    let verify_doc = detect::ConfigDocument::load(Path::new(&game.config_path))?;
     let mut post_verified = 0usize;
     for value in &stored {
         if verify_doc.get(&value.section, &value.key) == value.applied { post_verified += 1; }

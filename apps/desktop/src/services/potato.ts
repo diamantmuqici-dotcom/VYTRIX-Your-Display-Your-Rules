@@ -65,7 +65,7 @@ export interface GameInfo {
 }
 
 export type SettingCategory = "texture" | "environment" | "effects" | "distance" | "driver";
-export type SettingMechanism = "gameConfigIni" | "driverProfile" | "unsupported";
+export type SettingMechanism = "gameConfigIni" | "gameConfigJson" | "driverProfile" | "unsupported";
 
 export interface GraphicsSetting {
   id: string;
