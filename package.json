@@ -16,6 +16,6 @@
     "site:build": "npm run build -w @vytrix/website",
     "api:dev": "npm run dev -w @vytrix/api"
   },
-  "devDependencies": { "@tauri-apps/cli": "^2", "typescript": "^5.9.2" },
+  "devDependencies": { "@tauri-apps/cli": "^2", "typescript": "^7.0.2" },
   "engines": { "node": ">=20" }
 }
