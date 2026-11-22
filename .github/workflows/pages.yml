@@ -39,5 +39,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./apps/website/out
           publish_branch: gh-pages
+          keep_files: true
           user_name: vytrix-bot
           user_email: bot@vytrix.local
