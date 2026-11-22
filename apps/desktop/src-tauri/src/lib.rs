@@ -42,6 +42,7 @@ pub static APP_STATE: OnceLock<AppState> = OnceLock::new();
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let app = tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             let handle = app.handle();
             let data_dir = app.path().app_data_dir().map_err(|e| e.to_string())?;

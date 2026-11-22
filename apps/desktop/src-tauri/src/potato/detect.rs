@@ -244,9 +244,26 @@ fn find_config(profile: &GameProfile, install_dir: &str) -> String {
     let mut candidates: Vec<PathBuf> = Vec::new();
     // Known Unreal Engine configuration location. Only used when the file exists.
     if let Some(base) = local_appdata() {
-        for folder in [profile.hint, profile.name, "ROB RUN", "RobRun"] {
+        let mut folders: Vec<String> = vec![
+            profile.hint.to_owned(), profile.name.to_owned(),
+            "ROB RUN".to_owned(), "RobRun".to_owned(),
+            "robrun".to_owned(), "ROBRUN".to_owned(),
+        ];
+        // ROB RUN builds have shipped under publisher-prefixed AppData folders.
+        // Bounded child scan: names only, 256 entries, never descends blindly.
+        if let Ok(entries) = fs::read_dir(&base) {
+            for entry in entries.flatten().take(256) {
+                if !entry.path().is_dir() { continue; }
+                let name = entry.file_name().to_string_lossy().to_string();
+                if name.to_ascii_lowercase().contains("rob")
+                    && !folders.iter().any(|f| f.eq_ignore_ascii_case(&name)) {
+                    folders.push(name);
+                }
+            }
+        }
+        for folder in folders {
             for config in ["WindowsNoEditor", "Windows", "Win64"] {
-                candidates.push(base.join(folder).join("Saved").join("Config").join(config).join("GameUserSettings.ini"));
+                candidates.push(base.join(&folder).join("Saved").join("Config").join(config).join("GameUserSettings.ini"));
             }
         }
     }

@@ -1,6 +1,6 @@
 {
   "name": "@vytrix/desktop",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,12 +11,13 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^2.8.0",
-    "@vytrix/config": "0.2.0",
-    "@vytrix/game-database": "0.2.0",
-    "@vytrix/design-system": "0.2.0",
-    "@vytrix/preset-format": "0.2.0",
-    "@vytrix/shared-types": "0.2.0",
-    "@vytrix/validation": "0.2.0",
+    "@tauri-apps/plugin-dialog": "^2.8.4",
+    "@vytrix/config": "0.2.1",
+    "@vytrix/design-system": "0.2.1",
+    "@vytrix/game-database": "0.2.1",
+    "@vytrix/preset-format": "0.2.1",
+    "@vytrix/shared-types": "0.2.1",
+    "@vytrix/validation": "0.2.1",
     "framer-motion": "^14.14.0",
     "lucide-react": "^0.468.0",
     "qrcode": "^1.5.4",

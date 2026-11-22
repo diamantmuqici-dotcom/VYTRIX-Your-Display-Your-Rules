@@ -2,10 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { CommandResult } from "@vytrix/shared-types";
 import {
   Activity, AlertTriangle, Bot, Check, ChevronDown, ChevronRight, CircleCheck, Copy,
-  Cpu, Download, Eye, FileJson, Gauge, Gamepad2, HardDrive, History, Info, Layers,
+  Cpu, Download, Eye, FileJson, FolderOpen, Gauge, Gamepad2, HardDrive, History, Info, Layers,
   Monitor, Network, Play, RefreshCw, RotateCcw, Search, Settings2, ShieldCheck,
   SlidersHorizontal, Sparkles, Square, Timer, Upload, Wifi, Zap,
 } from "lucide-react";
+import { open } from "@tauri-apps/plugin-dialog";
 import { useApp } from "@/stores/app";
 import { useToast } from "@/hooks/useToast";
 import { useTranslateText } from "@/i18n";
@@ -263,6 +264,24 @@ export default function PotatoMode() {
     } catch (error) { report(error); }
   };
 
+  const pickConfig = async () => {
+    try {
+      const picked = await open({
+        multiple: false,
+        title: tr("Select a game configuration file"),
+        filters: [{ name: tr("Game configuration"), extensions: ["ini", "cfg", "txt"] }],
+      });
+      if (typeof picked !== "string" || !picked) return;
+      setManualPath(picked);
+      unwrap(await pm.setManualPath(gameId, picked));
+      setGames(unwrap(await pm.getGames()));
+      setSettings(unwrap(await pm.getSettings(gameId)));
+      setBackup(unwrap(await pm.getBackupInfo(gameId)));
+      notify(tr("Configuration path validated and registered."));
+      addLog(`Manual configuration path registered for ${gameId}: ${picked}`);
+    } catch (error) { report(error); }
+  };
+
   const startBenchmark = async () => {
     try {
       const result = unwrap(await pm.startBenchmark(gameId, selectedLevel));
@@ -397,9 +416,15 @@ export default function PotatoMode() {
             placeholder={MANUAL_PATH_PLACEHOLDER}
             aria-label="Manual configuration path"
           />
+          <button className="btn" onClick={() => void pickConfig()}>
+            <FolderOpen size={14} /> {tr("Browse")}
+          </button>
           <button className="btn" onClick={() => void saveManualPath()}>
             <FileJson size={14} /> {tr("Register path")}
           </button>
+        </div>
+        <div className="tiny" style={{ marginTop: 6 }}>
+          {tr("Browse for the file, or paste a full path. Quoted paths and %LOCALAPPDATA% are accepted.")}
         </div>
       </Panel>
 

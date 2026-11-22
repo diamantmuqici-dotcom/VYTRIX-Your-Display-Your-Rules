@@ -34,6 +34,71 @@ fn safe_id(value: &str) -> Option<String> {
     if out.is_empty() { None } else { Some(out) }
 }
 
+/// Normalize paths pasted from Explorer: "Copy as path" wraps them in quotes,
+/// users type %LOCALAPPDATA% or ~ prefixes, and trailing whitespace is common.
+fn normalize_path_input(raw: &str) -> Result<PathBuf, String> {
+    let mut text = raw.trim().to_owned();
+    if text.len() >= 2 {
+        let bytes = text.as_bytes();
+        let quoted = (bytes[0] == b'"' && bytes[bytes.len() - 1] == b'"')
+            || (bytes[0] == b'\'' && bytes[bytes.len() - 1] == b'\'');
+        if quoted { text = text[1..text.len() - 1].trim().to_owned(); }
+    }
+    if text.is_empty() { return Err("path is empty".to_owned()); }
+    if text.contains('\0') { return Err("path contains an invalid character".to_owned()); }
+
+    if text.contains('%') {
+        let chars: Vec<char> = text.chars().collect();
+        let mut expanded = String::with_capacity(text.len());
+        let mut i = 0;
+        while i < chars.len() {
+            if chars[i] == '%' {
+                if let Some(end) = (i + 1..chars.len()).find(|&j| chars[j] == '%') {
+                    let name: String = chars[i + 1..end].iter().collect();
+                    if let Ok(value) = std::env::var(&name) {
+                        expanded.push_str(&value);
+                        i = end + 1;
+                        continue;
+                    }
+                }
+            }
+            expanded.push(chars[i]);
+            i += 1;
+        }
+        text = expanded;
+    }
+    if text == "~" || text.starts_with("~/") || text.starts_with("~\\") {
+        if let Ok(home) = std::env::var("USERPROFILE").or_else(|_| std::env::var("HOME")) {
+            let rest = text[1..].trim_start_matches(['/', '\\']);
+            text = Path::new(&home).join(rest).to_string_lossy().to_string();
+        }
+    }
+    Ok(PathBuf::from(text))
+}
+
+/// Accept the exact file or a folder holding a standard Unreal config layout.
+fn resolve_config_input(raw: &str) -> Result<PathBuf, String> {
+    let path = normalize_path_input(raw)?;
+    if path.is_file() { return Ok(path); }
+    if path.is_dir() {
+        let mut candidates = Vec::with_capacity(8);
+        for variant in ["", "Windows", "WindowsNoEditor", "Win64"] {
+            candidates.push(path.join(variant).join("GameUserSettings.ini"));
+        }
+        for variant in ["Windows", "WindowsNoEditor", "Win64"] {
+            candidates.push(path.join("Saved").join("Config").join(variant).join("GameUserSettings.ini"));
+        }
+        for candidate in candidates {
+            if candidate.is_file() { return Ok(candidate); }
+        }
+        return Err(format!("folder contains no GameUserSettings.ini: {}", path.display()));
+    }
+    Err(format!(
+        "no configuration file at '{}' — launch the game once so it writes GameUserSettings.ini, then register the path",
+        path.display()
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -78,6 +143,37 @@ mod tests {
             assert!(!info.restoration.is_empty());
             assert!(!info.tradeoffs.is_empty());
         }
+    }
+
+    #[test]
+    fn path_input_strips_explorer_copy_as_path_quotes() {
+        let path = normalize_path_input("  \"C:\\Games\\GameUserSettings.ini\"  ").unwrap();
+        assert_eq!(path.to_string_lossy(), "C:\\Games\\GameUserSettings.ini");
+    }
+
+    #[test]
+    fn path_input_expands_environment_variables() {
+        std::env::set_var("VYTRIX_TEST_CFG_DIR", "C:\\Games\\RobRun");
+        let path = normalize_path_input("%VYTRIX_TEST_CFG_DIR%\\GameUserSettings.ini").unwrap();
+        assert_eq!(path.to_string_lossy(), "C:\\Games\\RobRun\\GameUserSettings.ini");
+    }
+
+    #[test]
+    fn config_input_resolves_folder_layouts() {
+        let base = std::env::temp_dir().join(format!("vytrix-cfg-test-{}", std::process::id()));
+        let folder = base.join("Saved").join("Config").join("Windows");
+        fs::create_dir_all(&folder).unwrap();
+        let file = folder.join("GameUserSettings.ini");
+        fs::write(&file, "[ScalabilityGroups]\n").unwrap();
+        let resolved = resolve_config_input(base.to_string_lossy().as_ref()).unwrap();
+        assert_eq!(resolved, file);
+        fs::remove_dir_all(&base).ok();
+    }
+
+    #[test]
+    fn config_input_rejects_missing_file_with_actionable_message() {
+        let err = resolve_config_input("C:\\definitely-missing-vytrix\\GameUserSettings.ini").unwrap_err();
+        assert!(err.contains("launch the game once"));
     }
 }
 
@@ -545,17 +641,17 @@ impl PotatoState {
     }
 
     pub fn set_manual_path(&self, game_id: &str, path: &str) -> Result<(), String> {
-        let candidate = Path::new(path);
-        if !candidate.is_file() { return Err("configuration file does not exist".to_owned()); }
-        if fs::metadata(candidate).map(|m| m.len()).unwrap_or(u64::MAX) > MAX_CONFIG_BYTES {
+        let resolved = resolve_config_input(path)?;
+        if fs::metadata(&resolved).map(|m| m.len()).unwrap_or(u64::MAX) > MAX_CONFIG_BYTES {
             return Err("configuration file exceeds the 2 MB size limit".to_owned());
         }
-        let ext = candidate.extension().and_then(|e| e.to_str()).unwrap_or("").to_ascii_lowercase();
+        let ext = resolved.extension().and_then(|e| e.to_str()).unwrap_or("").to_ascii_lowercase();
         if ext != "ini" && ext != "cfg" && ext != "txt" {
             return Err("configuration file must be .ini, .cfg or .txt".to_owned());
         }
+        let stored = resolved.to_string_lossy().to_string();
         if let Ok(mut guard) = self.manual_paths.lock() {
-            guard.insert(game_id.to_owned(), path.to_owned());
+            guard.insert(game_id.to_owned(), stored);
         }
         Ok(())
     }

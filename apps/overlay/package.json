@@ -1,6 +1,6 @@
 {
   "name": "@vytrix/overlay",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "Transparent always-on-top overlay webview for VYTRIX.",

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 — 2026-11-22
+
+- Fixed Potato Mode manual configuration path registration rejecting valid Windows paths. Paths copied with Explorer's "Copy as path" now have surrounding quotes removed, `%ENV%` variables and `~` prefixes are expanded, and folders are resolved to a contained `GameUserSettings.ini`.
+- Added a native file picker to the manual configuration path field so a config file can be selected without typing a path.
+- Broadened ROB RUN detection to cover publisher-prefixed AppData folders via a bounded child scan.
+- Replaced the opaque "configuration file does not exist" error with an actionable message naming the resolved path.
+- Added four Rust tests covering quote stripping, environment expansion, folder layout resolution and missing-file guidance.
+
 ## 0.2.0 — 2026-11-22
 
 - Added COMPLETE POTATO MODE 2.0: a dedicated graphics optimization center with four levels (LOW / MEDIUM / HIGH / ULTRA), collapsible explanations and advanced customization.
