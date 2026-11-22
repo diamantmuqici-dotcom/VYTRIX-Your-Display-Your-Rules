@@ -4,7 +4,7 @@ import type { ZoomMode, ZoomStatus } from "@vytrix/shared-types";
 import { useApp } from "@/stores/app";
 import { useToast } from "@/hooks/useToast";
 import { Panel } from "@/components/ui/Panel";
-import { getZoomStatus, normalizeZoomLevel, releaseZoom, toggleZoom } from "@/services/zoom";
+import { getZoomStatus, normalizeZoomLevel, releaseZoom, setZoomFocus, toggleZoom } from "@/services/zoom";
 import { isTauriRuntime } from "@/services/tauri";
 import { useT } from "@/i18n";
 
@@ -14,6 +14,8 @@ export default function ZoomPanel() {
   const { notify } = useToast();
   const t = useT();
   const [zoomStatus, setZoomStatus] = useState<ZoomStatus | null>(null);
+  const [focusX, setFocusX] = useState(50);
+  const [focusY, setFocusY] = useState(50);
 
   const zoomMode = state.settings.zoomMode;
   const zoomLevel = state.settings.zoomLevel;
@@ -24,18 +26,33 @@ export default function ZoomPanel() {
     let active = true;
     let dispose = () => {};
     void getZoomStatus().then((result) => {
-      if (active && result.ok) setZoomStatus(result.data);
+      if (!active || !result.ok) return;
+      setZoomStatus(result.data);
+      setFocusX(result.data.focusX);
+      setFocusY(result.data.focusY);
     });
     void (async () => {
       const { listen } = await import("@tauri-apps/api/event");
       const unlisten = await listen<ZoomStatus>("vytrix://zoom", (event) => {
-        if (active) setZoomStatus(event.payload);
+        if (!active) return;
+        setZoomStatus(event.payload);
+        setFocusX(event.payload.focusX);
+        setFocusY(event.payload.focusY);
       });
       if (active) dispose = unlisten;
       else unlisten();
     })();
     return () => { active = false; dispose(); };
   }, []);
+
+  const applyFocus = (x: number, y: number) => {
+    setFocusX(x);
+    setFocusY(y);
+    void setZoomFocus(x, y).then((result) => {
+      if (result.ok) setZoomStatus(result.data);
+      else notify(result.error.message, "error");
+    });
+  };
 
   const runZoom = (command: "toggle" | "release") => {
     const task = command === "toggle" ? toggleZoom() : releaseZoom();
@@ -71,8 +88,24 @@ export default function ZoomPanel() {
             onChange={(event) => setSetting("zoomLevel", normalizeZoomLevel(Number(event.target.value)))}
           />
         </div>
-        <div className="row"><span className="muted">{t("effects.zoom.bind")}</span><b className="mono">{zoomBind?.enabled === false ? "disabled" : zoomBind?.keys.join(" + ") || "none"}</b></div>
+        <div className="field" style={{ marginTop: 6 }}>
+          <label>{t("effects.zoom.focus")}</label>
+          <div className="tiny muted" style={{ marginBottom: 6 }}>{t("effects.zoom.focusHint")}</div>
+        </div>
+        <div className="field">
+          <label>{t("effects.zoom.focusX")}: {focusX.toFixed(0)}%</label>
+          <input type="range" min={0} max={100} step={1} value={focusX}
+            onChange={(event) => applyFocus(Number(event.target.value), focusY)} />
+        </div>
+        <div className="field">
+          <label>{t("effects.zoom.focusY")}: {focusY.toFixed(0)}%</label>
+          <input type="range" min={0} max={100} step={1} value={focusY}
+            onChange={(event) => applyFocus(focusX, Number(event.target.value))} />
+        </div>
+        <button className="btn" style={{ marginBottom: 10 }} onClick={() => applyFocus(50, 50)}>{t("effects.zoom.recenter")}</button>
+        <div className="row" data-bind-actions="toggle-zoom" title="Right-click to set hold / toggle and the zoom bind"><span className="muted">{t("effects.zoom.bind")}</span><b className="mono">{zoomBind?.enabled === false ? "disabled" : zoomBind?.keys.join(" + ") || "none"}</b></div>
         <div className="row"><span className="muted">{t("effects.zoom.status")}</span><b className="mono">{zoomStatus?.detail ?? "idle"}</b></div>
+        <div className="row"><span className="muted">{t("effects.zoom.focus")}</span><b className="mono">{focusX.toFixed(0)}% / {focusY.toFixed(0)}%</b></div>
         {zoomMode === "hold" ? <div className="tiny" style={{ lineHeight: 1.6 }}>{t("effects.zoom.holdHint")}</div> : null}
         <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
           <button className="btn primary" disabled={zoomMode === "hold"} onClick={() => runZoom("toggle")}>{t("effects.zoom.toggleNow")}</button>

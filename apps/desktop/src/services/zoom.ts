@@ -36,6 +36,11 @@ export function configureZoom(
   });
 }
 
+export function setZoomFocus(x: number, y: number): Promise<CommandResult<ZoomStatus>> {
+  const clamp = (value: number) => Number.isFinite(value) ? Math.min(100, Math.max(0, value)) : 50;
+  return invokeNative<ZoomStatus>("zoom_set_focus", { x: clamp(x), y: clamp(y) });
+}
+
 export function toggleZoom(): Promise<CommandResult<ZoomStatus>> {
   return invokeNative<ZoomStatus>("zoom_toggle");
 }

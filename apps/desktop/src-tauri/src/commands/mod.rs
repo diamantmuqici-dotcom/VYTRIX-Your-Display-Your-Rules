@@ -165,6 +165,16 @@ pub fn register_hotkey(action: String, keys: Vec<String>, state: State<'_, AppSt
 }
 
 #[tauri::command]
+pub fn register_hold_binding(action: String, keys: Vec<String>, state: State<'_, AppState>) -> Result<Vec<String>, String> {
+    state.hotkeys.register_hold(&action, &keys)
+}
+
+#[tauri::command]
+pub fn unregister_hold_binding(action: String, state: State<'_, AppState>) -> Result<(), String> {
+    state.hotkeys.unregister_hold(&action)
+}
+
+#[tauri::command]
 pub fn gpu_backend() -> crate::gpu::BackendReport { crate::gpu::backend_report() }
 
 #[tauri::command]
@@ -333,6 +343,15 @@ pub fn zoom_configure(
         _ => return Err("zoom mode must be toggle or hold".to_owned()),
     };
     state.zoom.configure(mode, &keys, level)
+}
+
+#[tauri::command]
+pub fn zoom_set_focus(
+    x: f32,
+    y: f32,
+    state: State<'_, AppState>,
+) -> Result<crate::zoom::ZoomStatus, String> {
+    state.zoom.set_focus(x, y)
 }
 
 #[tauri::command]

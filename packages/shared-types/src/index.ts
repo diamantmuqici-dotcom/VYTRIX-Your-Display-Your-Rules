@@ -242,11 +242,15 @@ export interface RecentCrosshair {
   usedAt: number;
 }
 
+export type BindingMode = "hold" | "toggle";
+
 export interface HotkeyBinding {
   action: HotkeyAction;
   keys: string[];
   mouseButton: number | null;
   enabled: boolean;
+  /** How the binding activates. Absent means toggle for legacy saved state. */
+  mode?: BindingMode;
 }
 
 export type HotkeyAction =
@@ -273,6 +277,9 @@ export interface ZoomStatus {
   keys: string[];
   available: boolean;
   detail: string;
+  /** Crosshair focal point as a percentage of the virtual screen. */
+  focusX: number;
+  focusY: number;
 }
 
 export type RiskLevel = "low" | "medium" | "high";

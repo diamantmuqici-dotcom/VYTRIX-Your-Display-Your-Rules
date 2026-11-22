@@ -4,9 +4,10 @@ import type {
   AppSettings, ColorField, ColorPreset, ColorSettings, CrosshairCollection,
   CrosshairDesign, CrosshairGameProfile,
   CrosshairStudioSettings, GameEntry, GameProfile, HotkeyBinding, OptimizationTask,
-  PhonePermissions, RecentCrosshair, SwitchProfile, SwitchRecord, SwitchStatus, ZoomMode,
+  PhonePermissions, RecentCrosshair, SwitchProfile, SwitchRecord, SwitchStatus, ZoomMode, BindingMode,
 } from "@vytrix/shared-types";
 import { SECTIONS, type SectionId } from "@vytrix/config";
+import { defaultBindingMode, isHotkeyAction } from "@/app/bindings";
 import { DEFAULT_COLOR_SETTINGS, clampColorSettings } from "@vytrix/validation";
 import { BUILTIN_PRESETS } from "@/data/presets";
 import { GAME_CATALOG } from "@/data/games";
@@ -88,6 +89,7 @@ interface AppApi {
   applyAllTasks: () => void;
   refreshTasks: () => void;
   setHotkey: (action: HotkeyBinding["action"], keys: string[]) => void;
+  setHotkeyMode: (action: HotkeyBinding["action"], mode: BindingMode) => void;
   setCrosshairEnabled: (enabled: boolean) => void;
   setPhonePermission: (key: keyof PhonePermissions, enabled: boolean) => void;
   log: (text: string) => void;
@@ -122,7 +124,7 @@ function defaultState(): AppState {
     crosshairStudio: { ...DEFAULT_STUDIO_SETTINGS },
     crosshairTab: "overview",
     tasks: OPTIMIZER_TASKS,
-    hotkeys: [
+    hotkeys: ([
       { action: "toggle-color", keys: ["Ctrl", "Shift", "C"], mouseButton: null, enabled: true },
       { action: "toggle-crosshair", keys: ["Ctrl", "Shift", "X"], mouseButton: null, enabled: true },
       { action: "open-color-studio", keys: ["Ctrl", "Shift", "V"], mouseButton: null, enabled: true },
@@ -133,7 +135,7 @@ function defaultState(): AppState {
       { action: "toggle-zoom", keys: ["Alt", "Z"], mouseButton: null, enabled: true },
       { action: "open-crosshair-studio", keys: ["Ctrl", "Alt", "X"], mouseButton: null, enabled: true },
       { action: "save-crosshair", keys: ["Ctrl", "Alt", "S"], mouseButton: null, enabled: true },
-    ],
+    ] as HotkeyBinding[]).map((binding) => ({ ...binding, mode: defaultBindingMode(binding.action) })),
     crosshairEnabled: false,
     phonePermissions: {
       saturation: true, vibrance: true, gamma: true,
@@ -167,6 +169,34 @@ function validZoomLevel(value: unknown): number {
   return Math.min(8, Math.max(1, Math.round(value * 4) / 4));
 }
 
+/** Older saved states have no per-binding mode; zoom inherits the legacy setting. */
+function validHotkeys(value: unknown, fallback: HotkeyBinding[], legacyZoomMode: unknown): HotkeyBinding[] {
+  if (!Array.isArray(value)) return fallback;
+  const out: HotkeyBinding[] = [];
+  for (const raw of value.slice(0, 40)) {
+    const item = raw as Partial<HotkeyBinding>;
+    const action = item?.action;
+    if (!action || !isHotkeyAction(action)) continue;
+    const keys = Array.isArray(item.keys)
+      ? item.keys.map((key) => String(key).slice(0, 24)).filter(Boolean).slice(0, 4)
+      : [];
+    if (keys.length === 0) continue;
+    const mode: BindingMode = item.mode === "hold" || item.mode === "toggle"
+      ? item.mode
+      : action === "toggle-zoom"
+        ? validZoomMode(legacyZoomMode)
+        : "toggle";
+    out.push({
+      action,
+      keys,
+      mouseButton: typeof item.mouseButton === "number" ? item.mouseButton : null,
+      enabled: item.enabled !== false,
+      mode,
+    });
+  }
+  return out.length > 0 ? out : fallback;
+}
+
 function load(): AppState {
   if (typeof window === "undefined") return defaultState();
   try {
@@ -175,6 +205,9 @@ function load(): AppState {
     const parsed = JSON.parse(raw) as Partial<AppState>;
     const base = defaultState();
     const savedCrosshairs = Array.isArray(parsed.crosshairs) ? parsed.crosshairs : base.crosshairs;
+    const hotkeys = validHotkeys(parsed.hotkeys, base.hotkeys, parsed.settings?.zoomMode);
+    const zoomMode = hotkeys.find((item) => item.action === "toggle-zoom")?.mode
+      ?? validZoomMode(parsed.settings?.zoomMode);
     return {
       ...base,
       ...parsed,
@@ -185,9 +218,10 @@ function load(): AppState {
         ...base.settings,
         ...parsed.settings,
         language: validLanguage(parsed.settings?.language),
-        zoomMode: validZoomMode(parsed.settings?.zoomMode),
+        zoomMode,
         zoomLevel: validZoomLevel(parsed.settings?.zoomLevel),
       },
+      hotkeys,
       crosshairs: savedCrosshairs.slice(0, 100).map((design) => normalizeDesign(design)),
       crosshairPresets: Array.isArray(parsed.crosshairPresets)
         ? parsed.crosshairPresets.slice(0, 200).map((preset) => {
@@ -392,7 +426,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
     },
     refreshTasks,
     setHotkey: (action, keys) => setState((s) => ({
-      ...s, hotkeys: s.hotkeys.map((h) => h.action === action ? { ...h, keys } : { ...h, keys: h.keys }),
+      ...s,
+      hotkeys: s.hotkeys.map((h) => h.action === action ? { ...h, keys } : h),
+    })),
+    setHotkeyMode: (action, mode) => setState((s) => ({
+      ...s,
+      hotkeys: s.hotkeys.map((h) => h.action === action ? { ...h, mode } : h),
+      settings: action === "toggle-zoom" ? { ...s.settings, zoomMode: mode } : s.settings,
     })),
     setCrosshairEnabled: (crosshairEnabled) => setState((s) => ({ ...s, crosshairEnabled })),
     setPhonePermission: (key, enabled) => setState((s) => ({

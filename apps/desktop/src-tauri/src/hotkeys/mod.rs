@@ -1,8 +1,19 @@
 //! Explicit global hotkey registration. No keyboard recording, no hooks.
 
 use parking_lot::Mutex;
+use serde::Serialize;
 use std::collections::{HashMap, HashSet};
 use std::sync::atomic::{AtomicI32, Ordering};
+use std::sync::Arc;
+use std::thread;
+use std::time::Duration;
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HoldEvent {
+    pub action: String,
+    pub pressed: bool,
+}
 
 #[derive(Default)]
 pub struct HotkeyRegistry {
@@ -11,6 +22,8 @@ pub struct HotkeyRegistry {
     ids_by_action: Mutex<HashMap<String, i32>>,
     next_id: AtomicI32,
     taken: Mutex<HashSet<String>>,
+    hold_bindings: Mutex<HashMap<String, Vec<String>>>,
+    hold_generation: Mutex<HashMap<String, u64>>,
 }
 
 impl HotkeyRegistry {
@@ -24,15 +37,7 @@ impl HotkeyRegistry {
     /// normalized key list or a reason. This never captures arbitrary input.
     pub fn register(&self, action: &str, keys: &[String]) -> Result<Vec<String>, String> {
         let safe_action = crate::security::safe_id(action).ok_or_else(|| "invalid action".to_owned())?;
-        if keys.is_empty() || keys.len() > 4 {
-            return Err("hotkey must have 1 to 4 parts".to_owned());
-        }
-        let mut normalized = Vec::new();
-        for part in keys {
-            let clean = crate::security::safe_text(part, 24).to_ascii_uppercase();
-            if clean.is_empty() { return Err("empty key part".to_owned()); }
-            normalized.push(clean);
-        }
+        let normalized = normalize_keys(keys)?;
         let signature = normalized.join("+");
         {
             for (existing_action, existing_keys) in self.bindings.lock().iter() {
@@ -65,6 +70,68 @@ impl HotkeyRegistry {
         Ok(normalized)
     }
 
+    /// Register a polling hold binding. Emits vytrix://hotkey-hold on each
+    /// press and release edge so the UI can apply and revert the effect.
+    pub fn register_hold(&self, action: &str, keys: &[String]) -> Result<Vec<String>, String> {
+        let safe_action = crate::security::safe_id(action).ok_or_else(|| "invalid action".to_owned())?;
+        let normalized = normalize_keys(keys)?;
+        #[cfg(windows)]
+        {
+            let vks = hold_virtual_keys(&normalized)?;
+            let generation = {
+                let mut generations = self.hold_generation.lock();
+                let next = generations.get(&safe_action).copied().unwrap_or(0) + 1;
+                generations.insert(safe_action.clone(), next);
+                next
+            };
+            if let Some(registry) = crate::APP_STATE.get().map(|state| Arc::clone(&state.hotkeys)) {
+                let thread_action = safe_action.clone();
+                thread::spawn(move || {
+                    let mut pressed = false;
+                    loop {
+                        let current = registry.hold_generation.lock()
+                            .get(&thread_action).copied().unwrap_or(0);
+                        if current != generation { break; }
+                        // SAFETY: virtual keys are bounded values from the resolved bind.
+                        let down = vks.iter().all(|vk| {
+                            (unsafe { crate::win::GetAsyncKeyState(*vk) } as u16) & 0x8000 != 0
+                        });
+                        if down != pressed {
+                            pressed = down;
+                            registry.emit_hold(&thread_action, pressed);
+                        }
+                        thread::sleep(Duration::from_millis(25));
+                    }
+                });
+            }
+        }
+        self.hold_bindings.lock().insert(safe_action, normalized.clone());
+        Ok(normalized)
+    }
+
+    /// Stop a hold poller without disturbing OS-registered toggle hotkeys.
+    pub fn unregister_hold(&self, action: &str) -> Result<(), String> {
+        let safe_action = crate::security::safe_id(action).ok_or_else(|| "invalid action".to_owned())?;
+        {
+            let mut generations = self.hold_generation.lock();
+            let next = generations.get(&safe_action).copied().unwrap_or(0) + 1;
+            generations.insert(safe_action.clone(), next);
+        }
+        self.hold_bindings.lock().remove(&safe_action);
+        Ok(())
+    }
+
+    fn emit_hold(&self, action: &str, pressed: bool) {
+        #[cfg(windows)]
+        if let Some(handle) = APP_HANDLE.get() {
+            use tauri::Emitter;
+            let _ = handle.emit("vytrix://hotkey-hold", HoldEvent {
+                action: action.to_owned(),
+                pressed,
+            });
+        }
+    }
+
     pub fn unregister_all(&self) {
         #[cfg(windows)]
         {
@@ -77,11 +144,56 @@ impl HotkeyRegistry {
                 }
             }
         }
+        let hold_actions: Vec<String> = self.hold_generation.lock().keys().cloned().collect();
+        {
+            let mut generations = self.hold_generation.lock();
+            for action in hold_actions {
+                let next = generations.get(&action).copied().unwrap_or(0) + 1;
+                generations.insert(action, next);
+            }
+        }
         self.bindings.lock().clear();
         self.actions_by_id.lock().clear();
         self.ids_by_action.lock().clear();
         self.taken.lock().clear();
+        self.hold_bindings.lock().clear();
     }
+}
+
+fn normalize_keys(keys: &[String]) -> Result<Vec<String>, String> {
+    if keys.is_empty() || keys.len() > 4 {
+        return Err("hotkey must have 1 to 4 parts".to_owned());
+    }
+    let mut normalized = Vec::new();
+    for part in keys {
+        let clean = crate::security::safe_text(part, 24).to_ascii_uppercase();
+        if clean.is_empty() { return Err("empty key part".to_owned()); }
+        normalized.push(clean);
+    }
+    Ok(normalized)
+}
+
+/// Hold binds poll every part, including modifiers, via GetAsyncKeyState.
+#[cfg(windows)]
+fn hold_virtual_keys(keys: &[String]) -> Result<Vec<i32>, String> {
+    let aliases: &[(&str, u32)] = &[
+        ("CTRL", 0x11), ("CONTROL", 0x11), ("SHIFT", 0x10),
+        ("ALT", 0x12), ("MENU", 0x12), ("WIN", 0x5B), ("SUPER", 0x5B),
+        ("SPACE", 0x20), ("ESC", 0x1B), ("ESCAPE", 0x1B),
+        ("UP", 0x26), ("ARROWUP", 0x26), ("DOWN", 0x28), ("ARROWDOWN", 0x28),
+        ("LEFT", 0x25), ("ARROWLEFT", 0x25), ("RIGHT", 0x27), ("ARROWRIGHT", 0x27),
+        ("PAGEUP", 0x21), ("PRIOR", 0x21), ("PAGEDOWN", 0x22), ("NEXT", 0x22),
+    ];
+    let mut out = Vec::new();
+    for key in keys {
+        let key = key.to_ascii_uppercase();
+        let code = aliases.iter().find(|(name, _)| *name == key.as_str())
+            .map(|(_, code)| *code)
+            .or_else(|| virtual_key(&key))
+            .ok_or_else(|| format!("unsupported hold key {key}"))? as i32;
+        if !out.contains(&code) { out.push(code); }
+    }
+    Ok(out)
 }
 
 #[cfg(windows)]
@@ -188,4 +300,28 @@ fn hotkey_window() -> *mut core::ffi::c_void {
     let hwnd = rx.recv().unwrap_or(0) as *mut core::ffi::c_void;
     let _ = HOTKEY_WINDOW.set(hwnd as usize);
     hwnd
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn normalize_keys_bounds_and_uppercases_parts() {
+        let keys = ["ctrl".to_owned(), "shift".to_owned(), "z".to_owned()];
+        assert_eq!(normalize_keys(&keys).unwrap(), ["CTRL", "SHIFT", "Z"]);
+        assert!(normalize_keys(&[]).is_err());
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn hold_binding_resolves_every_editor_alias() {
+        let keys = ["Ctrl".to_owned(), "ArrowUp".to_owned()];
+        assert_eq!(hold_virtual_keys(&keys).unwrap(), vec![0x11, 0x26]);
+    }
+
+    #[test]
+    fn invalid_action_is_rejected() {
+        assert!(crate::security::safe_id("bad;action").is_none());
+    }
 }

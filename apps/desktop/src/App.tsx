@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { PanelLeftClose, PanelLeftOpen, Boxes, Radio } from "lucide-react";
 import { SECTION_DEFS } from "@/app/sections";
+import { SECTION_BINDINGS } from "@/app/bindings";
 import { PRODUCT } from "@vytrix/config";
 import { useApp } from "@/stores/app";
 import { LogoMark } from "@/components/ui/Logo";
@@ -23,6 +24,7 @@ import Settings from "@/pages/Settings";
 import Misc from "@/pages/Misc";
 import PotatoMode from "@/pages/PotatoMode";
 import { ToastProvider } from "@/hooks/useToast";
+import { BindMenuProvider } from "@/components/ui/BindMenu";
 import { PhoneBridge } from "@/hooks/usePhoneBridge";
 import { HotkeyBridge } from "@/hooks/useHotkeyBridge";
 import { ZoomBridge } from "@/hooks/useZoomBridge";
@@ -71,11 +73,13 @@ function Shell() {
           <div className="nav-label">{collapsed ? "â€¢â€¢â€¢" : t("shell.controlCenter")}</div>
           {SECTION_DEFS.map((section) => {
             const Icon = section.icon;
+            const binds = SECTION_BINDINGS[section.id];
             return (
               <button
                 key={section.id}
                 className={`nav-item ${state.section === section.id ? "active" : ""}`}
                 onClick={() => setSection(section.id)}
+                data-bind-actions={binds?.join(",")}
                 title={collapsed ? t(`section.${section.id}` as Parameters<typeof t>[0]) : undefined}
               >
                 <span className="nav-index">{section.index}</span>
@@ -132,6 +136,7 @@ export default function App() {
       <HotkeyBridge />
       <ZoomBridge />
       <SmartSwitchBridge />
+      <BindMenuProvider />
       <Shell />
     </ToastProvider>
   );
