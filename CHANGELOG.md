@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 — 2026-11-22
+
+- Replaced the hardcoded `Balanced` Overview label with the exact applied color preset name, persisted in native storage and updated whenever a preset or custom color is applied.
+- Replaced the static optimizer list with a live native catalog of 23 reversible Windows settings read from the OS at runtime; previous values are saved before each write and verified after apply and restore.
+- Added a real high-performance power plan created through `powercfg /duplicatescheme`, activated on apply, with the prior scheme recorded for restore.
+- Added `Apply all optimizations` and `Restore all` bulk controls, plus a live power plan status panel.
+- Expanded the built-in color preset library from 18 to 45 presets with distinct channel, transfer and temperature targets and matching previews.
+- Added native IPC commands for optimizer state, apply, restore, apply-all, power plan status and active-preset persistence, with strict ID validation at the boundary.
+- Updated the top-bar version chip to read the real product version instead of a stale literal.
+
 ## 0.2.2 — 2026-11-22
 
 - Corrected ROB RUN configuration support: the real settings file is a flat Unity JSON document in `%USERPROFILE%\AppData\LocalLow\Kefir\ROB RUN\settings\settings_*.dat`, not an Unreal `GameUserSettings.ini`.

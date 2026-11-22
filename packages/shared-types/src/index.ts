@@ -277,6 +277,8 @@ export interface ZoomStatus {
 
 export type RiskLevel = "low" | "medium" | "high";
 
+export type TaskMechanism = "registry" | "powerPlan" | "localReview";
+
 export interface OptimizationTask {
   id: string;
   category: "performance" | "input" | "privacy" | "appearance";
@@ -288,6 +290,21 @@ export interface OptimizationTask {
   recommendedState: string;
   applied: boolean;
   previousValue: string | null;
+  mechanism?: TaskMechanism;
+}
+
+export interface TaskOutcome {
+  id: string;
+  applied: boolean;
+  previous: string | null;
+  message: string;
+}
+
+export interface PowerPlanStatus {
+  activeGuid: string;
+  activeName: string;
+  vytrixGuid: string | null;
+  available: boolean;
 }
 
 export interface MetricSample {

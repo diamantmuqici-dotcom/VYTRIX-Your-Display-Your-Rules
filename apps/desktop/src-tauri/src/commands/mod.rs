@@ -34,6 +34,14 @@ fn to_view(mode: &crate::display::DisplayMode) -> ModeView {
 #[tauri::command]
 pub fn system_summary() -> crate::system::SystemSummary {
     let mut summary = crate::system::read();
+    if let Some(store) = crate::APP_STATE.get().map(|state| &state.storage) {
+        // The active preset is the one the user actually applied, not a fixed label.
+        summary.active_color_preset = store.get_setting("active-color-preset")
+            .unwrap_or_else(|| "Custom".to_owned());
+        let applied = crate::optimizer::applied_count(store);
+        let total = crate::optimizer::catalog_ids().len();
+        summary.optimization_status = format!("{applied} / {total} applied");
+    }
     let game = crate::games::detect_foreground();
     summary.active_game = game.as_ref().map(|g| g.display_name.clone());
     if let Some(Ok(entries)) = crate::APP_STATE.get().map(|s| s.storage.list("game-profile")) {
@@ -163,11 +171,36 @@ pub fn gpu_backend() -> crate::gpu::BackendReport { crate::gpu::backend_report()
 pub fn detect_game() -> Option<crate::games::DetectedGame> { crate::games::detect_foreground() }
 
 #[tauri::command]
-pub fn optimizer_tasks() -> Vec<crate::optimizer::RegistryTask> { crate::optimizer::list_tasks() }
+pub fn optimizer_tasks(state: State<'_, AppState>) -> Vec<crate::optimizer::OptTask> {
+    crate::optimizer::list_tasks(&state.storage)
+}
 
 #[tauri::command]
-pub fn optimizer_apply(id: String) -> Result<crate::optimizer::TaskOutcome, String> {
-    crate::optimizer::apply_task(&id)
+pub fn optimizer_power_plan() -> crate::optimizer::PowerPlanStatus {
+    crate::optimizer::power_plan_status()
+}
+
+#[tauri::command]
+pub fn optimizer_apply(id: String, state: State<'_, AppState>) -> Result<crate::optimizer::TaskOutcome, String> {
+    crate::optimizer::apply_task(&state.storage, &id)
+}
+
+#[tauri::command]
+pub fn optimizer_restore(id: String, state: State<'_, AppState>) -> Result<crate::optimizer::TaskOutcome, String> {
+    crate::optimizer::restore_task(&state.storage, &id)
+}
+
+#[tauri::command]
+pub fn optimizer_apply_all(state: State<'_, AppState>) -> Vec<crate::optimizer::TaskOutcome> {
+    crate::optimizer::apply_all(&state.storage)
+}
+
+/// Records the exact preset name selected in Color Studio for the Overview metric.
+#[tauri::command]
+pub fn color_set_active_preset(name: String, state: State<'_, AppState>) -> Result<(), String> {
+    let safe = crate::security::safe_text(&name, 96);
+    if safe.is_empty() { return Err("empty preset name".to_owned()); }
+    state.storage.set_setting("active-color-preset", &safe)
 }
 
 #[tauri::command]

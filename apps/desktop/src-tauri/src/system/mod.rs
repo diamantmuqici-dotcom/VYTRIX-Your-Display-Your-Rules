@@ -28,7 +28,7 @@ impl SystemSummary {
             active_monitor: "unavailable".to_owned(),
             active_game: None,
             active_profile: None,
-            active_color_preset: "Balanced".to_owned(),
+            active_color_preset: "Custom".to_owned(),
             optimization_status: "unknown".to_owned(),
         }
     }

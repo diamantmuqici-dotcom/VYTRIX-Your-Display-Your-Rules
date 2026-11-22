@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { PanelLeftClose, PanelLeftOpen, Boxes, Radio } from "lucide-react";
 import { SECTION_DEFS } from "@/app/sections";
+import { PRODUCT } from "@vytrix/config";
 import { useApp } from "@/stores/app";
 import { LogoMark } from "@/components/ui/Logo";
 import { isTauriRuntime } from "@/services/tauri";
@@ -102,7 +103,7 @@ function Shell() {
           <div className="crumb"><small>{current.index} /</small> {t(`section.${current.id}` as Parameters<typeof t>[0])}</div>
           <div className="topbar-right">
             <span className="chip"><span className={`dot ${native ? "" : "warn"}`} /> {native ? t("shell.native") : t("shell.browser")}</span>
-            <span className="chip"><Radio size={11} /> v0.2.1</span>
+            <span className="chip"><Radio size={11} /> v{PRODUCT.version}</span>
           </div>
         </header>
 

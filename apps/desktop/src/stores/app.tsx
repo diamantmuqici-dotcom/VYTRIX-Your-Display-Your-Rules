@@ -12,6 +12,10 @@ import { BUILTIN_PRESETS } from "@/data/presets";
 import { GAME_CATALOG } from "@/data/games";
 import { OPTIMIZER_TASKS } from "@/data/optimizer";
 import { applyColor, resetColor, type ColorApplyStatus } from "@/services/color";
+import {
+  optimizerApply, optimizerApplyAll, optimizerRestore, optimizerTasks,
+  setActiveColorPreset,
+} from "@/services/optimizer";
 import { BUILTIN_CROSSHAIR_PRESETS, DEFAULT_DESIGN, DEFAULT_STUDIO_SETTINGS, PRESET_COLLECTIONS, type CrosshairPreset } from "@/crosshair/model";
 import { normalizeDesign } from "@/crosshair/validate";
 import {
@@ -81,6 +85,8 @@ interface AppApi {
   markCrosshairUsed: (id: string) => void;
   applyTask: (id: string) => void;
   restoreTask: (id: string) => void;
+  applyAllTasks: () => void;
+  refreshTasks: () => void;
   setHotkey: (action: HotkeyBinding["action"], keys: string[]) => void;
   setCrosshairEnabled: (enabled: boolean) => void;
   setPhonePermission: (key: keyof PhonePermissions, enabled: boolean) => void;
@@ -253,17 +259,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
     applyColor(color, reportColor, monitorId);
   }, [reportColor]);
 
+  // The Overview metric must name the exact preset the user selected.
+  const recordPreset = useCallback((name: string) => {
+    void setActiveColorPreset(name);
+  }, []);
+
+  const refreshTasks = useCallback(() => {
+    void optimizerTasks().then((tasks) => {
+      if (!tasks) return;
+      setState((s) => ({
+        ...s,
+        tasks: tasks.map((task) => {
+          const prior = s.tasks.find((item) => item.id === task.id);
+          return { ...task, previousValue: prior?.previousValue ?? null };
+        }),
+      }));
+    });
+  }, []);
+
+  useEffect(() => { refreshTasks(); }, [refreshTasks]);
+
   const api = useMemo<AppApi>(() => ({
     state,
     setSection: (section) => setState((s) => ({ ...s, section })),
     setColorField: (field, value) => setState((s) => {
       const color = clampColorSettings({ ...s.color, [field]: value });
       pushColor(color, s.settings.monitorId);
+      recordPreset("Custom");
       return { ...s, color };
     }),
     setColor: (color) => setState((s) => {
       const next = clampColorSettings(color);
       pushColor(next, s.settings.monitorId);
+      recordPreset("Custom");
       return { ...s, color: next };
     }),
     setBaseline: (baseline) => setState((s) => ({ ...s, baseline: clampColorSettings(baseline) })),
@@ -271,6 +299,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     applyPreset: (preset) => setState((s) => {
       const color = clampColorSettings(preset.settings);
       pushColor(color, s.settings.monitorId);
+      recordPreset(preset.name);
       return { ...s, color };
     }),
     upsertPreset: (preset) => setState((s) => ({
@@ -335,16 +364,33 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ...s,
       crosshairRecent: [{ id, usedAt: Date.now() }, ...s.crosshairRecent.filter((item) => item.id !== id)].slice(0, 12),
     })),
-    applyTask: (id) => setState((s) => ({
-      ...s,
-      tasks: s.tasks.map((t) => t.id === id ? { ...t, applied: true, previousValue: t.previousValue ?? t.currentState, currentState: t.recommendedState } : t),
-    })),
-    restoreTask: (id) => setState((s) => ({
-      ...s,
-      tasks: s.tasks.map((t) => t.id === id ? {
-        ...t, applied: false, currentState: t.previousValue ?? t.currentState, previousValue: null,
-      } : t),
-    })),
+    applyTask: (id) => {
+      const task = state.tasks.find((item) => item.id === id);
+      void optimizerApply(id).then((outcome) => {
+        if (!outcome) return;
+        log(`${task?.name ?? id}: ${outcome.message}${outcome.previous ? ` (was ${outcome.previous})` : ""}`);
+        refreshTasks();
+      });
+    },
+    restoreTask: (id) => {
+      const task = state.tasks.find((item) => item.id === id);
+      void optimizerRestore(id).then((outcome) => {
+        if (!outcome) return;
+        log(`${task?.name ?? id}: ${outcome.message}`);
+        refreshTasks();
+      });
+    },
+    applyAllTasks: () => {
+      void optimizerApplyAll().then((outcomes) => {
+        if (!outcomes) return;
+        const ok = outcomes.filter((item) => item.applied).length;
+        const failed = outcomes.filter((item) => !item.applied);
+        log(`Applied ${ok} of ${outcomes.length} optimizations`);
+        for (const item of failed) log(`${item.id}: ${item.message}`);
+        refreshTasks();
+      });
+    },
+    refreshTasks,
     setHotkey: (action, keys) => setState((s) => ({
       ...s, hotkeys: s.hotkeys.map((h) => h.action === action ? { ...h, keys } : { ...h, keys: h.keys }),
     })),
@@ -377,8 +423,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     reset: () => {
       setState(defaultState());
       void resetColor(null, reportColor);
+      recordPreset("Custom");
     },
-  }), [state, log, pushColor, reportColor]);
+  }), [state, log, pushColor, reportColor, recordPreset, refreshTasks]);
 
   return <AppContext.Provider value={api}>{children}</AppContext.Provider>;
 }

@@ -1,7 +1,7 @@
 [package]
 name = "vytrix"
-version = "0.2.2"
-description = "YOUR DISPLAY. YOUR RULES. Ã¢â‚¬â€ Windows gaming display and performance suite"
+version = "0.3.0"
+description = "YOUR DISPLAY. YOUR RULES. Windows gaming display and performance suite"
 authors = ["VYTRIX"]
 edition = "2021"
 rust-version = "1.77"
