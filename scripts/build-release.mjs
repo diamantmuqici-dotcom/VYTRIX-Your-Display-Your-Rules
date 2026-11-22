@@ -3,7 +3,7 @@
 // The manifest is left UNSIGNED on purpose; run scripts/sign-manifest.mjs next.
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -55,9 +55,10 @@ function walk(directory) {
   return found;
 }
 
-function isArtifact(filePath) {
+function isArtifact(filePath, version) {
   const name = path.basename(filePath).toLowerCase();
   if (SKIP_SUFFIXES.some((suffix) => name.endsWith(suffix))) return false;
+  if (!name.includes(version.toLowerCase())) return false;
   return ARTIFACT_EXTENSIONS.has(path.extname(name));
 }
 
@@ -68,6 +69,11 @@ function sha256(filePath) {
 function main() {
   const version = readVersion();
   const downloadBase = process.env.VYTRIX_RELEASE_BASE_URL || DEFAULT_BASE_URL(version);
+
+  // Never upload artifacts left over from an earlier version.
+  const releaseDir = path.dirname(MANIFEST_PATH);
+  rmSync(releaseDir, { recursive: true, force: true });
+  mkdirSync(releaseDir, { recursive: true });
 
   if (!skipBuild) {
     console.log('build-release: building workspace');
@@ -95,7 +101,7 @@ function main() {
   mkdirSync(path.dirname(portableDest), { recursive: true });
   copyFileSync(portableSource, portableDest);
 
-  const artifactPaths = [portableDest, ...walk(bundleDir).filter(isArtifact)]
+  const artifactPaths = [portableDest, ...walk(bundleDir).filter((file) => isArtifact(file, version))]
     .sort((a, b) => path.basename(a).localeCompare(path.basename(b)));
   if (artifactPaths.length === 0) fail(`no installer artifacts found under ${bundleDir}`);
 
