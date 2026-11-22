@@ -3,7 +3,7 @@
 // The manifest is left UNSIGNED on purpose; run scripts/sign-manifest.mjs next.
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -88,7 +88,15 @@ function main() {
     : path.join(ROOT, 'apps', 'desktop', 'src-tauri', 'target', 'release', 'bundle');
   if (!existsSync(bundleDir)) fail(`bundle directory not found: ${bundleDir}`);
 
-  const artifactPaths = walk(bundleDir).filter(isArtifact).sort((a, b) => a.localeCompare(b));
+  const portableSource = path.join(ROOT, 'apps', 'desktop', 'src-tauri', 'target', 'release', 'vytrix.exe');
+  if (!existsSync(portableSource)) fail(`portable executable not found: ${portableSource}`);
+  const portableName = 'VYTRIX-x64-portable.exe';
+  const portableDest = path.join(path.dirname(MANIFEST_PATH), portableName);
+  mkdirSync(path.dirname(portableDest), { recursive: true });
+  copyFileSync(portableSource, portableDest);
+
+  const artifactPaths = [portableDest, ...walk(bundleDir).filter(isArtifact)]
+    .sort((a, b) => path.basename(a).localeCompare(path.basename(b)));
   if (artifactPaths.length === 0) fail(`no installer artifacts found under ${bundleDir}`);
 
   const files = artifactPaths.map((filePath) => {
