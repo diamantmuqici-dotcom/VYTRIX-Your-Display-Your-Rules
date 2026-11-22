@@ -24,7 +24,7 @@ sha2 = "0.10"
 hex = "0.4"
 chrono = { version = "0.4", features = ["serde"] }
 tiny_http = "0.12"
-rand = "0.8"
+rand = "0.10"
 
 [profile.release]
 opt-level = 3
