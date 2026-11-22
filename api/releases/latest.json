@@ -1,24 +1,24 @@
 {
-  "version": "0.2.1",
-  "publishedAt": "2026-11-22T01:31:25.020Z",
+  "version": "0.2.2",
+  "publishedAt": "2026-11-22T02:02:10.799Z",
   "files": [
     {
-      "name": "VYTRIX_0.2.1_x64_en-US.msi",
-      "url": "https://github.com/diamantmuqici-dotcom/VYTRIX-Your-Display-Your-Rules/releases/download/v0.2.1/VYTRIX_0.2.1_x64_en-US.msi",
-      "sha256": "641c3630e69c049c128ff0a8cc79e49ad917c6bd074f032123e1e8ad1a540096",
-      "size": 4636672
+      "name": "VYTRIX_0.2.2_x64_en-US.msi",
+      "url": "https://github.com/diamantmuqici-dotcom/VYTRIX-Your-Display-Your-Rules/releases/download/v0.2.2/VYTRIX_0.2.2_x64_en-US.msi",
+      "sha256": "066cd63b04f69aedf8938ad319242074447181c12a0b6158d12d6318c7c83af6",
+      "size": 4644864
     },
     {
-      "name": "VYTRIX_0.2.1_x64-setup.exe",
-      "url": "https://github.com/diamantmuqici-dotcom/VYTRIX-Your-Display-Your-Rules/releases/download/v0.2.1/VYTRIX_0.2.1_x64-setup.exe",
-      "sha256": "385185688ce7d73855cab4a58f4acccd48a3da440270ecc2091117bcaf7b4488",
-      "size": 2702763
+      "name": "VYTRIX_0.2.2_x64-setup.exe",
+      "url": "https://github.com/diamantmuqici-dotcom/VYTRIX-Your-Display-Your-Rules/releases/download/v0.2.2/VYTRIX_0.2.2_x64-setup.exe",
+      "sha256": "06480e42d02acd2194a5bb1445b4eaede0f68a2640edd790682bacada5d01c74",
+      "size": 2710325
     },
     {
       "name": "VYTRIX-x64-portable.exe",
-      "url": "https://github.com/diamantmuqici-dotcom/VYTRIX-Your-Display-Your-Rules/releases/download/v0.2.1/VYTRIX-x64-portable.exe",
-      "sha256": "cc32dba3f1c2eeae4f8469ea6d6ea9e3b8ce49f7db570d5cfb27fe5d37c6a7e7",
-      "size": 7539712
+      "url": "https://github.com/diamantmuqici-dotcom/VYTRIX-Your-Display-Your-Rules/releases/download/v0.2.2/VYTRIX-x64-portable.exe",
+      "sha256": "a8790d0bcaf82c3655e12459c2c40487f5cb71eeff9dbbbd40909bd7d4a1f662",
+      "size": 7583744
     }
   ],
   "signature": ""
