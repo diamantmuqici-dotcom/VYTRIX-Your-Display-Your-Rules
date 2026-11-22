@@ -1,6 +1,5 @@
 User-Agent: *
 Allow: /
-Disallow: /account
 Disallow: /api/
 
 Host: https://diamantmuqici-dotcom.github.io/VYTRIX-Your-Display-Your-Rules
