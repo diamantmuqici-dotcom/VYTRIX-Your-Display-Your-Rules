@@ -111,20 +111,24 @@ impl ZoomController {
         if !level.is_finite() || level < MIN_LEVEL || level > MAX_LEVEL {
             return Err("zoom level must be 1 to 8".to_owned());
         }
-        if keys.is_empty() || keys.len() > 4 {
+        if keys.len() > 4 {
             return Err("zoom bind must have 1 to 4 parts".to_owned());
+        }
+        if mode == ZoomMode::Hold && keys.is_empty() {
+            return Err("zoom hold bind must have 1 to 4 parts".to_owned());
         }
         let clean: Vec<String> = keys
             .iter()
             .map(|key| crate::security::safe_text(key, 24).to_ascii_uppercase())
             .filter(|key| !key.is_empty())
             .collect();
-        if clean.is_empty() {
-            return Err("zoom bind needs at least one key".to_owned());
+        if clean.is_empty() && mode == ZoomMode::Hold {
+            return Err("zoom hold bind needs at least one key".to_owned());
         }
         // A rebind must fail loudly on an unknown key. Silently dropping a part
         // used to leave the poll thread with no keys and kill zoom entirely.
-        let vks = resolve_vks(&clean)?;
+        // Toggle mode is the exception: manual control needs no bind at all.
+        let vks = if clean.is_empty() { Vec::new() } else { resolve_vks(&clean)? };
 
         let generation = self.generation.fetch_add(1, Ordering::SeqCst) + 1;
         {
@@ -422,5 +426,23 @@ mod tests {
     #[test]
     fn unknown_key_is_rejected_not_dropped() {
         assert!(resolve_vks(&["CTRL".to_owned(), "NOPE".to_owned()]).is_err());
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn toggle_mode_allows_manual_control_without_a_bind() {
+        let controller = Arc::new(ZoomController::default());
+        let status = controller.configure(ZoomMode::Toggle, &[], 2.0).expect("toggle needs no bind");
+        assert_eq!(status.mode, ZoomMode::Toggle);
+        assert!(status.keys.is_empty());
+        controller.release();
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn hold_mode_still_requires_a_bind() {
+        let controller = Arc::new(ZoomController::default());
+        let error = controller.configure(ZoomMode::Hold, &[], 2.0).unwrap_err();
+        assert!(error.contains("hold bind"));
     }
 }

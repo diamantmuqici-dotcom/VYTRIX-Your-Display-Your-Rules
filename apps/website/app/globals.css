@@ -185,6 +185,127 @@
     transform: scale(1.06);
   }
 
+  /* Pointer-driven 3D. Flat by default, rotates only after a real pointer move. */
+  .tilt-card {
+    perspective: 900px;
+    transform-style: preserve-3d;
+  }
+
+  .tilt-card-inner {
+    position: relative;
+    border-radius: var(--radius-xl);
+    transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transform-style: preserve-3d;
+    transition: transform 220ms var(--ease);
+    will-change: transform;
+  }
+
+  .tilt-glow .tilt-card-inner::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      320px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgb(var(--brand-cyan) / 0.14),
+      transparent 62%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms var(--ease);
+  }
+
+  .tilt-glow .tilt-card-inner:hover::after {
+    opacity: 1;
+  }
+
+  .opt-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    perspective: 1000px;
+  }
+
+  .opt-layer .glass {
+    border: 1px solid rgb(var(--hairline) / 0.14);
+    box-shadow: 0 22px 64px -32px rgb(0 0 0 / 0.85);
+  }
+
+  .opt-layer-blue .opt-layer-icon {
+    color: rgb(var(--brand-blue));
+    border-color: rgb(var(--brand-blue) / 0.3);
+    background: rgb(var(--brand-blue) / 0.1);
+  }
+
+  .opt-layer-purple .opt-layer-icon {
+    color: rgb(var(--brand-purple));
+    border-color: rgb(var(--brand-purple) / 0.3);
+    background: rgb(var(--brand-purple) / 0.1);
+  }
+
+  .opt-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .vy-marquee {
+    position: relative;
+    overflow: hidden;
+    padding: 13px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: rgb(var(--secondary) / 0.6);
+  }
+
+  .vy-marquee::before,
+  .vy-marquee::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 12%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .vy-marquee::before {
+    left: 0;
+    background: linear-gradient(90deg, rgb(var(--bg)), transparent);
+  }
+
+  .vy-marquee::after {
+    right: 0;
+    background: linear-gradient(270deg, rgb(var(--bg)), transparent);
+  }
+
+  .vy-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: vyMarquee 38s linear infinite;
+  }
+
+  .vy-marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 22px;
+    padding-right: 44px;
+    font-family: var(--font-jetbrains-mono), monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    white-space: nowrap;
+    color: rgb(var(--muted));
+  }
+
+  .vy-marquee-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 99px;
+    background: rgb(var(--brand-cyan));
+    box-shadow: 0 0 12px rgb(var(--brand-cyan) / 0.8);
+  }
+
   /* Static-export safe: content is visible by default. The animation only
      enhances motion-capable browsers after paint and never gates visibility. */
   .reveal {
@@ -225,6 +346,12 @@
   }
   100% {
     transform: translate3d(0, -18px, 0);
+  }
+}
+
+@keyframes vyMarquee {
+  to {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 

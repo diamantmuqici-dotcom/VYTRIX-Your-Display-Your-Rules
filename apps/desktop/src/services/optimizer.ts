@@ -1,4 +1,6 @@
-import type { OptimizationTask, PowerPlanStatus, TaskOutcome } from "@vytrix/shared-types";
+import type {
+  OptimizationTask, PlatinumView, PowerPlanStatus, TaskOutcome, WindowsInfo,
+} from "@vytrix/shared-types";
 import { invokeNative, isTauriRuntime } from "./tauri";
 
 /** Task state is read from the OS on load; nothing is inferred from a static list. */
@@ -26,6 +28,28 @@ export async function optimizerRestore(id: string): Promise<TaskOutcome | null> 
 
 export async function optimizerApplyAll(): Promise<TaskOutcome[] | null> {
   const result = await invokeNative<TaskOutcome[]>("optimizer_apply_all");
+  return result.ok ? result.data : null;
+}
+
+export async function optimizerOs(): Promise<WindowsInfo | null> {
+  if (!isTauriRuntime()) return null;
+  const result = await invokeNative<WindowsInfo>("optimizer_os");
+  return result.ok ? result.data : null;
+}
+
+export async function optimizerProfile(): Promise<PlatinumView | null> {
+  if (!isTauriRuntime()) return null;
+  const result = await invokeNative<PlatinumView>("optimizer_profile");
+  return result.ok ? result.data : null;
+}
+
+export async function optimizerPlatinumApplyAll(): Promise<TaskOutcome[] | null> {
+  const result = await invokeNative<TaskOutcome[]>("optimizer_platinum_apply_all");
+  return result.ok ? result.data : null;
+}
+
+export async function optimizerPlatinumRestoreAll(): Promise<TaskOutcome[] | null> {
+  const result = await invokeNative<TaskOutcome[]>("optimizer_platinum_restore_all");
   return result.ok ? result.data : null;
 }
 

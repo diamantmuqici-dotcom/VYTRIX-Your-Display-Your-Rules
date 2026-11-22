@@ -284,11 +284,15 @@ export interface ZoomStatus {
 
 export type RiskLevel = "low" | "medium" | "high";
 
-export type TaskMechanism = "registry" | "powerPlan" | "localReview";
+export type TaskMechanism = "registry" | "powerPlan" | "systemCommand" | "localReview";
+
+export type OptimizationCategory =
+  | "performance" | "input" | "privacy" | "appearance"
+  | "memory" | "graphics" | "storage" | "power" | "services" | "network";
 
 export interface OptimizationTask {
   id: string;
-  category: "performance" | "input" | "privacy" | "appearance";
+  category: OptimizationCategory;
   name: string;
   description: string;
   benefit: string;
@@ -298,6 +302,35 @@ export interface OptimizationTask {
   applied: boolean;
   previousValue: string | null;
   mechanism?: TaskMechanism;
+}
+
+export interface WindowsInfo {
+  productName: string;
+  displayVersion: string;
+  currentBuild: number;
+  ubr: number;
+  edition: string;
+  family: string;
+  isWindows11: boolean;
+  profileLabel: string;
+}
+
+export interface PlatinumGroupView {
+  id: string;
+  title: string;
+  detail: string;
+  taskIds: string[];
+}
+
+export interface PlatinumView {
+  name: string;
+  version: string;
+  attribution: string;
+  sourceUrl: string;
+  os: WindowsInfo;
+  groups: PlatinumGroupView[];
+  taskCount: number;
+  recommendedCount: number;
 }
 
 export interface TaskOutcome {

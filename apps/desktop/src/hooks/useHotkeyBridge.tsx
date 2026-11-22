@@ -32,6 +32,7 @@ export function HotkeyBridge() {
   const profileIndex = useRef(-1);
   const holdSnapshot = useRef<HoldSnapshot | null>(null);
   const holdRegistered = useRef<Set<string>>(new Set());
+  const toggleRegistered = useRef<Set<string>>(new Set());
 
   const signature = app.state.hotkeys
     .map((binding) => `${binding.action}:${binding.keys.join("+")}:${binding.mode ?? defaultBindingMode(binding.action)}:${binding.enabled}`)
@@ -44,12 +45,23 @@ export function HotkeyBridge() {
     const sync = async () => {
       const bindings = appRef.current.state.hotkeys;
       const desiredHold = new Set<string>();
+      const desiredToggle = new Set<string>();
       for (const binding of bindings) {
-        if (!binding.enabled) continue;
         const mode = binding.mode ?? defaultBindingMode(binding.action);
-        // Zoom hold is polled by the magnification controller itself.
-        if (binding.action === "toggle-zoom" && mode === "hold") continue;
+        if (!binding.enabled) {
+          await invokeNative("unregister_hold_binding", { action: binding.action });
+          await invokeNative("unregister_hotkey", { action: binding.action });
+          continue;
+        }
+        // Zoom hold is polled by the magnification controller itself. A toggle
+        // switch must also drop any OS hotkey registered by the old mode.
+        if (binding.action === "toggle-zoom" && mode === "hold") {
+          await invokeNative("unregister_hold_binding", { action: binding.action });
+          await invokeNative("unregister_hotkey", { action: binding.action });
+          continue;
+        }
         if (mode === "hold") {
+          await invokeNative("unregister_hotkey", { action: binding.action });
           const result = await invokeNative("register_hold_binding", {
             action: binding.action,
             keys: binding.keys,
@@ -57,13 +69,27 @@ export function HotkeyBridge() {
           if (result.ok) desiredHold.add(binding.action);
         } else {
           await invokeNative("unregister_hold_binding", { action: binding.action });
-          await invokeNative("register_hotkey", { action: binding.action, keys: binding.keys });
+          if (binding.keys.length === 0) {
+            await invokeNative("unregister_hotkey", { action: binding.action });
+          } else {
+            const result = await invokeNative("register_hotkey", {
+              action: binding.action,
+              keys: binding.keys,
+            });
+            if (result.ok) desiredToggle.add(binding.action);
+          }
         }
       }
       for (const action of holdRegistered.current) {
         if (!desiredHold.has(action)) await invokeNative("unregister_hold_binding", { action });
       }
-      if (active) holdRegistered.current = desiredHold;
+      for (const action of toggleRegistered.current) {
+        if (!desiredToggle.has(action)) await invokeNative("unregister_hotkey", { action });
+      }
+      if (active) {
+        holdRegistered.current = desiredHold;
+        toggleRegistered.current = desiredToggle;
+      }
     };
     void sync();
     return () => { active = false; };
@@ -120,8 +146,11 @@ export function HotkeyBridge() {
       case "toggle-crosshair":
         api.log("Crosshair toggled by hotkey");
         break;
-      case "toggle-zoom":
-        if (state.settings.zoomMode === "toggle") {
+      case "toggle-zoom": {
+        const binding = state.hotkeys.find((item) => item.action === "toggle-zoom");
+        const mode = binding?.mode ?? defaultBindingMode("toggle-zoom");
+        if (binding?.enabled === false) break;
+        if (mode === "toggle") {
           void toggleZoom().then((result) => {
             if (!result.ok) api.log(`Zoom toggle failed: ${result.error.message}`);
           });
@@ -130,6 +159,7 @@ export function HotkeyBridge() {
           api.log("Zoom hold bind is driven natively while held");
         }
         break;
+      }
       case "switch-profile": {
         if (state.profiles.length === 0) { api.setSection("game-profiles"); break; }
         profileIndex.current = (profileIndex.current + 1) % state.profiles.length;

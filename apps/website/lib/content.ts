@@ -63,18 +63,19 @@ export const features: Feature[] = [
       "The overlay is drawn on top of the game; it does not read the game. Some fullscreen-exclusive titles require borderless windowed mode.",
   },
   {
-    slug: "reversible-optimizer",
+    slug: "optimizer",
     icon: RotateCcw,
-    title: "Reversible optimizer",
+    title: "Optimizer",
     summary:
-      "A short list of named Windows performance settings, each with a before snapshot. Change what you want, put it back when you want.",
+      "A touch-to-reveal Optimizer panel that runs the full Platinum+ v9.5 Windows profile. It reads your Windows build first, applies only the entries that fit it, and saves every previous value for a one-click undo.",
     details: [
-      "Every applied setting is recorded with its original value in a local snapshot.",
-      "Apply one tweak or a group, then restore the entire snapshot with a single action.",
-      "Plain-language descriptions of what each setting changes and what it may affect.",
+      "Open the Optimizer card to see attribution first: not ours, ported from Platinum+ Optimizer v9.5 by @STEFANO83223 and @Aledect on SourceForge. Upstream updates are not ours.",
+      "Windows 10 and Windows 11 are detected from ProductName, DisplayVersion, CurrentBuild and UBR in the registry. Windows 11-only entries such as the Copilot button are skipped on Windows 10.",
+      "The full profile covers over a hundred fixed registry writes plus netsh TCP tuning, bcdedit boot flags and a dedicated VYTRIX high-performance power plan, grouped by network, memory, graphics, storage, power, services and privacy.",
+      "Run everything or work group by group. Each applied setting records its prior value in the local vault, and Restore replays it — including the original power plan.",
     ],
     limit:
-      "Settings are scoped to the current user where Windows allows it. Anything requiring elevation is listed before it is applied.",
+      "Ported from a community Windows tuning script; the settings are real system changes, so the previous value is captured before each one and every entry is reversible. Defender, firewall and Update availability are never disabled.",
   },
   {
     slug: "performance-monitor",
@@ -301,6 +302,26 @@ export interface Release {
 }
 
 export const releases: Release[] = [
+  {
+    version: "0.3.0",
+    date: "2026-11-22",
+    title: "Optimizer profile, crosshair zoom and native release",
+    added: [
+      "Optimizer panel with the full Platinum+ v9.5 profile, explicit attribution and Windows 10/11 detection",
+      "Run or restore the entire OS-aware profile, group by group or setting by setting",
+      "Crosshair-centered utility zoom that tracks the aim point while active",
+      "Right-click binding menu with hold or toggle mode and any-key capture",
+    ],
+    changed: [
+      "Optimizer layout rebuilt as a card grid with a touch-to-reveal feature panel",
+      "Color preset row now shows the exact applied preset by name",
+      "Power plan creates a dedicated VYTRIX high-performance scheme and saves the previous one",
+    ],
+    fixed: [
+      "Changing a hotkey no longer broke the zoom binding",
+      "Applied optimizer state now reads from the OS instead of a static list",
+    ],
+  },
   {
     version: "0.9.4",
     date: "2026-11-12",

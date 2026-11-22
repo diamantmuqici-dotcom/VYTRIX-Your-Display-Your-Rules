@@ -165,6 +165,11 @@ pub fn register_hotkey(action: String, keys: Vec<String>, state: State<'_, AppSt
 }
 
 #[tauri::command]
+pub fn unregister_hotkey(action: String, state: State<'_, AppState>) -> Result<(), String> {
+    state.hotkeys.unregister(&action)
+}
+
+#[tauri::command]
 pub fn register_hold_binding(action: String, keys: Vec<String>, state: State<'_, AppState>) -> Result<Vec<String>, String> {
     state.hotkeys.register_hold(&action, &keys)
 }
@@ -203,6 +208,22 @@ pub fn optimizer_restore(id: String, state: State<'_, AppState>) -> Result<crate
 #[tauri::command]
 pub fn optimizer_apply_all(state: State<'_, AppState>) -> Vec<crate::optimizer::TaskOutcome> {
     crate::optimizer::apply_all(&state.storage)
+}
+
+#[tauri::command]
+pub fn optimizer_os() -> crate::optimizer::WindowsInfo { crate::optimizer::windows_info() }
+
+#[tauri::command]
+pub fn optimizer_profile() -> crate::optimizer::PlatinumView { crate::optimizer::platinum_profile() }
+
+#[tauri::command]
+pub fn optimizer_platinum_apply_all(state: State<'_, AppState>) -> Vec<crate::optimizer::TaskOutcome> {
+    crate::optimizer::apply_platinum_all(&state.storage)
+}
+
+#[tauri::command]
+pub fn optimizer_platinum_restore_all(state: State<'_, AppState>) -> Vec<crate::optimizer::TaskOutcome> {
+    crate::optimizer::restore_platinum_all(&state.storage)
 }
 
 /// Records the exact preset name selected in Color Studio for the Overview metric.

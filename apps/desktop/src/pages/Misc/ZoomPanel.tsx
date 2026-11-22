@@ -10,7 +10,7 @@ import { useT } from "@/i18n";
 
 /** Full-screen magnifier control moved from Display Effects into Misc. */
 export default function ZoomPanel() {
-  const { state, setSetting, log } = useApp();
+  const { state, setSetting, setZoomMode, log } = useApp();
   const { notify } = useToast();
   const t = useT();
   const [zoomStatus, setZoomStatus] = useState<ZoomStatus | null>(null);
@@ -72,7 +72,7 @@ export default function ZoomPanel() {
         <div className="tiny" style={{ lineHeight: 1.6 }}>{t("effects.zoom.detail")}</div>
         <div className="field" style={{ marginTop: 12 }}>
           <label>{t("effects.zoom.mode")}</label>
-          <select value={zoomMode} onChange={(event) => setSetting("zoomMode", event.target.value as ZoomMode)}>
+          <select value={zoomMode} onChange={(event) => setZoomMode(event.target.value as ZoomMode)}>
             <option value="toggle">{t("effects.zoom.toggle")}</option>
             <option value="hold">{t("effects.zoom.hold")}</option>
           </select>

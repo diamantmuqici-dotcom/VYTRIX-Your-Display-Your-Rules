@@ -1,6 +1,8 @@
-//! Reversible Windows tuning through documented registry and powercfg APIs.
-//! Every write records its prior value. Defender, firewall, Update and essential
-//! services are never targets. Only IDs in the fixed catalog can reach a write.
+//! Reversible Windows tuning through documented registry, powercfg and netsh APIs.
+//! Every write records its prior value. Defender, firewall and Update availability
+//! are never targets. Only IDs in the fixed catalog can reach a write.
+
+pub mod platinum;
 
 use crate::storage::Storage;
 use serde::{Deserialize, Serialize};
@@ -13,7 +15,10 @@ const CREATE_NO_WINDOW: u32 = 0x0800_0000;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
-pub enum TaskMechanism { Registry, PowerPlan, LocalReview }
+pub enum TaskMechanism { Registry, PowerPlan, SystemCommand, LocalReview }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OsTarget { All, Win10, Win11 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -49,6 +54,65 @@ pub struct PowerPlanStatus {
     pub available: bool,
 }
 
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct WindowsInfo {
+    pub product_name: String,
+    pub display_version: String,
+    pub current_build: u32,
+    pub ubr: u32,
+    pub edition: String,
+    pub family: String,
+    pub is_windows_11: bool,
+    pub profile_label: String,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PlatinumView {
+    pub name: String,
+    pub version: String,
+    pub attribution: String,
+    pub source_url: String,
+    pub os: WindowsInfo,
+    pub groups: Vec<PlatinumGroupView>,
+    pub task_count: usize,
+    pub recommended_count: usize,
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PlatinumGroupView {
+    pub id: String,
+    pub title: String,
+    pub detail: String,
+    pub task_ids: Vec<String>,
+}
+
+#[derive(Debug, Clone)]
+enum Undo {
+    Fixed(Vec<String>),
+    Token {
+        marker: &'static str,
+        prefix: Vec<String>,
+        delete: Vec<String>,
+        joined: bool,
+    },
+}
+
+#[derive(Debug, Clone)]
+pub(crate) struct CommandTask {
+    id: &'static str,
+    category: &'static str,
+    name: &'static str,
+    description: &'static str,
+    benefit: &'static str,
+    exe: &'static str,
+    apply: Vec<String>,
+    probe: Vec<String>,
+    undo: Undo,
+}
+
 #[derive(Debug, Clone)]
 enum Target {
     Dword(u32),
@@ -58,11 +122,11 @@ enum Target {
 }
 
 #[derive(Debug, Clone)]
-struct RegistryTask {
+pub(crate) struct RegistryTask {
     id: &'static str,
     category: &'static str,
     name: &'static str,
-    description: &'static str,
+    description: String,
     benefit: &'static str,
     risk: &'static str,
     hive: isize,
@@ -89,92 +153,92 @@ fn registry_catalog() -> Vec<RegistryTask> {
     use Target::*;
     vec![
         RegistryTask { id: "game-mode", category: "performance", name: "Game Mode",
-            description: "Keeps Windows Game Mode enabled for the foreground game.",
+            description: "Keeps Windows Game Mode enabled for the foreground game.".to_owned(),
             benefit: "Prioritizes game process scheduling.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\GameBar", value: "AutoGameModeEnabled", target: Dword(1) },
         RegistryTask { id: "game-bar-capture", category: "performance", name: "Game Bar capture",
-            description: "Turns off background Game Bar recording.",
+            description: "Turns off background Game Bar recording.".to_owned(),
             benefit: "Removes capture hooks from the game loop.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\GameDVR", value: "AppCaptureEnabled", target: Dword(0) },
         RegistryTask { id: "game-bar-tips", category: "performance", name: "Game Bar startup tips",
-            description: "Suppresses the first-run Game Bar prompt.",
+            description: "Suppresses the first-run Game Bar prompt.".to_owned(),
             benefit: "One less overlay process at game start.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\GameBar", value: "ShowStartupPanel", target: Dword(0) },
         RegistryTask { id: "background-apps", category: "performance", name: "Background applications",
-            description: "Stops Store apps running in the background.",
+            description: "Stops Store apps running in the background.".to_owned(),
             benefit: "Frees CPU and memory during play.", risk: "medium", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications",
             value: "GlobalUserDisabled", target: Dword(1) },
         RegistryTask { id: "transparency-effects", category: "appearance", name: "Transparency effects",
-            description: "Disables translucent composition surfaces.",
+            description: "Disables translucent composition surfaces.".to_owned(),
             benefit: "Lower desktop composition cost.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize",
             value: "EnableTransparency", target: Dword(0) },
         RegistryTask { id: "visual-effects", category: "appearance", name: "Visual effects preset",
-            description: "Selects the built-in best-performance visual preset.",
+            description: "Selects the built-in best-performance visual preset.".to_owned(),
             benefit: "Cuts non-essential animation and shadow work.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects",
             value: "VisualFXSetting", target: Dword(2) },
         RegistryTask { id: "taskbar-animations", category: "appearance", name: "Taskbar animations",
-            description: "Disables taskbar slide and fade animations.",
+            description: "Disables taskbar slide and fade animations.".to_owned(),
             benefit: "Small composition saving on the desktop.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
             value: "TaskbarAnimations", target: Dword(0) },
         RegistryTask { id: "listview-alpha", category: "appearance", name: "List view alpha selection",
-            description: "Removes translucent selection rectangles in Explorer.",
+            description: "Removes translucent selection rectangles in Explorer.".to_owned(),
             benefit: "Avoids per-frame alpha blending.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
             value: "ListviewAlphaSelect", target: Dword(0) },
         RegistryTask { id: "toast-notifications", category: "appearance", name: "Toast notifications",
-            description: "Suppresses pop-up notifications during the session.",
+            description: "Suppresses pop-up notifications during the session.".to_owned(),
             benefit: "No focus-stealing composition work.", risk: "medium", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\PushNotifications",
             value: "ToastEnabled", target: Dword(0) },
         RegistryTask { id: "mouse-acceleration", category: "input", name: "Mouse acceleration",
-            description: "Disables pointer acceleration for consistent aim.",
+            description: "Disables pointer acceleration for consistent aim.".to_owned(),
             benefit: "1:1 physical mouse movement.", risk: "low", hive: HKCU,
             path: r"Control Panel\Mouse", value: "MouseSpeed", target: Text("0".into()) },
         RegistryTask { id: "mouse-threshold-1", category: "input", name: "Mouse threshold 1",
-            description: "First acceleration threshold set to zero.",
+            description: "First acceleration threshold set to zero.".to_owned(),
             benefit: "No speed-dependent pointer scaling.", risk: "low", hive: HKCU,
             path: r"Control Panel\Mouse", value: "MouseThreshold1", target: Text("0".into()) },
         RegistryTask { id: "mouse-threshold-2", category: "input", name: "Mouse threshold 2",
-            description: "Second acceleration threshold set to zero.",
+            description: "Second acceleration threshold set to zero.".to_owned(),
             benefit: "No speed-dependent pointer scaling.", risk: "low", hive: HKCU,
             path: r"Control Panel\Mouse", value: "MouseThreshold2", target: Text("0".into()) },
         RegistryTask { id: "sticky-keys-shortcut", category: "input", name: "Sticky Keys shortcut",
-            description: "Clears the five-shift activation bit, keeps accessibility available.",
+            description: "Clears the five-shift activation bit, keeps accessibility available.".to_owned(),
             benefit: "No accidental modifier lock in game.", risk: "medium", hive: HKCU,
             path: r"Control Panel\Accessibility\StickyKeys", value: "Flags", target: ClearFlag(0x4) },
         RegistryTask { id: "keyboard-repeat-delay", category: "input", name: "Keyboard repeat delay",
-            description: "Sets the pre-repeat delay to its shortest value.",
+            description: "Sets the pre-repeat delay to its shortest value.".to_owned(),
             benefit: "Faster repeated key input.", risk: "low", hive: HKCU,
             path: r"Control Panel\Keyboard", value: "KeyboardDelay", target: Text("0".into()) },
         RegistryTask { id: "keyboard-repeat-rate", category: "input", name: "Keyboard repeat rate",
-            description: "Sets the key repeat rate to its fastest value.",
+            description: "Sets the key repeat rate to its fastest value.".to_owned(),
             benefit: "Faster repeated key input.", risk: "low", hive: HKCU,
             path: r"Control Panel\Keyboard", value: "KeyboardSpeed", target: Text("31".into()) },
         RegistryTask { id: "pointer-trails", category: "input", name: "Mouse pointer trails",
-            description: "Turns off pointer trails that add composition work to the cursor.",
+            description: "Turns off pointer trails that add composition work to the cursor.".to_owned(),
             benefit: "Cleaner pointer rendering.", risk: "low", hive: HKCU,
             path: r"Control Panel\Mouse", value: "MouseTrails", target: Text("0".into()) },
         RegistryTask { id: "advertising-id", category: "privacy", name: "Advertising ID",
-            description: "Turns off the per-user advertising identifier.",
+            description: "Turns off the per-user advertising identifier.".to_owned(),
             benefit: "No ad-identifier reads.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo",
             value: "Enabled", target: Dword(0) },
         RegistryTask { id: "app-launch-tracking", category: "privacy", name: "App launch tracking",
-            description: "Stops Start from tracking frequently used programs.",
+            description: "Stops Start from tracking frequently used programs.".to_owned(),
             benefit: "Less background telemetry work.", risk: "low", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced",
             value: "Start_TrackProgs", target: Dword(0) },
         RegistryTask { id: "tailored-experiences", category: "privacy", name: "Tailored experiences",
-            description: "Disables diagnostic-data-driven suggestions.",
+            description: "Disables diagnostic-data-driven suggestions.".to_owned(),
             benefit: "Removes a background data consumer.", risk: "medium", hive: HKCU,
             path: r"Software\Microsoft\Windows\CurrentVersion\Privacy",
             value: "TailoredExperiencesWithDiagnosticDataEnabled", target: Dword(0) },
         RegistryTask { id: "diagnostic-data", category: "privacy", name: "Diagnostic data level",
-            description: "Requests the minimum Windows telemetry level.",
+            description: "Requests the minimum Windows telemetry level.".to_owned(),
             benefit: "Reduces telemetry upload work.", risk: "medium", hive: HKLM,
             path: r"SOFTWARE\Policies\Microsoft\Windows\DataCollection",
             value: "AllowTelemetry", target: Dword(0) },
@@ -192,6 +256,24 @@ pub fn catalog_ids() -> Vec<String> {
     let mut ids: Vec<String> = registry_catalog().into_iter().map(|t| t.id.to_owned()).collect();
     ids.push("power-plan".to_owned());
     ids.extend(REVIEW_IDS.iter().map(|item| item.0.to_owned()));
+    ids
+}
+
+/// Base VYTRIX entries plus the ported Platinum+ registry set.
+fn all_registry_tasks() -> Vec<RegistryTask> {
+    let mut tasks = registry_catalog();
+    tasks.extend(platinum::catalog());
+    tasks
+}
+
+fn task_os(id: &str) -> OsTarget {
+    platinum::os_for(id)
+}
+
+/// Every task owned by the Platinum profile: fixed registry writes and system commands.
+pub fn platinum_ids() -> Vec<String> {
+    let mut ids: Vec<String> = platinum::catalog().into_iter().map(|task| task.id.to_owned()).collect();
+    ids.extend(command_catalog().into_iter().map(|task| task.id.to_owned()));
     ids
 }
 
@@ -417,6 +499,225 @@ fn plan_name(line: &str) -> String {
     line[start + 1..end].trim().to_owned()
 }
 
+#[cfg(not(windows))]
+fn reg_query(_hive: isize, _path: &str, _value: &str) -> Option<RegValue> { None }
+
+fn reg_u32(hive: isize, path: &str, value: &str) -> Option<u32> {
+    reg_query(hive, path, value).and_then(|entry| {
+        if entry.kind == 4 && entry.bytes.len() >= 4 {
+            Some(u32::from_le_bytes([entry.bytes[0], entry.bytes[1], entry.bytes[2], entry.bytes[3]]))
+        } else { None }
+    })
+}
+
+fn reg_string(hive: isize, path: &str, value: &str) -> Option<String> {
+    reg_query(hive, path, value).and_then(|entry| reg_text(&entry))
+}
+
+/// Windows 11 starts at build 22000. Everything older in the 10.x line is Windows 10.
+pub fn windows_info() -> WindowsInfo {
+    const CV: &str = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion";
+    let current_build = reg_string(HKLM, CV, "CurrentBuild")
+        .and_then(|text| text.trim().parse::<u32>().ok()).unwrap_or(0);
+    let ubr = reg_u32(HKLM, CV, "UBR").unwrap_or(0);
+    let is_windows_11 = current_build >= 22_000;
+    let family = if is_windows_11 {
+        "Windows 11".to_owned()
+    } else if current_build >= 10_240 {
+        "Windows 10".to_owned()
+    } else {
+        "unknown".to_owned()
+    };
+    let profile_label = if is_windows_11 {
+        format!("{family} build {current_build}.{ubr} — Windows 11 entries enabled")
+    } else {
+        format!("{family} build {current_build}.{ubr} — Windows 10 safe subset")
+    };
+    WindowsInfo {
+        product_name: reg_string(HKLM, CV, "ProductName").unwrap_or_else(|| "Windows".to_owned()),
+        display_version: reg_string(HKLM, CV, "DisplayVersion").unwrap_or_default(),
+        current_build,
+        ubr,
+        edition: reg_string(HKLM, CV, "EditionID").unwrap_or_default(),
+        family,
+        is_windows_11,
+        profile_label,
+    }
+}
+
+fn os_allows(target_os: OsTarget, info: &WindowsInfo) -> bool {
+    match target_os {
+        OsTarget::All => true,
+        OsTarget::Win10 => !info.is_windows_11,
+        OsTarget::Win11 => info.is_windows_11,
+    }
+}
+
+fn argv(exe: &str, args: &[&str]) -> Vec<String> {
+    std::iter::once(exe.to_owned()).chain(args.iter().map(|arg| (*arg).to_owned())).collect()
+}
+
+/// netsh and bcdedit settings whose prior value can be read back and replayed.
+pub(crate) fn command_catalog() -> Vec<CommandTask> {
+    vec![
+        CommandTask {
+            id: "pt-net-autotuning", category: "network", name: "TCP auto-tuning",
+            description: "netsh int tcp set global autotuninglevel=normal; prior level is captured first.",
+            benefit: platinum::benefit_for("network"), exe: "netsh.exe",
+            apply: argv("netsh.exe", &["int", "tcp", "set", "global", "autotuninglevel=normal"]),
+            probe: argv("netsh.exe", &["int", "tcp", "show", "global"]),
+            undo: Undo::Token {
+                marker: "autotuning",
+                prefix: argv("netsh.exe", &["int", "tcp", "set", "global", "autotuninglevel="]),
+                delete: argv("netsh.exe", &["int", "tcp", "set", "global", "autotuninglevel=normal"]),
+                joined: true,
+            },
+        },
+        CommandTask {
+            id: "pt-net-rss", category: "network", name: "Receive-side scaling",
+            description: "netsh int tcp set global rss=enabled; prior state is captured first.",
+            benefit: platinum::benefit_for("network"), exe: "netsh.exe",
+            apply: argv("netsh.exe", &["int", "tcp", "set", "global", "rss=enabled"]),
+            probe: argv("netsh.exe", &["int", "tcp", "show", "global"]),
+            undo: Undo::Token {
+                marker: "receive-side scaling",
+                prefix: argv("netsh.exe", &["int", "tcp", "set", "global", "rss="]),
+                delete: argv("netsh.exe", &["int", "tcp", "set", "global", "rss=enabled"]),
+                joined: true,
+            },
+        },
+        CommandTask {
+            id: "pt-net-chimney", category: "network", name: "TCP chimney offload",
+            description: "netsh int tcp set global chimney=enabled; prior state is captured first.",
+            benefit: platinum::benefit_for("network"), exe: "netsh.exe",
+            apply: argv("netsh.exe", &["int", "tcp", "set", "global", "chimney=enabled"]),
+            probe: argv("netsh.exe", &["int", "tcp", "show", "global"]),
+            undo: Undo::Token {
+                marker: "chimney offload",
+                prefix: argv("netsh.exe", &["int", "tcp", "set", "global", "chimney="]),
+                delete: argv("netsh.exe", &["int", "tcp", "set", "global", "chimney=enabled"]),
+                joined: true,
+            },
+        },
+        CommandTask {
+            id: "pt-net-dca", category: "network", name: "Direct cache access",
+            description: "netsh int tcp set global dca=enabled; prior state is captured first.",
+            benefit: platinum::benefit_for("network"), exe: "netsh.exe",
+            apply: argv("netsh.exe", &["int", "tcp", "set", "global", "dca=enabled"]),
+            probe: argv("netsh.exe", &["int", "tcp", "show", "global"]),
+            undo: Undo::Token {
+                marker: "direct cache access",
+                prefix: argv("netsh.exe", &["int", "tcp", "set", "global", "dca="]),
+                delete: argv("netsh.exe", &["int", "tcp", "set", "global", "dca=enabled"]),
+                joined: true,
+            },
+        },
+        CommandTask {
+            id: "pt-net-timestamps", category: "network", name: "TCP timestamps",
+            description: "netsh int tcp set global timestamps=disabled; prior state is captured first.",
+            benefit: platinum::benefit_for("network"), exe: "netsh.exe",
+            apply: argv("netsh.exe", &["int", "tcp", "set", "global", "timestamps=disabled"]),
+            probe: argv("netsh.exe", &["int", "tcp", "show", "global"]),
+            undo: Undo::Token {
+                marker: "timestamps",
+                prefix: argv("netsh.exe", &["int", "tcp", "set", "global", "timestamps="]),
+                delete: argv("netsh.exe", &["int", "tcp", "set", "global", "timestamps=enabled"]),
+                joined: true,
+            },
+        },
+        CommandTask {
+            id: "pt-ip-taskoffload", category: "network", name: "IP task offload",
+            description: "netsh int ip set global taskoffload=enabled; prior state is captured first.",
+            benefit: platinum::benefit_for("network"), exe: "netsh.exe",
+            apply: argv("netsh.exe", &["int", "ip", "set", "global", "taskoffload=enabled"]),
+            probe: argv("netsh.exe", &["int", "ip", "show", "global"]),
+            undo: Undo::Token {
+                marker: "task offload",
+                prefix: argv("netsh.exe", &["int", "ip", "set", "global", "taskoffload="]),
+                delete: argv("netsh.exe", &["int", "ip", "set", "global", "taskoffload=enabled"]),
+                joined: true,
+            },
+        },
+        CommandTask {
+            id: "pt-bcd-tscsync", category: "network", name: "TSC sync policy",
+            description: "bcdedit /set tscsyncpolicy enhanced; previous boot value is captured first.",
+            benefit: "Keeps high-resolution timers consistent across processor groups.", exe: "bcdedit.exe",
+            apply: argv("bcdedit.exe", &["/set", "tscsyncpolicy", "enhanced"]),
+            probe: argv("bcdedit.exe", &["/get", "tscsyncpolicy"]),
+            undo: Undo::Token {
+                marker: "tscsyncpolicy",
+                prefix: argv("bcdedit.exe", &["/set", "tscsyncpolicy"]),
+                delete: argv("bcdedit.exe", &["/deletevalue", "tscsyncpolicy"]),
+                joined: false,
+            },
+        },
+        CommandTask {
+            id: "pt-bcd-x2apic", category: "network", name: "x2APIC policy",
+            description: "bcdedit /set x2apicpolicy enable; previous boot value is captured first.",
+            benefit: "Uses the extended APIC for interrupt routing on supported hardware.", exe: "bcdedit.exe",
+            apply: argv("bcdedit.exe", &["/set", "x2apicpolicy", "enable"]),
+            probe: argv("bcdedit.exe", &["/get", "x2apicpolicy"]),
+            undo: Undo::Token {
+                marker: "x2apicpolicy",
+                prefix: argv("bcdedit.exe", &["/set", "x2apicpolicy"]),
+                delete: argv("bcdedit.exe", &["/deletevalue", "x2apicpolicy"]),
+                joined: false,
+            },
+        },
+        CommandTask {
+            id: "pt-bcd-ems", category: "network", name: "Emergency management services",
+            description: "bcdedit /set ems off; previous boot value is captured first.",
+            benefit: "Removes emergency console hooks from the boot path.", exe: "bcdedit.exe",
+            apply: argv("bcdedit.exe", &["/set", "ems", "off"]),
+            probe: argv("bcdedit.exe", &["/get", "ems"]),
+            undo: Undo::Token {
+                marker: "ems",
+                prefix: argv("bcdedit.exe", &["/set", "ems"]),
+                delete: argv("bcdedit.exe", &["/deletevalue", "ems"]),
+                joined: false,
+            },
+        },
+        CommandTask {
+            id: "pt-cmd-hibernate", category: "power", name: "Hibernation file",
+            description: "powercfg /h off; hibernation availability is probed before apply.",
+            benefit: "Frees the hiberfile and removes hibernate transitions.", exe: "powercfg.exe",
+            apply: argv("powercfg.exe", &["/h", "off"]),
+            probe: argv("powercfg.exe", &["/a"]),
+            undo: Undo::Fixed(argv("powercfg.exe", &["/h", "on"])),
+        },
+    ]
+}
+
+#[cfg(windows)]
+fn run_command(args: &[String]) -> Result<String, String> {
+    use std::os::windows::process::CommandExt;
+    let (exe, rest) = args.split_first().ok_or_else(|| "empty command".to_owned())?;
+    let output = std::process::Command::new(exe)
+        .args(rest).creation_flags(CREATE_NO_WINDOW).output()
+        .map_err(|error| format!("{exe} could not start: {error}"))?;
+    let stdout = String::from_utf8_lossy(&output.stdout).into_owned();
+    if !output.status.success() {
+        let detail = String::from_utf8_lossy(&output.stderr).trim().to_owned();
+        return Err(if detail.is_empty() { format!("{exe} command failed") } else { detail });
+    }
+    Ok(stdout)
+}
+
+#[cfg(not(windows))]
+fn run_command(_args: &[String]) -> Result<String, String> { Err("system commands require Windows".to_owned()) }
+
+/// Pull the current value token out of a `netsh show` / `bcdedit /get` line.
+fn prior_token(output: &str, marker: &str) -> Option<String> {
+    output.lines()
+        .find(|line| {
+            let lower = line.to_ascii_lowercase();
+            lower.contains(marker) && !lower.contains("not found")
+        })
+        .and_then(|line| line.split_whitespace().last())
+        .map(|token| token.trim_end_matches(|c: char| !c.is_ascii_alphanumeric()).to_owned())
+        .filter(|token| !token.is_empty())
+}
+
 pub fn power_plan_status() -> PowerPlanStatus {
     let active = powercfg(&["/getactivescheme"]).ok();
     let active_guid = active.as_deref().and_then(parse_guid).unwrap_or_default();
@@ -472,8 +773,10 @@ fn restore_power_plan(storage: &Storage) -> Result<TaskOutcome, String> {
 
 /// Live catalog: current values are read from the OS, never inferred from the UI.
 pub fn list_tasks(storage: &Storage) -> Vec<OptTask> {
+    let info = windows_info();
     let mut out = Vec::new();
-    for task in registry_catalog() {
+    for task in all_registry_tasks() {
+        if !os_allows(task_os(task.id), &info) { continue; }
         #[cfg(windows)]
         let current = reg_query(task.hive, task.path, task.value);
         #[cfg(not(windows))]
@@ -504,6 +807,21 @@ pub fn list_tasks(storage: &Storage) -> Vec<OptTask> {
             description: format!("{} [{}]{}\\{}", task.description, hive, task.path, task.value),
             benefit: task.benefit.to_owned(), risk: task.risk.to_owned(), current_state,
             recommended_state, applied, mechanism: TaskMechanism::Registry, previous_value,
+        });
+    }
+    for task in command_catalog() {
+        let state = saved(storage, task.id);
+        let prior = state.as_ref().and_then(|s| decode_hex(&s.previous_hex))
+            .and_then(|bytes| String::from_utf8(bytes).ok());
+        let desired = task.apply.last().cloned().unwrap_or_default();
+        out.push(OptTask {
+            id: task.id.to_owned(), category: task.category.to_owned(), name: task.name.to_owned(),
+            description: format!("{} [system command] {}", task.description, task.exe),
+            benefit: task.benefit.to_owned(), risk: "medium".to_owned(),
+            current_state: prior.as_ref().map(|text| format!("was: {}", text.lines().next().unwrap_or("captured")))
+                .unwrap_or_else(|| "system default".to_owned()),
+            recommended_state: desired, applied: state.is_some(),
+            mechanism: TaskMechanism::SystemCommand, previous_value: prior,
         });
     }
     let status = power_plan_status();
@@ -548,7 +866,14 @@ pub fn apply_task(storage: &Storage, id: &str) -> Result<TaskOutcome, String> {
         return Ok(TaskOutcome { id: safe, applied: true, previous: Some("not reviewed".to_owned()),
             message: "review recorded locally".to_owned() });
     }
-    let task = registry_catalog().into_iter().find(|task| task.id == safe)
+    if let Some(task) = command_catalog().into_iter().find(|task| task.id == safe) {
+        let info = windows_info();
+        if !os_allows(task_os(&safe), &info) {
+            return Err("this setting is not available on this Windows version".to_owned());
+        }
+        return apply_command(storage, &task);
+    }
+    let task = all_registry_tasks().into_iter().find(|task| task.id == safe)
         .ok_or_else(|| "unknown optimization id".to_owned())?;
     #[cfg(windows)]
     let current = reg_query(task.hive, task.path, task.value);
@@ -587,7 +912,10 @@ pub fn restore_task(storage: &Storage, id: &str) -> Result<TaskOutcome, String> 
         return Ok(TaskOutcome { id: safe, applied: false, previous: None,
             message: "review record removed".to_owned() });
     }
-    let task = registry_catalog().into_iter().find(|task| task.id == safe)
+    if let Some(task) = command_catalog().into_iter().find(|task| task.id == safe) {
+        return restore_command(storage, &task, &state);
+    }
+    let task = all_registry_tasks().into_iter().find(|task| task.id == safe)
         .ok_or_else(|| "unknown optimization id".to_owned())?;
     #[cfg(windows)]
     {
@@ -607,6 +935,91 @@ pub fn restore_task(storage: &Storage, id: &str) -> Result<TaskOutcome, String> 
     Ok(TaskOutcome { id: safe, applied: false, previous: None, message: "restored and verified".to_owned() })
 }
 
+/// Capture the prior command output first, then run the fixed setting command.
+fn apply_command(storage: &Storage, task: &CommandTask) -> Result<TaskOutcome, String> {
+    let probe = run_command(&task.probe).unwrap_or_default();
+    let prior = if probe.trim().is_empty() { "unavailable".to_owned() } else { probe };
+    persist(storage, task.id, &SavedState {
+        previous_hex: encode_hex(prior.as_bytes()),
+        previous_kind: 0,
+        previous_existed: true,
+        ..SavedState::default()
+    })?;
+    run_command(&task.apply)?;
+    Ok(TaskOutcome {
+        id: task.id.to_owned(), applied: true,
+        previous: Some(prior.lines().next().unwrap_or("previous state captured").to_owned()),
+        message: format!("{} setting applied", task.exe),
+    })
+}
+
+/// Replay the captured token, or the documented default when no token was present.
+fn restore_command(storage: &Storage, task: &CommandTask, state: &SavedState) -> Result<TaskOutcome, String> {
+    let prior_text = decode_hex(&state.previous_hex)
+        .and_then(|bytes| String::from_utf8(bytes).ok()).unwrap_or_default();
+    let restore_args: Vec<String> = match &task.undo {
+        Undo::Fixed(args) => args.clone(),
+        Undo::Token { marker, prefix, delete, joined } => {
+            if let Some(token) = prior_token(&prior_text, marker) {
+                let mut args = prefix.clone();
+                if *joined {
+                    let last = args.last_mut().ok_or_else(|| "invalid restore command".to_owned())?;
+                    *last = format!("{last}{token}");
+                } else {
+                    args.push(token);
+                }
+                args
+            } else {
+                delete.clone()
+            }
+        }
+    };
+    run_command(&restore_args)?;
+    storage.delete(STORE_KIND, task.id)?;
+    Ok(TaskOutcome { id: task.id.to_owned(), applied: false, previous: None,
+        message: "system setting restored".to_owned() })
+}
+
+/// The Platinum feature surface: attribution, detected Windows version, groups and counts.
+pub fn platinum_profile() -> PlatinumView {
+    let info = windows_info();
+    let ids = platinum_ids();
+    let groups = platinum::groups().into_iter().map(|group| PlatinumGroupView {
+        id: group.id.to_owned(), title: group.title.to_owned(), detail: group.detail.to_owned(),
+        task_ids: group.task_ids.into_iter()
+            .filter(|id| os_allows(task_os(id), &info)).collect(),
+    }).collect();
+    PlatinumView {
+        name: "Platinum+ Optimizer".to_owned(),
+        version: platinum::VERSION.to_owned(),
+        attribution: platinum::ATTRIBUTION.to_owned(),
+        source_url: platinum::SOURCE_URL.to_owned(),
+        recommended_count: ids.iter().filter(|id| os_allows(task_os(id), &info)).count(),
+        task_count: ids.len(),
+        os: info,
+        groups,
+    }
+}
+
+/// Run the entire OS-appropriate Platinum profile in catalog order.
+pub fn apply_platinum_all(storage: &Storage) -> Vec<TaskOutcome> {
+    let info = windows_info();
+    platinum_ids().into_iter()
+        .filter(|id| os_allows(task_os(&id), &info))
+        .map(|id| apply_task(storage, &id).unwrap_or_else(|message| TaskOutcome {
+            id, applied: false, previous: None, message,
+        }))
+        .collect()
+}
+
+pub fn restore_platinum_all(storage: &Storage) -> Vec<TaskOutcome> {
+    platinum_ids().into_iter()
+        .map(|id| restore_task(storage, &id).unwrap_or_else(|message| TaskOutcome {
+            id, applied: false, previous: None, message,
+        }))
+        .collect()
+}
+
 pub fn apply_all(storage: &Storage) -> Vec<TaskOutcome> {
     catalog_ids().into_iter()
         .map(|id| apply_task(storage, &id).unwrap_or_else(|message| TaskOutcome {
@@ -616,7 +1029,11 @@ pub fn apply_all(storage: &Storage) -> Vec<TaskOutcome> {
 }
 
 pub fn applied_count(storage: &Storage) -> usize {
-    storage.list(STORE_KIND).map(|entries| entries.len()).unwrap_or(0)
+    let ids = catalog_ids();
+    storage.list(STORE_KIND).map(|entries| entries.iter()
+        .filter(|entry| entry.get("id").and_then(|value| value.as_str())
+            .map(|id| ids.iter().any(|known| known == id)).unwrap_or(false))
+        .count()).unwrap_or(0)
 }
 
 #[cfg(test)]

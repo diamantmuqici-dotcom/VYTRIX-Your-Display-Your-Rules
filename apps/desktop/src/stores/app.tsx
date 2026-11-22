@@ -62,6 +62,7 @@ interface AppApi {
   setColor: (color: ColorSettings) => void;
   setBaseline: (color: ColorSettings) => void;
   setSetting: <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => void;
+  setZoomMode: (mode: ZoomMode) => void;
   applyPreset: (preset: ColorPreset) => void;
   upsertPreset: (preset: ColorPreset) => void;
   removePreset: (id: string) => void;
@@ -180,12 +181,14 @@ function validHotkeys(value: unknown, fallback: HotkeyBinding[], legacyZoomMode:
     const keys = Array.isArray(item.keys)
       ? item.keys.map((key) => String(key).slice(0, 24)).filter(Boolean).slice(0, 4)
       : [];
-    if (keys.length === 0) continue;
     const mode: BindingMode = item.mode === "hold" || item.mode === "toggle"
       ? item.mode
       : action === "toggle-zoom"
         ? validZoomMode(legacyZoomMode)
         : "toggle";
+    // Toggle zoom keeps manual control with no key; every other empty bind is
+    // a corrupt save and must fall back to the default.
+    if (keys.length === 0 && !(action === "toggle-zoom" && mode === "toggle")) continue;
     out.push({
       action,
       keys,
@@ -329,7 +332,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
       return { ...s, color: next };
     }),
     setBaseline: (baseline) => setState((s) => ({ ...s, baseline: clampColorSettings(baseline) })),
-    setSetting: (key, value) => setState((s) => ({ ...s, settings: { ...s.settings, [key]: value } })),
+    setSetting: (key, value) => setState((s) => {
+    if (key === "zoomMode") {
+      const mode = value as AppSettings["zoomMode"];
+      return {
+        ...s,
+        settings: { ...s.settings, zoomMode: mode },
+        // The OS registration and the native controller both read the binding
+        // mode. Leaving it on hold after a dropdown change killed the toggle.
+        hotkeys: s.hotkeys.map((h) => h.action === "toggle-zoom" ? { ...h, mode } : h),
+      };
+    }
+    return { ...s, settings: { ...s.settings, [key]: value } };
+  }),
+  setZoomMode: (mode) => setState((s) => ({
+    ...s,
+    settings: { ...s.settings, zoomMode: mode },
+    hotkeys: s.hotkeys.map((h) => h.action === "toggle-zoom" ? { ...h, mode } : h),
+  })),
     applyPreset: (preset) => setState((s) => {
       const color = clampColorSettings(preset.settings);
       pushColor(color, s.settings.monitorId);

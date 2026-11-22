@@ -121,6 +121,30 @@ impl HotkeyRegistry {
         Ok(())
     }
 
+    /// Remove an OS-registered toggle binding. Mode changes and disabled
+    /// bindings must not leave the previous hotkey live in the OS.
+    pub fn unregister(&self, action: &str) -> Result<(), String> {
+        let safe_action = crate::security::safe_id(action).ok_or_else(|| "invalid action".to_owned())?;
+        #[cfg(windows)]
+        {
+            use crate::win;
+            let id = { self.ids_by_action.lock().remove(&safe_action) };
+            if let Some(id) = id {
+                let hwnd = hotkey_window();
+                if !hwnd.is_null() {
+                    // SAFETY: id and hwnd were created by this registry.
+                    unsafe { win::UnregisterHotKey(hwnd, id) };
+                }
+                self.actions_by_id.lock().remove(&id);
+            }
+        }
+        let signature = { self.bindings.lock().remove(&safe_action).map(|keys| keys.join("+")) };
+        if let Some(signature) = signature {
+            self.taken.lock().remove(&signature);
+        }
+        Ok(())
+    }
+
     fn emit_hold(&self, action: &str, pressed: bool) {
         #[cfg(windows)]
         if let Some(handle) = APP_HANDLE.get() {

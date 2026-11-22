@@ -50,9 +50,17 @@ export function ZoomBridge() {
     signatureRef.current = signature;
     const keys = zoomBindEnabled && zoomKeysText ? zoomKeysText.split(">") : [];
     if (keys.length === 0) {
-      void releaseZoom().then((result) => {
-        if (!result.ok) log(`Zoom setup failed: ${result.error.message}`);
-      });
+      if (zoomMode === "toggle") {
+        // Toggle mode has a manual control and an in-app button. No bind is
+        // required, so configure native state instead of dropping the mode.
+        void configureZoom(zoomMode, keys, zoomLevel).then((result) => {
+          if (!result.ok) log(`Zoom setup failed: ${result.error.message}`);
+        });
+      } else {
+        void releaseZoom().then((result) => {
+          if (!result.ok) log(`Zoom setup failed: ${result.error.message}`);
+        });
+      }
       return;
     }
     void configureZoom(zoomMode, keys, zoomLevel).then((result) => {

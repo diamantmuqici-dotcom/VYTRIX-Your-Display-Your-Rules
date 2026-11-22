@@ -20,6 +20,8 @@ import { Section, SectionHeading } from "@/components/section";
 import { accessFaqs, features, productFaqs } from "@/lib/content";
 import { DIRECT_EXE_URL, GITHUB_URL } from "@/lib/site";
 import { GameArtwork } from "@/components/game-artwork";
+import { OptimizerShowcase } from "@/components/optimizer-showcase";
+import { TiltCard } from "@/components/tilt-card";
 import { gameCatalog, gameCatalogStats } from "@/lib/game-catalog.generated";
 
 const comparisonRows = [
@@ -191,16 +193,35 @@ export default function HomePage() {
         </Container>
       </section>
 
+      <div className="vy-marquee" aria-hidden="true">
+        <div className="vy-marquee-track">
+          {[
+            "NO DLL INJECTION", "REVERSIBLE BY DEFAULT", "WINDOWS 10 / 11",
+            "FREE & OPEN SOURCE", "PER-MONITOR PROFILES", "LOCAL PHONE CONTROL",
+            `${gameCatalogStats.total} GAME CONFIGURATIONS`, "PLATINUM+ OPTIMIZER",
+          ].concat([
+            "NO DLL INJECTION", "REVERSIBLE BY DEFAULT", "WINDOWS 10 / 11",
+            "FREE & OPEN SOURCE", "PER-MONITOR PROFILES", "LOCAL PHONE CONTROL",
+            `${gameCatalogStats.total} GAME CONFIGURATIONS`, "PLATINUM+ OPTIMIZER",
+          ]).map((label, index) => (
+            <span key={`${label}-${index}`} className="vy-marquee-item">
+              <span className="vy-marquee-dot" />
+              {label}
+            </span>
+          ))}
+        </div>
+      </div>
+
       <Section id="features">
         <SectionHeading
           eyebrow="The suite"
           title={
             <>
-              Six tools, one{" "}
+              Eight tools, one{" "}
               <span className="text-gradient">display layer.</span>
             </>
           }
-          description="No game files, no memory reads, no driver. Everything below works where your desktop already draws."
+          description="No game files, no memory reads, no driver. Everything below works where your desktop already draws — and the Optimizer reaches into Windows only with a saved before value."
         />
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -231,6 +252,11 @@ export default function HomePage() {
         </div>
       </Section>
 
+      <Section id="optimizer" className="border-t border-[color:var(--line)] bg-secondary/40">
+        <AnimatedGradient />
+        <OptimizerShowcase />
+      </Section>
+
       <Section id="games" className="border-t border-[color:var(--line)] bg-secondary/25">
         <SectionHeading
           eyebrow="Game catalog"
@@ -256,19 +282,21 @@ export default function HomePage() {
             if (!game) return null;
             return (
               <Reveal key={game.id}>
-                <div className="overflow-hidden rounded-xl border border-[color:var(--line)] bg-card/60 transition-transform duration-500 ease-bench hover:-translate-y-1">
-                  <div className="aspect-[2/1]">
-                    <GameArtwork id={game.id} category={game.category} />
+                <TiltCard max={8}>
+                  <div className="overflow-hidden rounded-xl border border-[color:var(--line)] bg-card/60">
+                    <div className="aspect-[2/1]">
+                      <GameArtwork id={game.id} category={game.category} />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-display text-sm font-semibold text-ink">
+                        {game.name}
+                      </h3>
+                      <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-subtle">
+                        {game.categoryLabel} · {game.verificationStatus}
+                      </p>
+                    </div>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-display text-sm font-semibold text-ink">
-                      {game.name}
-                    </h3>
-                    <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-subtle">
-                      {game.categoryLabel} · {game.verificationStatus}
-                    </p>
-                  </div>
-                </div>
+                </TiltCard>
               </Reveal>
             );
           })}

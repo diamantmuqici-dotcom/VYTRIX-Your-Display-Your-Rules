@@ -6,6 +6,7 @@ import { GlassCard } from "@/components/glass-card";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/reveal";
 import { Section, SectionHeading } from "@/components/section";
+import { OptimizerShowcase } from "@/components/optimizer-showcase";
 import { features } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -58,7 +59,7 @@ export default function FeaturesPage() {
                 ["Per-monitor color", "Windows display layer", "Yes", "Sliders + hotkey"],
                 ["Game profiles", "Executable name match", "Yes", "Auto on launch"],
                 ["Crosshair overlay", "Own transparent window", "Close the window", "Auto-show rule"],
-                ["Reversible optimizer", "Named Windows settings", "Snapshot restore", "Apply per setting"],
+                ["Optimizer", "Named Windows settings", "Snapshot restore", "Open card → run profile"],
                 ["Performance monitor", "System counters", "Overlay toggle", "Compact overlay"],
                 ["Phone control", "Local network page", "Unpair", "Explicit pairing"],
                 ["Utility zoom", "Magnification API", "Release / toggle", "Alt + Z"],
@@ -105,6 +106,10 @@ export default function FeaturesPage() {
             </ul>
           </GlassCard>
         </div>
+      </Section>
+
+      <Section id="optimizer" className="border-t border-[color:var(--line)] bg-secondary/40">
+        <OptimizerShowcase />
       </Section>
 
       <Section className="border-t border-[color:var(--line)] bg-secondary/25">
