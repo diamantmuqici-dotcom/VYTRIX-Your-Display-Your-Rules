@@ -13,6 +13,7 @@ jobs:
     runs-on: windows-latest
     env:
       VYTRIX_RELEASE_PRIVATE_KEY: ${{ secrets.VYTRIX_RELEASE_PRIVATE_KEY }}
+      VYTRIX_RELEASE_BASE_URL: "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
